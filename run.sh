@@ -6,6 +6,6 @@ source activate base
 source activate snakemake
 snakemake salmon_decoys \
   --cores 12 \
+  --conda-frontend miniconda \
   --sdm conda \
-  --conda-frontend conda \
   -np --rerun-incomplete
