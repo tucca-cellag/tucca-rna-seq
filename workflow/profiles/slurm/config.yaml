@@ -1,8 +1,11 @@
 executor: slurm
 jobs: 100
+conda-frontend: conda
+sdm: conda
 default-resources:
-  slurm_partition: batch
-  slurm_account: bbromb01
+  slurm_partition: "batch"
+  slurm_account: "bbromb01"
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
+  slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"
