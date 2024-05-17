@@ -1,12 +1,12 @@
 # Snakemake workflow: `tucca-rna-seq`
 
+# `THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
+
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
 [![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
 
 
 TUCCA's Automated RNA-Seq Snakemake Pipeline using Salmon and DESeq2
-
-`THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
 
 
 ## Usage
