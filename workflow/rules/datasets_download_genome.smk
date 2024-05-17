@@ -16,7 +16,7 @@ rule datasets_download_genome:
         (datasets download genome accession {params.genome_accession} \
             --include gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
-            --filename {output} > {output}) 2> {log}
+            --filename {output} > {output}) &> {log}
         """
 
 
@@ -49,7 +49,7 @@ rule unzip_genome:
                 + "*"
                 + "_genomic.fna"
             ).format(genome=config["ncbi_genome_accession"])
-        )[0],
+        ),
     params:
         genome=config["ncbi_genome_accession"],
     log:
@@ -57,5 +57,5 @@ rule unzip_genome:
     shell:
         """
         (mkdir -p results/datasets
-        unzip -o {input} -d results/datasets) 2> {log}
+        unzip -o {input} -d results/datasets) &> {log}
         """
