@@ -8,4 +8,6 @@ snakemake salmon_decoys \
   --cores 12 \
   --conda-frontend miniconda \
   --sdm conda \
+  --executor slurm \
+  --profile workflow/profiles/slurm/config.yaml \
   -np --rerun-incomplete
