@@ -1,4 +1,36 @@
-# Main entrypoint of the workflow. 
-# Please follow the best practices: 
-# https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
-# in particular regarding the standardized folder structure mentioned there. 
+from snakemake.utils import min_version
+
+##### set minimum snakemake version #####
+min_version("8.11.3")
+
+
+##### setup report #####
+configfile: "config/config.yaml"
+
+
+# report: "report/workflow.rst"
+
+
+##### Modules #####
+
+
+include: "rules/common.smk"
+include: "rules/datasets_download_genome.smk"
+include: "rules/salmon_decoys.smk"
+include: "rules/salmon_index.smk"
+
+
+# include: "rules/star_index.smk"
+# include: "rules/fastqc.smk"
+# include: "rules/star.smk"
+# include: "rules/qualimap.smk"
+# include: "rules/salmon_quant.smk"
+# include: "rules/multiqc.smk"
+
+
+##### target rules #####
+
+
+rule all:
+    input:
+        "results/...",

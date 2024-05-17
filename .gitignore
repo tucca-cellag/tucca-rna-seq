@@ -3,3 +3,8 @@ resources/**
 logs/**
 .snakemake
 .snakemake/**
+.template
+bashversion
+.DS_Store
+logs/**
+results/**

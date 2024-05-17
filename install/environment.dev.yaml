@@ -1,0 +1,9 @@
+name: tucca-rna-seq
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bedtools
+  - biopython
+  - snakefmt
+  - unzip

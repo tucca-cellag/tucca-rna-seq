@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - salmon =1.10.3
+  - bzip2 =1.0.8
+  - gzip =1.13
+variables:
+  CONDA_SUBDIR: osx-64
