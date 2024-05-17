@@ -1,7 +1,7 @@
 #!/bin/bash
 
 module load miniconda/23.10
-conda activate snakemake
+source activate snakemake
 snakemake salmon_decoys \
   --cores 12 \
   --sdm conda \
