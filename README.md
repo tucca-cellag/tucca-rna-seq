@@ -6,6 +6,8 @@
 
 TUCCA's Automated RNA-Seq Snakemake Pipeline using Salmon and DESeq2
 
+`THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
+
 
 ## Usage
 
