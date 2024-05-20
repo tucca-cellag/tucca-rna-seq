@@ -1,6 +1,5 @@
-import glob
-
 print("running datasets.smk")
+import glob
 
 
 rule datasets_download_genome:

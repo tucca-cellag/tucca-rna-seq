@@ -2,14 +2,10 @@ from snakemake.utils import min_version
 
 ##### set minimum snakemake version #####
 min_version("8.11.3")
-print("checked for min snakemake version")
 
 
 ##### setup report #####
 configfile: "config/config.yaml"
-
-
-print("grabbing config file")
 
 
 # report: "report/workflow.rst"
@@ -19,27 +15,9 @@ print("grabbing config file")
 
 
 include: "rules/common.smk"
-
-
-print("loading config.smk")
-
-
 include: "rules/datasets_download_genome.smk"
-
-
-print("loading datasets.smk")
-
-
 include: "rules/salmon_decoys.smk"
-
-
-print("loading salmon_decoys.smk")
-
-
 include: "rules/salmon_index.smk"
-
-
-print("loading salmon_index.smk")
 
 
 # include: "rules/star_index.smk"
@@ -48,11 +26,7 @@ print("loading salmon_index.smk")
 # include: "rules/qualimap.smk"
 # include: "rules/salmon_quant.smk"
 # include: "rules/multiqc.smk"
-
-
 ##### target rules #####
-
-
-rule all:
-    input:
-        "results/...",
+# rule all:
+#    input:
+#        "results/...",
