@@ -1,7 +1,4 @@
-print("running datasets.smk")
 import glob
-
-print("running datasets.smk")
 
 
 rule datasets_download_genome:
