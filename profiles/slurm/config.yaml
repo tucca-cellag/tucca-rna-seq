@@ -2,8 +2,8 @@ __use_yte__: true
 
 # Set yte vars
 __variables__:
-  mail: "--mail-type='ALL' --mail-user='benjamin.bromberg@tufts.edu' --error='logs/"
-  end_err_log_str: "_slurm_stderr.%j.%N.log'"
+  mail: "'--mail-type='ALL' --mail-user='benjamin.bromberg@tufts.edu' --error='logs/"
+  end_err_log_str: "_slurm_stderr.%j.%N.log''"
 
 # Profile Settings
 executor: slurm
