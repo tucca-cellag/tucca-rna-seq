@@ -26,7 +26,8 @@ rule salmon_decoys:
         kmer_len=31,
     shell:
         """
-        (# Preparing decoy metadata (the full genome is used as decoy)
+        (#!/bin/sh
+        # Preparing decoy metadata (the full genome is used as decoy)
         grep "^>" {input.genome} | cut -d " " -f 1 > {output.decoys}
         sed -i.bak -e 's/>//g' {output.decoys}
 
