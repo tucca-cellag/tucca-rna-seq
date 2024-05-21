@@ -14,7 +14,7 @@ rule star_index:
             genome=config["ncbi_genome_accession"]
         ),
     output:
-        directory("results/star/{genome}_index").format(
+        directory("results/star/{genome}_index/").format(
             genome=config["ncbi_genome_accession"]
         ),
     threads: 12
@@ -23,10 +23,7 @@ rule star_index:
     log:
         "logs/star/star_index.log",
     params:
-        sjdbOverhang=149,
-    resources:
-        mem_mb=64000,
-        slurm_extra="--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/star/star_index_slurm_stderr.%j.%N.err",
+        sjdbOverhang=config["star_index_sjdbOverhang"],
     shell:
         """
         (STAR --runThreadN {threads} \

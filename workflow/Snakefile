@@ -15,6 +15,7 @@ configfile: "config/config.yaml"
 
 
 include: "rules/common.smk"
+include: "rules/test.smk"
 include: "rules/datasets_download_genome.smk"
 include: "rules/salmon_decoys.smk"
 include: "rules/salmon_index.smk"

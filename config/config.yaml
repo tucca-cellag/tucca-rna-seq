@@ -1,2 +1,4 @@
 ncbi_genome_accession: GCF_002263795.3
 ncbi_genome_api_key:
+salmon_index_kmer_len: 31
+star_index_sjdbOverhang: 149
