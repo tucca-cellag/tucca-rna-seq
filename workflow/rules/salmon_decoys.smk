@@ -26,10 +26,14 @@ rule salmon_decoys:
         kmer_len=31,
     shell:
         """
-        (#!/bin/bash \
-        grep "^>" {input.genome} | cut -d " " -f 1 > {output.decoys} \
-        sed -i.bak -e 's/>//g' {output.decoys} \
-        cat {input.transcriptome} {input.genome} > {output.gentrome} \
+        (# Preparing decoy metadata (the full genome is used as decoy)
+        grep \"^>\" {input.genome} | cut -d \" \" -f 1 > {output.decoys}
+        sed -i.bak -e 's/>//g' {output.decoys}
+
+        # Concatenate genome to end of transcriptome to make reference file for index
+        cat {input.transcriptome} {input.genome} > {output.gentrome}
+
+        # Index the concatenated transcriptome and genome
         salmon index -t {output.gentrome} \
         -i salmon_index_k{params.kmer_len} \
         -d {output.decoys} \
