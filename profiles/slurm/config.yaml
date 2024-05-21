@@ -15,7 +15,7 @@ default-resources:
   runtime: 240 # TODO change to batch or mpi partition and 4320 min
   mem_mb: 32000
   cpus_per_task: 12
-  slurm_extra: mail
+  slurm_extra: ?mail
 
 set-resources:
   datasets_download_genome:
