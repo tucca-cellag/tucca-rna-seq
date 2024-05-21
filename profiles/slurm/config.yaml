@@ -31,7 +31,7 @@ set-resources:
     slurm_extra: ?'f"{mail} --error=logs/salmon/salmon_index_slurm_stderr.%j.%N.log"'
   create_gtf:
     job-name: "'create_gtf'"
-      slurm_extra: ?'f"{mail} --error=logs/gffread/create_gtf_slurm_stderr.%j.%N.log"'
+    slurm_extra: ?'f"{mail} --error=logs/gffread/create_gtf_slurm_stderr.%j.%N.log"'
   star_index:
     job-name: "'star_index'"
     slurm_extra: ?'f"{mail} --error=logs/star/star_index_slurm_stderr.%j.%N.log"'
