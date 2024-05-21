@@ -6,4 +6,4 @@ source activate base
 source activate snakemake
 snakemake star_index \
   --workflow-profile profiles/slurm \
-  -p --rerun-incomplete
+  -p --forcerun star_index
