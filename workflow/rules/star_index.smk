@@ -33,5 +33,5 @@ rule star_index:
         --genomeDir {output} \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
-        --sjdbOverhang {sjdbOverhang}) &> {log}
+        --sjdbOverhang {params.sjdbOverhang}) &> {log}
         """
