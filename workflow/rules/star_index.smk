@@ -26,7 +26,7 @@ rule star_index:
         sjdbOverhang=149,
     resources:
         mem_mb=64000,
-        slurm_extra: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/star/star_index_slurm_stderr.%j.%N.err'"
+        slurm_extra="'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/star/star_index_slurm_stderr.%j.%N.err'",
     shell:
         """
         (STAR --runThreadN {threads} \
