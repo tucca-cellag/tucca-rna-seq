@@ -14,8 +14,10 @@ rule star_index:
             genome=config["ncbi_genome_accession"]
         ),
     output:
-        directory("results/star/{genome}_index/").format(
-            genome=config["ncbi_genome_accession"]
+        directory(
+            "results/star/{genome}_index/".format(
+                genome=config["ncbi_genome_accession"]
+            )
         ),
     threads: 12
     conda:
