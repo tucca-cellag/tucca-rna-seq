@@ -6,4 +6,4 @@ source activate base
 source activate snakemake
 snakemake unzip_genome \
   --workflow-profile profiles/slurm \
-  -np --rerun-incomplete
+  -p --rerun-incomplete
