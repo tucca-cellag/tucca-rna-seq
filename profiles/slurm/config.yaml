@@ -19,8 +19,8 @@ default-resources:
 
 set-resources:
   datasets_download_genome:
-    job-name: "datasets_download_genome"
+    job-name: "'datasets_download_genome'"
   unzip_genome:
-    job-name: "unzip_genome"
+    job-name: "'unzip_genome'"
   salmon_decoys:
-    job-name: "job-name salmon_decoys"
+    job-name: "'salmon_decoys'"
