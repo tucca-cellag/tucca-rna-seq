@@ -26,11 +26,9 @@ rule salmon_decoys:
         kmer_len=31,
     shell:
         """
-        (grep "^>" {input.genome} | cut -d " " -f 1 > {output.decoys}
-        sed -i.bak -e 's/>//g' {output.decoys}
-
-        cat {input.transcriptome} {input.genome} > {output.gentrome}
-
+        (grep "^>" {input.genome} | cut -d " " -f 1 > {output.decoys} \
+        sed -i.bak -e 's/>//g' {output.decoys} \
+        cat {input.transcriptome} {input.genome} > {output.gentrome} \
         salmon index -t {output.gentrome} \
         -i salmon_index_k{params.kmer_len} \
         -d {output.decoys} \
