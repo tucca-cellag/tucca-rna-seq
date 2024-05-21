@@ -19,18 +19,18 @@ default-resources:
 set-resources:
   datasets_download_genome:
     job-name: "'datasets_download_genome'"
-    slurm_extra: ?f"{mail} + '--error=logs/datasets/datasets_download_genome_slurm_stderr.%j.%N.log'"
+    slurm_extra: ?mail + "'--error=logs/datasets/datasets_download_genome_slurm_stderr.%j.%N.log'"
   unzip_genome:
   salmon_decoys:
     job-name: "'salmon_decoys'"
-    slurm_extra: ?f"{mail} + '--error=logs/salmon/salmon_decoys_slurm_stderr.%j.%N.log'"
+    slurm_extra: ?mail + "'--error=logs/salmon/salmon_decoys_slurm_stderr.%j.%N.log'"
   salmon_index:
     job-name: "'salmon_index'"
-    slurm_extra: ?f"{mail} + '--error=logs/salmon/salmon_index_slurm_stderr.%j.%N.log'"
+    slurm_extra: ?mail + "'--error=logs/salmon/salmon_index_slurm_stderr.%j.%N.log'"
   create_gtf:
     job-name: "'create_gtf'"
-    slurm_extra: ?f"{mail} + '--error=logs/gffread/create_gtf_slurm_stderr.%j.%N.log'"
+    slurm_extra: ?mail + "'--error=logs/gffread/create_gtf_slurm_stderr.%j.%N.log'"
   star_index:
     job-name: "'star_index'"
-    slurm_extra: ?f"{mail} + '--error=logs/star/star_index_slurm_stderr.%j.%N.log'"
+    slurm_extra: ?mail + "'--error=logs/star/star_index_slurm_stderr.%j.%N.log'"
     mem_mb: 64000
