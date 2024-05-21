@@ -2,8 +2,7 @@ __use_yte__: true
 
 # Set yte vars
 __variables__:
-  mail:
-  end_err_log_str:
+  mail: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
 
 # Profile Settings
 executor: slurm
@@ -16,24 +15,19 @@ default-resources:
   runtime: 240 # TODO change to batch or mpi partition and 4320 min
   mem_mb: 32000
   cpus_per_task: 12
+  slurm_extra: ?mail
 
 set-resources:
   datasets_download_genome:
     job-name: "'datasets_download_genome'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/datasets/datasets_download_genome_slurm_stderr.%j.%N.log"
   unzip_genome:
     job-name: "'unzip_genome'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/datasets/unzip_genome_slurm_stderr.%j.%N.log"
   salmon_decoys:
     job-name: "'salmon_decoys'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/salmon/salmon_decoys_slurm_stderr.%j.%N.log"
   salmon_index:
     job-name: "'salmon_index'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/salmon/salmon_index_slurm_stderr.%j.%N.log"
   create_gtf:
     job-name: "'create_gtf'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/gffread/create_gtf_slurm_stderr.%j.%N.log"
   star_index:
     job-name: "'star_index'"
-    slurm_extra: "--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu --error=logs/star/star_index_slurm_stderr.%j.%N.log"
     mem_mb: 64000
