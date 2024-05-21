@@ -28,7 +28,7 @@ rule salmon_decoys:
         """
         (# Preparing decoy metadata (the full genome is used as decoy)
         grep \"^>\" {input.genome} | cut -d \" \" -f 1 > {output.decoys}
-        sed -i.bak -e 's/>//g' {output.decoys}
+        sed -i.bak -e \'s/>//g\' {output.decoys}
 
         # Concatenate genome to end of transcriptome to make reference file for index
         cat {input.transcriptome} {input.genome} > {output.gentrome}
