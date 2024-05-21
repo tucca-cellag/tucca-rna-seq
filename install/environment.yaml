@@ -3,6 +3,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python>=3.10, <3.12
-  - snakemake>=8.11
-  - graphviz
+  - snakemake=8.11.3
+  - yte=1.5.4

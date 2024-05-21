@@ -1,3 +1,10 @@
+__use_yte__: true
+
+# Set yte vars
+__variables__:
+  mail: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
+
+# Profile Settings
 executor: slurm
 jobs: 100
 conda-frontend: conda
@@ -5,7 +12,14 @@ sdm: conda
 default-resources:
   slurm_partition: "interactive"
   slurm_account: "default"
-  runtime: 240
+  runtime: 240 # TODO change to batch or mpi partition and 4320 min
   mem_mb: 32000
   cpus_per_task: 12
-  slurm_extra: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
+
+set-resources:
+  datasets_download_genome:
+    slurm_extra: ?"'--job-name datasets_download_genome '" + mail
+  unzip_genome:
+    slurm_extra: ?"'--job-name unzip_genome '" + mail
+  salmon_decoys:
+    slurm_extra: ?"'--job-name salmon_decoys '" + mail

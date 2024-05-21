@@ -1,9 +1,8 @@
-name: tucca-rna-seq
+name: tucca-rna-seq-dev
 channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bedtools
-  - biopython
-  - snakefmt
-  - unzip
+  - snakemake=8.11.3
+  - yte=1.5.4
+  - snakefmt=0.10.2
