@@ -24,3 +24,9 @@ set-resources:
     job-name: "'unzip_genome'"
   salmon_decoys:
     job-name: "'salmon_decoys'"
+  salmon_index:
+    job-name: "'salmon_index'"
+  create_gtf:
+    job-name: "'create_gtf'"
+  star_index:
+    job-name: "'star_index'"
