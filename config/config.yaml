@@ -1,3 +1,10 @@
+# path or URL to sample sheet (TSV format, columns: sample, condition, ...)
+samples: config/samples.tsv
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
+# Units are technical replicates (e.g. lanes, or resequencing of the same biological
+# sample).
+units: config/units.tsv
+
 ncbi_genome_accession: GCF_002263795.3
 ncbi_genome_api_key:
 salmon_index_kmer_len: 31
