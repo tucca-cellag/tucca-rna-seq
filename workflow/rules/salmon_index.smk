@@ -18,10 +18,6 @@
 
 rule salmon_index:
     input:
-        sequences=expand(
-            "results/datasets/ncbi_dataset/data/{genome}/rna.fna",
-            genome=config["ncbi_genome_accession"],
-        )[0],
         gentrome="results/salmon/gentrome.fasta.gz",
         decoys="results/salmon/decoys.txt",
     output:
