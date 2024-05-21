@@ -40,7 +40,7 @@ rule star_index:
     conda:
         "../envs/star.yaml"
     log:
-        "logs/star_index_{genome}.log",
+        "logs/star_index_{genome}.log".format(genome=config["ncbi_genome_accession"]),
     params:
         sjdbOverhang=149,
     resources:
