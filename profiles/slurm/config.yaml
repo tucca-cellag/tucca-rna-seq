@@ -3,7 +3,7 @@ jobs: 100
 conda-frontend: conda
 sdm: conda
 default-resources:
-  slurm_partition: "batch"
+  slurm_partition: "mpi"
   slurm_account: "default"
   runtime: 4320
   mem_mb: 32000
