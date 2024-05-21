@@ -54,7 +54,7 @@ rule salmon_index:
         """
         (# Index the concatenated transcriptome and genome
         salmon index -t {input.gentrome} \
-        -i results/salmon/transcriptome_index/salmon_index_k{params.kmer_len} \
+        -i results/salmon/transcriptome_index \
         -d {input.decoys} \
         -p {threads} \
         -k {params.kmer_len}) &> {log}
