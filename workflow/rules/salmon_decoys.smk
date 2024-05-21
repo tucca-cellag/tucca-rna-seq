@@ -1,5 +1,22 @@
 import glob
 
+# Why do this?
+# See the note on mapping using selective alignment here:
+# https://salmon.readthedocs.io/en/latest/salmon.html
+
+# TLDR
+# "we recommend using selective alignment with a decoy-aware transcriptome, to
+# mitigate potential spurious mapping of reads that actually arise from some
+# unannotated genomic locus that is sequence-similar to an annotated
+# transcriptome."
+
+# For more information on this see the documentation for Salmon
+# https://github.com/COMBINE-lab/salmon
+# https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode
+# https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
+# Thread on "How does salmon deal with decoy?"
+# https://www.biostars.org/p/456231/
+
 
 rule salmon_decoys:
     input:
@@ -22,21 +39,12 @@ rule salmon_decoys:
         "../envs/salmon.yaml"
     log:
         "logs/salmon/decoys.log",
-    params:
-        kmer_len=31,
     shell:
         """
         (# Preparing decoy metadata (the full genome is used as decoy)
         grep \"^>\" {input.genome} | cut -d \" \" -f 1 > {output.decoys}
         sed -i.bak -e \'s/>//g\' {output.decoys}
 
-        # Concatenate genome to end of transcriptome to make reference file for index
-        cat {input.transcriptome} {input.genome} > {output.gentrome}
-
-        # Index the concatenated transcriptome and genome
-        salmon index -t {output.gentrome} \
-        -i salmon_index_k{params.kmer_len} \
-        -d {output.decoys} \
-        -p {threads} \
-        -k {params.kmer_len}) &> {log}
+        # Concatenate genome to end of transcriptome to make ref file for index
+        cat {input.transcriptome} {input.genome} > {output.gentrome}) &> {log}
         """
