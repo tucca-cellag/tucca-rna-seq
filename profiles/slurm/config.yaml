@@ -5,7 +5,7 @@ sdm: conda
 default-resources:
   slurm_partition: "interactive"
   slurm_account: "default"
-  runtime: 4320
+  runtime: 240
   mem_mb: 32000
   cpus_per_task: 12
   slurm_extra: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
