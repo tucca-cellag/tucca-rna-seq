@@ -3,7 +3,11 @@ import glob
 
 rule datasets_download_genome:
     output:
-        temp("ncbi_dataset_{genome}.zip".format(genome=config["ncbi_genome_accession"])),
+        temp(
+            "ncbi_dataset_{genome}.zip".format(
+                genome=config["ref"]["ncbi_genome_accession"]
+            )
+        ),
     params:
         genome_accession=config["ref"]["ncbi_genome_accession"],
         api_key=config["api_keys"]["ncbi"],
