@@ -19,15 +19,15 @@ default-resources:
 
 set-resources:
   datasets_download_genome:
-    job-name: "'datasets_download_genome'"
+    slurm_extra: "'--job-name=datasets_download_genome --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   unzip_genome:
-    job-name: "'unzip_genome'"
+    slurm_extra: "'--job-name=unzip_genome --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   salmon_decoys:
-    job-name: "'salmon_decoys'"
+    slurm_extra: "'--job-name=salmon_decoys --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   salmon_index:
-    job-name: "'salmon_index'"
+    slurm_extra: "'--job-name=salmon_index --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   create_gtf:
-    job-name: "'create_gtf'"
+    slurm_extra: "'--job-name=create_gtf --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   star_index:
-    job-name: "'star_index'"
+    slurm_extra: "'--job-name=star_index --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
     mem_mb: 64000
