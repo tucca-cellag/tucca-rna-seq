@@ -1,3 +1,4 @@
+name: ncbi_datasets_cli
 channels:
   - conda-forge
 dependencies:

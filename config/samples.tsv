@@ -1,7 +1,7 @@
-sample_name	cell_type
-A	primary_iso_3
-B	primary_iso_3
-C	primary_iso_3
-D	CriBSC2
-E	CriBSC2
-F	CriBSC2
+sample_name	cell_type	treatment_1	treatment_2	sequencing_batch
+A	BSC_iso_3	primary	NA	1
+B	BSC_iso_3	primary	NA	1
+C	BSC_iso_3	primary	NA	1
+D	CriBSC2	ko	NA	2
+E	CriBSC2	ko	NA	2
+F	CriBSC2	ko	NA	2

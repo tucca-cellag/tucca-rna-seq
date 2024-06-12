@@ -1,3 +1,4 @@
+name: salmon
 channels:
   - conda-forge
   - bioconda

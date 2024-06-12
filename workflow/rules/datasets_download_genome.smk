@@ -5,8 +5,8 @@ rule datasets_download_genome:
     output:
         temp("ncbi_dataset_{genome}.zip".format(genome=config["ncbi_genome_accession"])),
     params:
-        genome_accession=config["ncbi_genome_accession"],
-        api_key=config["ncbi_genome_api_key"],
+        genome_accession=config["ref"]["ncbi_genome_accession"],
+        api_key=config["api_keys"]["ncbi"],
     conda:
         "../envs/ncbi_datasets_cli.yaml"
     log:
@@ -22,7 +22,9 @@ rule datasets_download_genome:
 
 rule unzip_genome:
     input:
-        "ncbi_dataset_{genome}.zip".format(genome=config["ncbi_genome_accession"]),
+        "ncbi_dataset_{genome}.zip".format(
+            genome=config["ref"]["ncbi_genome_accession"]
+        ),
     output:
         multiext(
             "results/datasets/",
@@ -35,7 +37,7 @@ rule unzip_genome:
         ),
         multiext(
             "results/datasets/ncbi_dataset/data/{genome}/".format(
-                genome=config["ncbi_genome_accession"]
+                genome=config["ref"]["ncbi_genome_accession"]
             ),
             "genomic.gff",
             "rna.fna",
@@ -48,10 +50,10 @@ rule unzip_genome:
                 "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
                 + "*"
                 + "_genomic.fna"
-            ).format(genome=config["ncbi_genome_accession"])
+            ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     params:
-        genome=config["ncbi_genome_accession"],
+        genome=config["ref"]["ncbi_genome_accession"],
     log:
         "logs/datasets/unzip_genome.log",
     shell:

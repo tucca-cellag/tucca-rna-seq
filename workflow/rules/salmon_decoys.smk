@@ -22,14 +22,14 @@ rule salmon_decoys:
     input:
         transcriptome=expand(
             "results/datasets/ncbi_dataset/data/{genome}/rna.fna",
-            genome=config["ncbi_genome_accession"],
+            genome=config["ref"]["ncbi_genome_accession"],
         )[0],
         genome=glob.glob(
             (
                 "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
                 + "*"
                 + "_genomic.fna"
-            ).format(genome=config["ncbi_genome_accession"])
+            ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     output:
         gentrome="results/salmon/gentrome.fasta.gz",

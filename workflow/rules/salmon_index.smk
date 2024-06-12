@@ -45,7 +45,7 @@ rule salmon_index:
     log:
         "logs/salmon/transcriptome_index.log",
     params:
-        kmer_len=config["salmon_index_kmer_len"],
+        kmer_len=config["params"]["salmon_index"]["kmer_len"],
     shell:
         """
         (# Index the concatenated transcriptome and genome

@@ -3,7 +3,7 @@
 # Update the repository
 git pull
 
-# Create symlink to raw_data directory if not already made
+# Create symlink to bbromb01/raw_data directory if not already made
 if [ ! -L data/raw_data ]; then
   ln -s /cluster/tufts/kaplanlab/bbromb01/raw_data data/raw_data
 fi

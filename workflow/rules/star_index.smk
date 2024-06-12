@@ -8,15 +8,15 @@ rule star_index:
                 "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
                 + "*"
                 + "_genomic.fna"
-            ).format(genome=config["ncbi_genome_accession"])
+            ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
         genome_gtf="results/datasets/ncbi_dataset/data/{genome}/genomic.gtf".format(
-            genome=config["ncbi_genome_accession"]
+            genome=config["ref"]["ncbi_genome_accession"]
         ),
     output:
         directory(
             "results/star/{genome}_index/".format(
-                genome=config["ncbi_genome_accession"]
+                genome=config["ref"]["ncbi_genome_accession"]
             )
         ),
     threads: 12
@@ -25,7 +25,7 @@ rule star_index:
     log:
         "logs/star/star_index.log",
     params:
-        sjdbOverhang=config["star_index_sjdbOverhang"],
+        sjdbOverhang=config["params"]["star_index"]["sjdbOverhang"],
     shell:
         """
         (STAR --runThreadN {threads} \
