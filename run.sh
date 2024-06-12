@@ -18,5 +18,4 @@ source activate snakemake
 
 # Run snakemake pipeline
 snakemake star_index \
-  --workflow-profile profiles/slurm \
-  -np
+  --workflow-profile profiles/slurm
