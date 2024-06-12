@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Ensure the script is called with at least one argument
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <target_rule> [additional_params...]"
+  exit 1
+fi
+
+TARGET_RULE=$1
+shift       # Shift the command-line arguments to the left, so $2 becomes $1, $3 becomes $2, and so on
+PARAMS="$@" # Capture all remaining arguments
+
 # Update the repository
 git pull
 
@@ -17,5 +27,5 @@ source activate base
 source activate snakemake
 
 # Run snakemake pipeline
-snakemake star_index \
+snakemake $TARGET_RULE $PARAMS \
   --workflow-profile profiles/slurm
