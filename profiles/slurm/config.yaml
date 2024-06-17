@@ -10,24 +10,13 @@ jobs: 100
 conda-frontend: conda
 sdm: conda
 default-resources:
-  slurm_partition: "interactive"
+  slurm_partition: "batch"
   slurm_account: "default"
-  runtime: 240 # TODO change to batch or mpi partition and 4320 min
+  runtime: 4320 # TODO change to batch or mpi partition and 4320 min
   mem_mb: 32000
   cpus_per_task: 12
   slurm_extra: ?mail
 
 set-resources:
-  datasets_download_genome:
-    slurm_extra: "'--job-name=datasets_download_genome --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
-  unzip_genome:
-    slurm_extra: "'--job-name=unzip_genome --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
-  salmon_decoys:
-    slurm_extra: "'--job-name=salmon_decoys --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
-  salmon_index:
-    slurm_extra: "'--job-name=salmon_index --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
-  create_gtf:
-    slurm_extra: "'--job-name=create_gtf --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
   star_index:
-    slurm_extra: "'--job-name=star_index --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
     mem_mb: 64000
