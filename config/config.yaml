@@ -12,8 +12,8 @@ ref:
   ncbi_genome_accession: GCF_002263795.3
 
 diffexp:
-  # variables for whom you are interested in whether they have an effect on
-  # expression levels
+  # variables for which you would like to determine whether or not they have an
+  # effect on expression levels
   variables_of_interest:
     treatment_1:
       # any fold change will be relative to this factor level
