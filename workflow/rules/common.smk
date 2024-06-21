@@ -68,9 +68,6 @@ def get_final_output(sample):
     return final_output
 
 
-print(get_final_output())
-
-
 """ 
 def get_strandedness(units):
     if "strandedness" in units.columns:
