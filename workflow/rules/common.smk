@@ -68,7 +68,7 @@ def get_final_output(sample):
     return final_output
 
 
-print(final_output)
+print(get_final_output())
 
 
 """ 
