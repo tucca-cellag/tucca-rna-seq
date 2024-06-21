@@ -27,7 +27,10 @@ include: "rules/fastqc.smk"
 # include: "rules/qualimap.smk"
 # include: "rules/salmon_quant.smk"
 # include: "rules/multiqc.smk"
+
 ##### target rules #####
-# rule all:
-#    input:
-#        "results/...",
+
+
+rule all:
+    input:
+        "results/...",
