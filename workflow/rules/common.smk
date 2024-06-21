@@ -62,7 +62,7 @@ def get_final_output(wildcards):
     final_output.extend(
         expand(
             ["results/fastqc/{sample}.html", "results/fastqc/{sample}_fastqc.zip"],
-            sample=sample,
+            sample=wildcards.sample,
         )
     )
     return final_output
