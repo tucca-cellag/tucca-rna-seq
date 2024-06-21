@@ -33,4 +33,5 @@ include: "rules/fastqc.smk"
 
 rule all:
     input:
-        "results/fastqc/...",
+        expand("results/fastqc/{sample}.html", wildcards.sample),
+        expand("results/fastqc/{sample}_fastqc.zip", wildcards.sample),
