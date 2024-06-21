@@ -13,8 +13,6 @@ samples = (
 
 # validate(samples, schema="../schemas/samples.schema.yaml")
 
-print(samples)
-
 units = (
     pd.read_csv(config["units"], sep="\t", dtype={"sample_name": str, "unit_name": str})
     .set_index(["sample_name", "unit_name"], drop=False)
@@ -27,6 +25,11 @@ units = (
 wildcard_constraints:
     sample="|".join(samples["sample_name"]),
     unit="|".join(units["unit_name"]),
+
+
+print(sample)
+print(unit)
+print(wildcard_constraints)
 
 
 def is_paired_end(sample):
