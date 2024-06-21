@@ -1,6 +1,8 @@
 import glob
 import pandas as pd
 
+####### load config and sample sheets #######
+
 # from snakemake.utils import validate
 
 # validate(config, schema="../schemas/config.schema.yaml")
@@ -22,9 +24,15 @@ units = (
 # validate(units, schema="../schemas/units.schema.yaml")
 
 
+####### wildcard constraints #######
+
+
 wildcard_constraints:
     sample="|".join(samples["sample_name"]),
     unit="|".join(units["unit_name"]),
+
+
+####### helper functions #######
 
 
 def get_fq(wildcards):
@@ -54,7 +62,7 @@ def get_final_output(wildcards):
     final_output.extend(
         expand(
             ["results/fastqc/{sample}.html", "results/fastqc/{sample}_fastqc.zip"],
-            sample=wildcards.sample,
+            **wildcards,
         )
     )
     return final_output
