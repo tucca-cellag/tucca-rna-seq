@@ -33,4 +33,4 @@ include: "rules/fastqc.smk"
 
 rule all:
     input:
-        "results/...",
+        "results/fastqc/...",
