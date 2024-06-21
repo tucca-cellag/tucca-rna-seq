@@ -27,16 +27,18 @@ wildcard_constraints:
     unit="|".join(units["unit_name"]),
 
 
-print(sample)
-print(unit)
-print(wildcard_constraints)
+def get_fq(wildcards):
+    u = units.loc[(wildcards.sample, wildcards.unit)]
+    if not is_paired_end(wildcards.sample):
+        return {"fq1": f"{u.fq1}"}
+    else:
+        return {"fq1": f"{u.fq1}", "fq2": f"{u.fq2}"}
 
 
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()
-    sra_null = sample_units["sra"].isnull()
-    paired = ~fq2_null | ~sra_null
+    paired = ~fq2_null
     all_paired = paired.all()
     all_single = (~paired).all()
     assert (
@@ -47,27 +49,16 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_fq(wildcards):
-    u = units.loc[(wildcards.sample, wildcards.unit)]
-    if pd.isna(u["fq1"]):
-        # SRA sample (always paired-end for now)
-        accession = u["sra"]
-        return dict(
-            zip(
-                ["fq1", "fq2"],
-                expand(
-                    "sra/{accession}_{group}.fastq",
-                    accession=accession,
-                    group=["R1", "R2"],
-                ),
-            )
-        )
-    if not is_paired_end(wildcards.sample):
-        return {"fq1": f"{u.fq1}"}
-    else:
-        return {"fq1": f"{u.fq1}", "fq2": f"{u.fq2}"}
+def get_final_output():
+    final_output = expand(
+        "results/fastqc/{sample}.html",
+        "results/fastqc/{sample}_fastqc.zip",
+        sample=samples["sample_name"],
+    )
+    return final_output
 
 
+""" 
 def get_strandedness(units):
     if "strandedness" in units.columns:
         return units["strandedness"].tolist()
@@ -89,4 +80,4 @@ def get_bioc_species_name():
 
 
 def get_contrast(wildcards):
-    return config["diffexp"]["contrasts"][wildcards.contrast]
+    return config["diffexp"]["contrasts"][wildcards.contrast] """

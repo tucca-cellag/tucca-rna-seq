@@ -33,5 +33,4 @@ include: "rules/fastqc.smk"
 
 rule all:
     input:
-        expand("results/fastqc/{sample}.html", sample),
-        expand("results/fastqc/{sample}_fastqc.zip", sample),
+        get_final_output(),
