@@ -57,7 +57,7 @@ def is_paired_end(sample):
     return all_paired
 
 
-print(sample)
+print(wildcards)
 
 
 def get_final_output(sample):
