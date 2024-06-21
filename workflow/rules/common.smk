@@ -57,12 +57,12 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_final_output(wildcards):
+def get_final_output(sample):
     final_output = []
     final_output.extend(
         expand(
             ["results/fastqc/{sample}.html", "results/fastqc/{sample}_fastqc.zip"],
-            **wildcards,
+            sample=sample,
         )
     )
     return final_output
