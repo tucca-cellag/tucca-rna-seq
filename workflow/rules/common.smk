@@ -57,15 +57,18 @@ def is_paired_end(sample):
     return all_paired
 
 
+print(sample)
+
+
 def get_final_output(sample):
-    """final_output = []
+    final_output = []
     final_output.extend(
         expand(
             ["results/fastqc/{sample}.html", "results/fastqc/{sample}_fastqc.zip"],
             sample=sample,
         )
-    )"""
-    return print(sample)""" final_output """
+    )
+    return final_output
 
 
 """ 
