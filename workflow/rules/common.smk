@@ -57,7 +57,7 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_final_output(samples):
+def get_final_output(samples=samples):
     final_output = []
     final_output.extend(
         expand(
