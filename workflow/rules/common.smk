@@ -57,7 +57,7 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_final_output(samples=samples, units=units):
+def get_final_output(wildcards, samples=samples):
     final_output = []
     final_output.extend(
         expand(
@@ -65,7 +65,7 @@ def get_final_output(samples=samples, units=units):
                 "results/fastqc/{sample}-{unit}.html",
                 "results/fastqc/{sample}-{unit}_fastqc.zip",
             ],
-            unit=units.index,
+            unit=wildcards.unit,
             sample=samples.index,
         )
     )
