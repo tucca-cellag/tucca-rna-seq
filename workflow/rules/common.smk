@@ -57,7 +57,7 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_final_output(wildcards):
+""" def get_final_output(wildcards):
     final_output = []
     final_output.extend(
         expand(
@@ -69,7 +69,7 @@ def get_final_output(wildcards):
             unit=wildcards.unit,
         )
     )
-    return final_output
+    return final_output """
 
 
 """ 
