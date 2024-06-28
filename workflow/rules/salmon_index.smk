@@ -44,8 +44,6 @@ rule salmon_index:
         "../envs/salmon.yaml"
     log:
         "logs/salmon/transcriptome_index.log",
-    params:
-        kmer_len=config["params"]["salmon_index"]["kmer_len"],
     shell:
         """
         (# Index the concatenated transcriptome and genome
@@ -53,5 +51,5 @@ rule salmon_index:
         -i results/salmon/transcriptome_index \
         -d {input.decoys} \
         -p {threads} \
-        -k {params.kmer_len}) &> {log}
+        -k {config["params"]["salmon_index"]["kmer_len"]}) &> {log}
         """

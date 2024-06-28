@@ -56,8 +56,6 @@ rule unzip_genome:
                 + "_genomic.fna"
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
-    params:
-        genome=config["ref"]["ncbi_genome_accession"],
     log:
         "logs/datasets/unzip_genome.log",
     shell:

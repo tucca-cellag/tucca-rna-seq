@@ -24,8 +24,6 @@ rule star_index:
         "../envs/star.yaml"
     log:
         "logs/star/star_index.log",
-    params:
-        sjdbOverhang=config["params"]["star_index"]["sjdbOverhang"],
     shell:
         """
         (STAR --runThreadN {threads} \
@@ -33,5 +31,5 @@ rule star_index:
         --genomeDir {output} \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
-        --sjdbOverhang {params.sjdbOverhang}) &> {log}
+        --sjdbOverhang {config["params"]["star_index"]["sjdbOverhang"]}) &> {log}
         """

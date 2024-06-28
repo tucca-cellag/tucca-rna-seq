@@ -33,8 +33,6 @@ wildcard_constraints:
 
 
 ####### helper functions #######
-def test(wildcards):
-    return print(units.loc[(wildcards.sample, wildcards.unit)])
 
 
 def get_fq(wildcards):
