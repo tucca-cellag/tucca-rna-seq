@@ -57,6 +57,21 @@ def is_paired_end(sample):
     return all_paired
 
 
+def get_final_output():
+    final_output = []
+    final_output.extend(
+        expand(
+            [
+                "results/fastqc/{sample}_{unit}.html",
+                "results/fastqc/{sample}_{unit}_fastqc.zip",
+            ],
+            sample=samples.index,
+            unit=units.index.get_level_values("unit_name"),
+        )
+    )
+    return final_output
+
+
 """ 
 def get_strandedness(units):
     if "strandedness" in units.columns:

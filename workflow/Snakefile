@@ -33,11 +33,4 @@ include: "rules/fastqc.smk"
 
 rule all:
     input:
-        expand(
-            [
-                "results/fastqc/{sample}_{unit}.html",
-                "results/fastqc/{sample}_{unit}_fastqc.zip",
-            ],
-            sample=samples.index,
-            unit=units.index.get_level_values("unit_name"),
-        ),
+        get_final_output(),
