@@ -2,10 +2,13 @@ rule fastqc:
     input:
         unpack(get_fq),
     output:
-        "results/fastqc/{sample}{unit}_R1_001.html",
-        "results/fastqc/{sample}{unit}_R1_001_fastqc.zip",
-        "results/fastqc/{sample}{unit}_R2_001.html",
-        "results/fastqc/{sample}{unit}_R2_001_fastqc.zip",
+        expand(
+            [
+                "results/fastqc/{sample}-{unit}_R{rep}_001.html",
+                "results/fastqc/{sample}-{unit}_R{rep}_001_fastqc.zip",
+            ],
+            rep=[1, 2],
+        ),
     params:
         extra="--quiet",
     threads: 1
@@ -14,7 +17,7 @@ rule fastqc:
     conda:
         "../envs/fastqc.yaml"
     log:
-        "logs/fastqc/{sample}{unit}.log",
+        "logs/fastqc/{sample}-{unit}.log",
     shell:
         """
         (fastqc --threads {threads} --memory {resources.mem_mb} {params.extra} \
