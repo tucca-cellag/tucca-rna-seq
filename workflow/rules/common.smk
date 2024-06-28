@@ -65,7 +65,7 @@ def get_final_output(samples=samples, units=units):
                 "results/fastqc/{sample}-{unit}.html",
                 "results/fastqc/{sample}-{unit}_fastqc.zip",
             ],
-            units=units.index,
+            unit=units.index,
             sample=samples.index,
         )
     )
