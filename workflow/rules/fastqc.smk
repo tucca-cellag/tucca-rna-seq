@@ -2,8 +2,8 @@ rule fastqc:
     input:
         unpack(get_fq),
     output:
-        html="results/fastqc/{sample}.html",
-        zip="results/fastqc/{sample}_fastqc.zip",
+        html="results/fastqc/{sample}-{unit}.html",
+        zip="results/fastqc/{sample}-{unit}_fastqc.zip",
     params:
         extra="--quiet",
     threads: 1

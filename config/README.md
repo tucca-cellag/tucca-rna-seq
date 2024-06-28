@@ -51,7 +51,8 @@ thank you.
 
 ## Unit Sheet (`units.tsv`)
 
-For each sample, add one or more sequencing unit lines (runs, lanes or replicates) to the unit sheet in `config/units.tsv`.
+For each sample, add one or more sequencing unit lines (runs, lanes or
+replicates) to the unit sheet in `config/units.tsv`.
 
 ### `.fastq` file source
 
