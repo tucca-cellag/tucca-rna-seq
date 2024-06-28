@@ -63,7 +63,7 @@ def get_final_output(samples=samples, units=units):
         expand(
             [
                 "results/fastqc/{sample}_{unit}.html",
-                "results/fastqc/{sample}_{unit}_fastqc.zip",
+                "results/fastqc/{sample}_{unit}_fastqc.zip"
             ]
             sample=samples.index,
         )
