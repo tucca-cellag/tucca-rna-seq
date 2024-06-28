@@ -31,6 +31,13 @@ include: "rules/fastqc.smk"
 ##### target rules #####
 
 
-""" rule all:
+rule all:
     input:
-        get_final_output(), """
+        expand(
+            [
+                "results/fastqc/{sample}_{unit}.html",
+                "results/fastqc/{sample}_{unit}_fastqc.zip",
+            ],
+            sample=wildcards.sample,
+            unit=wildcards.unit,
+        ),

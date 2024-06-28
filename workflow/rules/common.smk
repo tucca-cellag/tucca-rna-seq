@@ -57,21 +57,6 @@ def is_paired_end(sample):
     return all_paired
 
 
-""" def get_final_output(wildcards):
-    final_output = []
-    final_output.extend(
-        expand(
-            [
-                "results/fastqc/{sample}_{unit}.html",
-                "results/fastqc/{sample}_{unit}_fastqc.zip",
-            ],
-            sample=wildcards.sample,
-            unit=wildcards.unit,
-        )
-    )
-    return final_output """
-
-
 """ 
 def get_strandedness(units):
     if "strandedness" in units.columns:
