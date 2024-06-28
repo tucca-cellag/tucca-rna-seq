@@ -31,11 +31,11 @@ include: "rules/fastqc.smk"
 ##### target rules #####
 
 
-rule all:
-    input:
-        get_final_output(),
-
-
 rule test:
     input:
-        test(),
+        test,
+
+
+rule all:
+    input:
+        get_final_output,
