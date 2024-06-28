@@ -43,6 +43,9 @@ def get_fq(wildcards):
         return {"fq1": f"{u.fq1}", "fq2": f"{u.fq2}"}
 
 
+print(unpack(get_fq))
+
+
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()
