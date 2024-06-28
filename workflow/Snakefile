@@ -38,6 +38,6 @@ rule all:
                 "results/fastqc/{sample}_{unit}.html",
                 "results/fastqc/{sample}_{unit}_fastqc.zip",
             ],
-            sample=wildcards.sample,
-            unit=wildcards.unit,
+            sample=samples.index,
+            unit=units.index.get_level_values("unit_name"),
         ),
