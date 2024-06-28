@@ -35,7 +35,7 @@ wildcard_constraints:
 ####### helper functions #######
 
 
-def get_fq(wildcards):
+def get_fq(wildcards=wildcards):
     u = units.loc[(wildcards.sample, wildcards.unit)]
     if not is_paired_end(wildcards.sample):
         return {"fq1": f"{u.fq1}"}
