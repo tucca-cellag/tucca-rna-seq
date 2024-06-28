@@ -12,7 +12,7 @@ rule fastqc:
     conda:
         "../envs/fastqc.yaml"
     log:
-        "logs/fastqc/{sample}.log",
+        "logs/fastqc/{sample}-{unit}.log",
     shell:
         """
         (fastqc --threads {threads} --memory {resources.mem_mb} {params.extra} \
