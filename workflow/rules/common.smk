@@ -37,9 +37,6 @@ def test(wildcards):
     return print(units.loc[(wildcards.sample, wildcards.unit)])
 
 
-test()
-
-
 def get_fq(wildcards):
     u = units.loc[(wildcards.sample, wildcards.unit)]
     if not is_paired_end(wildcards.sample):
