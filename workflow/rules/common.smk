@@ -43,9 +43,6 @@ def get_fq(wildcards):
         return {"fq1": f"{u.fq1}", "fq2": f"{u.fq2}"}
 
 
-print(unpack(get_fq))
-
-
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()
@@ -60,12 +57,12 @@ def is_paired_end(sample):
     return all_paired
 
 
-def get_final_output(sample):
+def get_final_output(samples):
     final_output = []
     final_output.extend(
         expand(
             ["results/fastqc/{sample}.html", "results/fastqc/{sample}_fastqc.zip"],
-            sample=sample,
+            sample=samples.index,
         )
     )
     return final_output
