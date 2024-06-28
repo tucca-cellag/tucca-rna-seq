@@ -33,4 +33,4 @@ include: "rules/fastqc.smk"
 
 rule all:
     input:
-        get_final_output,
+        get_final_output(),
