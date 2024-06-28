@@ -59,14 +59,16 @@ def is_paired_end(sample):
 
 def get_final_output():
     final_output = []
+    # fastqc output results
     final_output.extend(
         expand(
             [
-                "results/fastqc/{sample}_{unit}.html",
-                "results/fastqc/{sample}_{unit}_fastqc.zip",
+                "results/fastqc/{sample}{unit}_R{rep}_001.html",
+                "results/fastqc/{sample}{unit}_R{rep}_001_fastqc.zip",
             ],
             sample=samples.index,
             unit=units.index.get_level_values("unit_name"),
+            rep=[1, 2],
         )
     )
     return final_output
