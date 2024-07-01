@@ -3,7 +3,7 @@ rule star_pe_multi:
         # use a list for multiple fastq files for one sample
         # usually technical replicates across lanes/flowcells
         # paired end reads needs to be ordered so each item in the two lists match
-        get_paired_reads(),
+        get_paired_reads,
         # path to STAR reference genome index
         idx="results/star/{genome}_index".format(
             genome=config["ref"]["ncbi_genome_accession"]
@@ -29,7 +29,7 @@ rule star_pe_multi:
 
 """ rule star_se:
     input:
-        fq1=get_fq_files(),
+        fq1=get_fq_files,
         # path to STAR reference genome index
         idx="results/star/{genome}_index".format(
             genome=config["ref"]["ncbi_genome_accession"]
