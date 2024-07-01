@@ -13,11 +13,8 @@ rule fastqc:
         "../envs/fastqc.yaml"
     log:
         "logs/fastqc/{sample}_{unit}_{read}.log",
-    run:
-        fq = input[0]
-        shell(
-            f"""
-            fastqc --threads {threads} --memory {resources.mem_mb} \
-            {params.extra} --outdir results/fastqc/ {fq} &> {log}
-            """
-        )
+    shell:
+        """
+        (fastqc --threads {threads} --memory {resources.mem_mb} \
+        {params.extra} --outdir results/fastqc/ {input}) &> {log}
+        """
