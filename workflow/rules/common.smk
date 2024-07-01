@@ -30,47 +30,67 @@ units = (
 wildcard_constraints:
     sample="|".join(samples["sample_name"]),
     unit="|".join(units["unit_name"]),
+    read="R1|R2",
 
 
 ####### helper functions #######
 
 
-def get_fq(wildcards):
-    u = units.loc[(wildcards.sample, wildcards.unit)]
-    if not is_paired_end(wildcards.sample):
-        return {"fq1": f"{u.fq1}"}
-    else:
-        return {"fq1": f"{u.fq1}", "fq2": f"{u.fq2}"}
-
-
 def is_paired_end(sample):
-    sample_units = units.loc[sample]
-    fq2_null = sample_units["fq2"].isnull()
-    paired = ~fq2_null
+    sample_units = units.loc[sample].dropna()
+    paired = sample_units["fq2"].notna()
     all_paired = paired.all()
     all_single = (~paired).all()
     assert (
         all_single or all_paired
-    ), "invalid units for sample {}, must be all paired end or all single end".format(
-        sample
-    )
+    ), "Mixed paired-end and single-end reads found for sample {}.".format(sample)
     return all_paired
+
+
+def get_fq_files(wildcards):
+    u = units.loc[(wildcards.sample, wildcards.unit)]
+    if wildcards.read == "R1":
+        return u.fq1
+    elif wildcards.read == "R2":
+        return u.fq2
+    else:
+        raise ValueError("Invalid read direction: {}".format(wildcards.read))
+
+
+def get_read_from_filename(filename, convention):
+    if convention == "standard":
+        if "_R1_" in filename:
+            return "R1"
+        elif "_R2_" in filename:
+            return "R2"
+    elif convention == "numeric":
+        if filename.endswith("_1.fq.gz"):
+            return "R1"
+        elif filename.endswith("_2.fq.gz"):
+            return "R2"
+    raise ValueError(
+        "Filename does not match any known read convention: {}".format(filename)
+    )
 
 
 def get_final_output():
     final_output = []
-    # fastqc output results
-    final_output.extend(
-        expand(
-            [
-                "results/fastqc/{sample}-{unit}_R{rep}_001.html",
-                "results/fastqc/{sample}-{unit}_R{rep}_001_fastqc.zip",
-            ],
-            sample=samples.index,
-            unit=units.index.get_level_values("unit_name"),
-            rep=[1, 2],
+    for index, row in units.iterrows():
+        convention = row["convention"]
+        read1_html = "results/fastqc/{}_{}_{}.html".format(
+            row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
         )
-    )
+        read2_html = "results/fastqc/{}_{}_{}.html".format(
+            row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
+        )
+        read1_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
+            row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
+        )
+        read2_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
+            row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
+        )
+
+        final_output.extend([read1_html, read2_html, read1_zip, read2_zip])
     return final_output
 
 
