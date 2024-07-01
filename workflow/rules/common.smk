@@ -94,6 +94,26 @@ def get_final_output():
     return final_output
 
 
+def get_paired_reads(wildcards):
+    """
+    Given a sample name, return a list of tuples containing paired reads.
+    """
+    sample_units = units.loc[wildcards.sample]
+
+    paired_reads = []
+    for unit_name, unit_info in sample_units.iterrows():
+        if is_paired_end(wildcards.sample):
+            paired_reads.append(
+                {"unit": unit_name, "fq1": unit_info.fq1, "fq2": unit_info.fq2}
+            )
+        else:
+            raise ValueError(
+                f"Single-end read encountered for sample {wildcards.sample}, unit {unit_name}. Paired-end reads are required."
+            )
+
+    return paired_reads
+
+
 """ 
 def get_strandedness(units):
     if "strandedness" in units.columns:

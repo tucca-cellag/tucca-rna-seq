@@ -21,9 +21,9 @@ include: "rules/salmon_index.smk"
 include: "rules/gffread.smk"
 include: "rules/star_index.smk"
 include: "rules/fastqc.smk"
+include: "rules/star.smk"
 
 
-# include: "rules/star.smk"
 # include: "rules/qualimap.smk"
 # include: "rules/salmon_quant.smk"
 # include: "rules/multiqc.smk"
