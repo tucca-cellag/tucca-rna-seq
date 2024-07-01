@@ -26,8 +26,8 @@ rule fastqc:
             base_name=$(basename "{input}" .fastq.gz)
         fi
         
-        html_output_name=${base_name}_fastqc.html
-        zip_output_name=${base_name}_fastqc.zip
+        html_output_name=${{base_name}}_fastqc.html
+        zip_output_name=${{base_name}}_fastqc.zip
         
         mv results/fastqc/$html_output_name {output.htmls}
         mv results/fastqc/$zip_output_name {output.zips}
