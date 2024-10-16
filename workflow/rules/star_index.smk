@@ -14,10 +14,26 @@ rule star_index:
             genome=config["ref"]["ncbi_genome_accession"]
         ),
     output:
-        directory(
+        multiext(
             "results/star/{genome}_index/".format(
                 genome=config["ref"]["ncbi_genome_accession"]
-            )
+            ),
+            "chrLength.txt",
+            "chrName.txt",
+            "chrNameLength.txt",
+            "chrStart.txt",
+            "exonGeTrInfo.tab",
+            "exonInfo.tab",
+            "geneInfo.tab",
+            "Genome",
+            "genomeParameters.txt",
+            "Log.out",
+            "SA",
+            "SAindex",
+            "sjdbInfo.txt",
+            "sjdbList.fromGTF.out.tab",
+            "sjdbList.out.tab",
+            "transcriptInfo.tab",
         ),
     threads: 12
     conda:
