@@ -6,11 +6,11 @@ rule star_pe_multi:
         ),
     output:
         # see STAR manual for additional output files
-        aln="results/star/pe/{sample}/pe_aligned.sam",
-        log="logs/pe/{sample}/Log.out",
-        sj="results/star/pe/{sample}/SJ.out.tab",
+        aln="results/star/pe/{sample}_{unit}_pe_aligned.sam",
+        log="logs/pe/{sample}_{unit}_Log.out",
+        sj="results/star/pe/{sample}_{unit}_SJ.out.tab",
     log:
-        "logs/pe/{sample}.log",
+        "logs/pe/{sample}_{unit}.log",
     params:
         "",
     threads: 12
@@ -18,10 +18,10 @@ rule star_pe_multi:
         "../envs/star.yaml"
     shell:
         """
-        STAR --runThreadN {threads} \
+        (STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {wildcards.fq1} {wildcards.fq2} \
-        --outFileNamePrefix results/star/{sample}_ \
+        --outFileNamePrefix results/star/{sample}_{unit}_ \
         --outSAMtype BAM SortedByCoordinate \
         --outSAMunmapped Within \
         --outSAMattributes Standard \
@@ -30,5 +30,5 @@ rule star_pe_multi:
         --outFilterScoreMinOverLread 0 \
         --outFilterMatchNminOverLread 0 \
         --alignIntronMin 1 \
-        --alignIntronMax 2500
+        --alignIntronMax 2500) &> {log}
         """
