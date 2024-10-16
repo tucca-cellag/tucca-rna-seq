@@ -272,49 +272,18 @@ def get_final_output():
     final_output = []
     for index, row in units.iterrows():
         convention = row["convention"]
-        read1_html = "results/fastqc/{}_{}_{}.html".format(
+        read1_fq_html = "results/fastqc/{}_{}_{}.html".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
         )
-        read2_html = "results/fastqc/{}_{}_{}.html".format(
+        read2_fq_html = "results/fastqc/{}_{}_{}.html".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
-        read1_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
+        read1_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
         )
-        read2_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
+        read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
 
-        final_output.extend([read1_html, read2_html, read1_zip, read2_zip])
+        final_output.extend([read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip])
     return final_output
-
-
-def genome_files_exist(genome):
-    # List of files that should be present after unzipping the genome
-    required_files = [
-        multiext(
-            "results/datasets/",
-            "README.md",
-        ),
-        multiext(
-            "results/datasets/ncbi_dataset/data/",
-            "assembly_data_report.jsonl",
-            "dataset_catalog.json",
-        ),
-        multiext(
-            "results/datasets/ncbi_dataset/data/{genome}/".format(genome=genome),
-            "genomic.gff",
-            "rna.fna",
-            "cds_from_genomic.fna",
-            "protein.faa",
-            "sequence_report.jsonl",
-        ),
-    ]
-    genomic_fna_files = glob.glob(
-        "results/datasets/ncbi_dataset/data/{genome}/{genome}_*_genomic.fna".format(
-            genome=genome
-        )
-    )
-    required_files.extend(genomic_fna_files)
-
-    return all([os.path.exists(f) for f in required_files])
