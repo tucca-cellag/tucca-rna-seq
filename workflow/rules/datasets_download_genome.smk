@@ -3,10 +3,8 @@ import glob
 
 rule datasets_download_genome:
     output:
-        temp(
-            "ncbi_dataset_{genome}.zip".format(
-                genome=config["ref"]["ncbi_genome_accession"]
-            )
+        "ncbi_dataset_{genome}.zip".format(
+            genome=config["ref"]["ncbi_genome_accession"]
         ),
     params:
         genome_accession=config["ref"]["ncbi_genome_accession"],
@@ -17,12 +15,11 @@ rule datasets_download_genome:
         "logs/datasets/datasets_download_genome.log",
     shell:
         """
-        {params.genome_files_exist}() && echo "Genome files already exist. Skipping download." || (
-            datasets download genome accession {params.genome_accession} \
+        (datasets download genome accession {params.genome_accession} \
             --include gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
-            --filename {output} > {output}
-        ) &> {log}
+            --filename {output} > {output}) &> {log}
+        """
 
 
 rule unzip_genome:
