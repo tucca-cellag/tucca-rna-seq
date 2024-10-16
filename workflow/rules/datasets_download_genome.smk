@@ -1,5 +1,4 @@
 import glob
-from common import genome_files_exist
 
 
 rule datasets_download_genome:
