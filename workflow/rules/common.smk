@@ -227,9 +227,9 @@ def get_read_from_filename(filename, convention):
         elif "_R2_" in filename:
             return "R2"
     elif convention == "numeric":
-        if filename.endswith("_1.fq.gz" | "_1.fastq.gz"):
+        if filename.endswith("_1.fq.gz", "_1.fastq.gz"):
             return "R1"
-        elif filename.endswith("_2.fq.gz" | "_2.fastq.gz"):
+        elif filename.endswith("_2.fq.gz", "_2.fastq.gz"):
             return "R2"
     raise ValueError(
         "Filename does not match any known read convention: {}".format(filename)
