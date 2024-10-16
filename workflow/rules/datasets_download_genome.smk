@@ -15,19 +15,14 @@ rule datasets_download_genome:
         "../envs/ncbi_datasets_cli.yaml"
     log:
         "logs/datasets/datasets_download_genome.log",
-    run:
-        genome = config["ref"]["ncbi_genome_accession"]
-        if not genome_files_exist(genome):
-            shell(
-                """
-                (datasets download genome accession {params.genome_accession} \
-                --include gff3,rna,cds,protein,genome,seq-report \
-                --api-key {params.api_key} \
-                --filename {output} > {output}) &> {log}
-                """
-            )
-        else:
-            print("Genome files already exist. Skipping download.")
+    shell:
+        """
+        {params.genome_files_exist}() && echo "Genome files already exist. Skipping download." || (
+            datasets download genome accession {params.genome_accession} \
+            --include gff3,rna,cds,protein,genome,seq-report \
+            --api-key {params.api_key} \
+            --filename {output} > {output}
+        ) &> {log}
 
 
 rule unzip_genome:
