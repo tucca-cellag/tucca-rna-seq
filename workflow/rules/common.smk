@@ -270,6 +270,8 @@ def get_final_output():
     ]
     """
     final_output = []
+
+    # Ask for FastQC output files
     for index, row in units.iterrows():
         convention = row["convention"]
         read1_fq_html = "results/fastqc/{}_{}_{}.html".format(
