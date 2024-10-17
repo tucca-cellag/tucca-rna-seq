@@ -1,4 +1,4 @@
-rule star_pe_multi:
+rule star:
     input:
         get_paired_reads,
         star_index="results/star/{genome}_index".format(
