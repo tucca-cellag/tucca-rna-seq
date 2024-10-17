@@ -47,7 +47,7 @@ rule star_index:
         """
         (STAR --runThreadN {threads} \
         --runMode genomeGenerate \
-        --genomeDir {results/star/{params.genome}_index} \
+        --genomeDir results/star/{params.genome}_index \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
         --sjdbOverhang {params.sjdb_overhang}) &> {log}
