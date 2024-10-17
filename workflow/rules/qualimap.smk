@@ -17,7 +17,6 @@ rule qualimap_rnaseq:
         counting_alg=config["params"]["qualimap_rnaseq"]["counting_alg"],
         sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
         extra=config["params"]["qualimap_rnaseq"]["extra"],
-    threads: 12
     conda:
         "../envs/qualimap.yaml"
     log:
@@ -27,13 +26,12 @@ rule qualimap_rnaseq:
     shell:
         """
         unset DISPLAY
-        
+
         (qualimap rnaseq \
         -outdir results/qualimap/{wildcards.sample}_{wildcards.unit}.qualimap \
         -a {params.counting_alg} \
         -bam {input.bam} \
         -gtf {input.genome_gtf} \
         --sequencing-protocol {params.sequencing_protocol} \
-        -nt {threads} \
         {params.extra}) &> {log}
         """
