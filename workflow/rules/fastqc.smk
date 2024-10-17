@@ -5,7 +5,7 @@ rule fastqc:
         htmls="results/fastqc/{sample}_{unit}_{read}.html",
         zips="results/fastqc/{sample}_{unit}_{read}_fastqc.zip",
     params:
-        extra="--quiet",
+        extra=config["params"]["fastqc"]["extra"],
     threads: 1
     resources:
         mem_mb=1024,
@@ -15,6 +15,7 @@ rule fastqc:
         "logs/fastqc/{sample}_{unit}_{read}.log",
     shell:
         """
+        # Perform fastqc on each read
         fastqc --threads {threads} --memory {resources.mem_mb} \
         {params.extra} --outdir results/fastqc/ {input} &> {log}
         
