@@ -34,3 +34,9 @@ include: "rules/star.smk"
 rule all:
     input:
         get_final_output(),
+    message:
+        "RNA-seq pipeline run complete!"
+    shell:
+        """
+        cp config results/config_snapshot
+        """
