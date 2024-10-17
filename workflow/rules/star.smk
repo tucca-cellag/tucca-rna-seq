@@ -1,6 +1,6 @@
 rule star:
     input:
-        get_paired_reads,
+        reads=lambda wildcards: get_paired_reads(wildcards),
         star_index="results/star/{genome}_index".format(
             genome=config["ref"]["ncbi_genome_accession"]
         ),
@@ -35,9 +35,10 @@ rule star:
         "../envs/star.yaml"
     shell:
         """
+        set -x # activate debugging
         (STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
-        --readFilesIn {wildcards.fq1} {wildcards.fq2} \
+        --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
         --outFileNamePrefix results/star/{sample}_{unit}_ \
         --outSAMtype {params.outSAMtype} \
         --outSAMunmapped {params.outSAMunmapped} \
@@ -49,4 +50,5 @@ rule star:
         --alignIntronMin {params.alignIntronMin} \
         --alignIntronMax {params.alignIntronMax} \
         {params.extra}) &> {log}
+        set -x # deactivate debugging
         """
