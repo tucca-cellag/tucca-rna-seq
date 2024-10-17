@@ -13,6 +13,10 @@ rule datasets_download_genome:
         "../envs/ncbi_datasets_cli.yaml"
     log:
         "logs/datasets/datasets_download_genome.log",
+    message:
+        "Downloading genome for NCBI genome accession: {genome}".format(
+            genome=config["ref"]["ncbi_genome_accession"]
+        )
     shell:
         """
         (datasets download genome accession {params.genome_accession} \
@@ -57,6 +61,10 @@ rule unzip_genome:
         ),
     log:
         "logs/datasets/unzip_genome.log",
+    message:
+        "Unzipping genome for NCBI genome accession: {genome}".format(
+            genome=config["ref"]["ncbi_genome_accession"]
+        )
     shell:
         """
         (mkdir -p results/datasets

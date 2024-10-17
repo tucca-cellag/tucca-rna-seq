@@ -9,10 +9,10 @@ rule qualimap_rnaseq:
             "results/qualimap/{sample}_{unit}.qualimap/",
             "qualimapReport.html",
             "rnaseq_qc_results.txt",
-            directory("css"),
-            directory("images_qualimapReport"),
-            directory("raw_data_qualimapReport"),
         ),
+        directory("results/qualimap/{sample}_{unit}.qualimap/css"),
+        directory("results/qualimap/{sample}_{unit}.qualimap/images_qualimapReport"),
+        directory("results/qualimap/{sample}_{unit}.qualimap/raw_data_qualimapReport"),
     params:
         counting_alg=config["params"]["qualimap_rnaseq"]["counting_alg"],
         sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
