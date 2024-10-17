@@ -67,7 +67,7 @@ params:
     extra: ""
   qualimap_rnaseq:
     counting_alg: proportional
-    sequencing_protocol: non-strand-specific
+    sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"
 
 api_keys:

@@ -28,7 +28,7 @@ rule qualimap_rnaseq:
         unset DISPLAY
         (qualimap rnaseq \
         -outdir results/qualimap/{wildcards.sample}_{wildcards.unit}.qualimap \
-        --algorithm {params.counting_alg} \
+        -a {params.counting_alg} \
         -bam {input.bam} \
         -gtf {input.genome_gtf} \
         --sequencing-protocol {params.sequencing_protocol} \
