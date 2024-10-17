@@ -149,6 +149,7 @@ def get_paired_reads(wildcards):
                 """
             )
 
+    print(paired_reads)
     return paired_reads
 
 
