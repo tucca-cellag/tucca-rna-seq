@@ -84,7 +84,7 @@ def get_fq_files(wildcards):
     'sample1_unit1_R1.fastq.gz'
     """
     u = units.loc[(wildcards.sample, wildcards.unit)]
-    print(f"Getting fq files for {wildcards.sample} {wildcards.unit}")
+    # print(f"Getting fq files for {wildcards.sample} {wildcards.unit}")
     if wildcards.read == "R1":
         return u.fq1
     elif wildcards.read == "R2":
@@ -137,9 +137,9 @@ def get_paired_reads(wildcards):
     for unit_name, unit_info in sample_units.iterrows():
         if is_paired_end(wildcards.sample):
             paired_reads.extend([unit_info.fq1, unit_info.fq2])
-            print(
+            """ print(
                 f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={unit_info.fq1}, fq2={unit_info.fq2}"
-            )
+            ) """
         else:
             raise ValueError(
                 f"""
@@ -150,7 +150,7 @@ def get_paired_reads(wildcards):
                 """
             )
 
-    print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
+    # print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
     return paired_reads
 
 
@@ -335,16 +335,16 @@ def get_final_output():
             row.sample_name, row.unit_name
         )
 
-        print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
-        print(f"  FastQC HTML (R1): {read1_fq_html}")
-        print(f"  FastQC HTML (R2): {read2_fq_html}")
-        print(f"  FastQC ZIP (R1): {read1_fq_zip}")
-        print(f"  FastQC ZIP (R2): {read2_fq_zip}")
-        print(f"  BAM: {bam}")
+        # print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
+        # print(f"  FastQC HTML (R1): {read1_fq_html}")
+        # print(f"  FastQC HTML (R2): {read2_fq_html}")
+        # print(f"  FastQC ZIP (R1): {read1_fq_zip}")
+        # print(f"  FastQC ZIP (R2): {read2_fq_zip}")
+        # print(f"  BAM: {bam}")
 
         final_output.extend(
             [read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip, bam]
         )
 
-    print(f"Final output list: {final_output}")
+    # print(f"Final output list: {final_output}")
     return final_output
