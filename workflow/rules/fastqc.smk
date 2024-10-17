@@ -4,6 +4,8 @@ rule fastqc:
     output:
         htmls="results/fastqc/{sample}_{unit}_{read}.html",
         zips="results/fastqc/{sample}_{unit}_{read}_fastqc.zip",
+    message:
+        "Running FASTQC on {wildcards.sample} {wildcards.unit} {wildcards.read}"
     params:
         extra=config["params"]["fastqc"]["extra"],
     threads: 1
