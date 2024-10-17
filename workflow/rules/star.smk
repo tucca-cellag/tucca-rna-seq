@@ -5,12 +5,14 @@ rule star:
             genome=config["ref"]["ncbi_genome_accession"]
         ),
     output:
-        # see STAR manual for additional output files
-        "results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-        "results/star/{sample}_{unit}_Log.final.out",
-        "results/star/{sample}_{unit}_Log.out",
-        "results/star/{sample}_{unit}_Log.progress.out",
-        "results/star/{sample}_{unit}_SJ.out.tab",
+        multiext(
+            "results/star/",
+            "{sample}_{unit}_Aligned.sortedByCoord.out.bam",
+            "{sample}_{unit}_Log.final.out",
+            "{sample}_{unit}_Log.out",
+            "{sample}_{unit}_Log.progress.out",
+            "{sample}_{unit}_SJ.out.tab",
+        ),
     log:
         "logs/star/star_{sample}_{unit}.log",
     params:
