@@ -299,7 +299,7 @@ def get_final_output():
         print(f"  FastQC HTML (R2): {read2_fq_html}")
         print(f"  FastQC ZIP (R1): {read1_fq_zip}")
         print(f"  FastQC ZIP (R2): {read2_fq_zip}")
-        print(f"  BAM: {bam}")
+        # print(f"  BAM: {bam}")
 
         final_output.extend([read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip])
 
