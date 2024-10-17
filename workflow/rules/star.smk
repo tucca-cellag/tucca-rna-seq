@@ -1,6 +1,6 @@
 rule star:
     input:
-        reads=lambda wildcards: get_paired_reads(wildcards),
+        reads=get_paired_reads,
         star_index="results/star/{genome}_index".format(
             genome=config["ref"]["ncbi_genome_accession"]
         ),
