@@ -6,12 +6,12 @@ rule star:
         ),
     output:
         multiext(
-            "results/star/",
-            "{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-            "{sample}_{unit}_Log.final.out",
-            "{sample}_{unit}_Log.out",
-            "{sample}_{unit}_Log.progress.out",
-            "{sample}_{unit}_SJ.out.tab",
+            "results/star/{sample}_{unit}_",
+            "Aligned.sortedByCoord.out.bam",
+            "Log.final.out",
+            "Log.out",
+            "Log.progress.out",
+            "SJ.out.tab",
         ),
     log:
         "logs/star/star_{sample}_{unit}.log",
@@ -35,10 +35,10 @@ rule star:
         "../envs/star.yaml"
     shell:
         """
-        set -x # activate debugging
+        (set -x # activate debugging
         echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
         echo "inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
-        (STAR --runThreadN {threads} \
+        STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
         --outFileNamePrefix results/star/{sample}_{unit}_ \
@@ -51,6 +51,6 @@ rule star:
         --outFilterMatchNminOverLread {params.outFilterMatchNminOverLread} \
         --alignIntronMin {params.alignIntronMin} \
         --alignIntronMax {params.alignIntronMax} \
-        {params.extra}) &> {log}
-        set -x # deactivate debugging
+        {params.extra} \
+        set -x # deactivate debugging) &> {log}
         """
