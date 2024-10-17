@@ -241,6 +241,30 @@ def get_read_from_filename(filename, convention):
 
 
 def cp_config_to_res_dir():
+    """
+    Copy the contents of the 'config' directory to the
+    'results/last_run_config_snapshot' directory.
+
+    This function creates the 'results/last_run_config_snapshot' directory if
+    it does not already exist. It then iterates over all items in the 'config'
+    directory. For each item, it checks if the item is a directory or a file.
+    If it is a directory, it uses `shutil.copytree` to copy the entire directory
+    tree to the destination. If it is a file, it uses `shutil.copy2` to copy
+    the file to the destination.
+
+    The `dirs_exist_ok=True` parameter in `shutil.copytree` ensures that
+    existing directories are not overwritten, and the `exist_ok=True` parameter
+    in `os.makedirs` ensures that no error is raised if the directory already
+    exists.
+
+    Example:
+    >>> cp_config_to_res_dir()
+    This will copy all files and directories from 'config' to
+    'results/last_run_config_snapshot'.
+
+    Raises:
+    OSError: If an error occurs while creating the directory or copying files.
+    """
     os.makedirs("results/last_run_config_snapshot", exist_ok=True)
     for item in os.listdir("config"):
         s = os.path.join("config", item)
@@ -253,16 +277,17 @@ def cp_config_to_res_dir():
 
 def get_final_output():
     """
-    Generate a list of final output file paths for FastQC results based on the
-    units DataFrame.
+    Generate a list of final output file paths for FastQC results and BAM files
+    based on the units DataFrame.
 
     This function iterates over each row in the `units` DataFrame and constructs
     the paths for the FastQC HTML and ZIP files for both read 1 and read 2,
-    based on the naming convention specified in each row.
+    as well as the BAM file, based on the naming convention specified in
+    each row.
 
     Returns:
-    list: A list of strings representing the file paths for the FastQC HTML and
-            ZIP files.
+    list: A list of strings representing the file paths for the FastQC HTML,
+            ZIP files, and BAM files.
 
     Example:
     >>> units = pd.DataFrame({
@@ -278,10 +303,12 @@ def get_final_output():
         'results/fastqc/sample1_unit1_R2.html',
         'results/fastqc/sample1_unit1_R1_fastqc.zip',
         'results/fastqc/sample1_unit1_R2_fastqc.zip',
+        'results/star/sample1_unit1_Aligned.sortedByCoord.out.bam',
         'results/fastqc/sample2_unit2_R1.html',
         'results/fastqc/sample2_unit2_R2.html',
         'results/fastqc/sample2_unit2_R1_fastqc.zip',
-        'results/fastqc/sample2_unit2_R2_fastqc.zip'
+        'results/fastqc/sample2_unit2_R2_fastqc.zip',
+        'results/star/sample2_unit2_Aligned.sortedByCoord.out.bam'
     ]
     """
     # Copy config files to the results directory
