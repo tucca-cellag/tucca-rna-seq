@@ -41,13 +41,14 @@ diffexp:
   # If you want to introduce different assumptions into your model, you can
   # specify a different model to use, for example skipping the interaction:
   # model: ~jointly_handled + treatment_1 + treatment_2
-  model: ""
+  model:
 
 params:
   salmon_index:
-    kmer_len: "31"
+    kmer_len: 31
   star_index:
-    sjdbOverhang: "149"
+    sjdbOverhang: 149
+  star:
 
 api_keys:
   ncbi:
