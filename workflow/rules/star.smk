@@ -7,11 +7,11 @@ rule star:
     output:
         multiext(
             "results/star/",
-            "{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-            "{sample}_{unit}_Log.final.out",
-            "{sample}_{unit}_Log.out",
-            "{sample}_{unit}_Log.progress.out",
-            "{sample}_{unit}_SJ.out.tab",
+            "{sample}_Aligned.sortedByCoord.out.bam",
+            "{sample}_Log.final.out",
+            "{sample}_Log.out",
+            "{sample}_Log.progress.out",
+            "{sample}_SJ.out.tab",
         ),
     log:
         "logs/star/star_{sample}_{unit}.log",
