@@ -149,7 +149,7 @@ def get_paired_reads(wildcards):
                 """
             )
 
-    print(paired_reads)
+    print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
     return paired_reads
 
 
