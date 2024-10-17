@@ -12,7 +12,7 @@ rule star:
         "results/star/{sample}_{unit}_Log.progress.out",
         "results/star/{sample}_{unit}_SJ.out.tab",
     log:
-        "logs/{sample}_{unit}.log",
+        "logs/star/star_{sample}_{unit}.log",
     params:
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
