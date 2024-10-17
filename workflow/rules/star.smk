@@ -7,14 +7,14 @@ rule star:
     output:
         multiext(
             "results/star/",
-            "{sample}_Aligned.sortedByCoord.out.bam",
-            "{sample}_Log.final.out",
-            "{sample}_Log.out",
-            "{sample}_Log.progress.out",
-            "{sample}_SJ.out.tab",
+            "{sample}_{unit}_Aligned.sortedByCoord.out.bam",
+            "{sample}_{unit}_Log.final.out",
+            "{sample}_{unit}_Log.out",
+            "{sample}_{unit}_Log.progress.out",
+            "{sample}_{unit}_SJ.out.tab",
         ),
     log:
-        "logs/star/star_{sample}.log",
+        "logs/star/star_{sample}_{unit}.log",
     params:
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
@@ -36,7 +36,8 @@ rule star:
     shell:
         """
         set -x # activate debugging
-        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}"
+        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
+        echo "inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
         (STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
