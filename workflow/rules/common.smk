@@ -290,18 +290,20 @@ def get_final_output():
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
-        """ bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
+        bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
             row.sample_name, row.unit_name
-        ) """
+        )
 
         print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
         print(f"  FastQC HTML (R1): {read1_fq_html}")
         print(f"  FastQC HTML (R2): {read2_fq_html}")
         print(f"  FastQC ZIP (R1): {read1_fq_zip}")
         print(f"  FastQC ZIP (R2): {read2_fq_zip}")
-        # print(f"  BAM: {bam}")
+        print(f"  BAM: {bam}")
 
-        final_output.extend([read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip])
+        final_output.extend(
+            [read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip, bam]
+        )
 
     print(f"Final output list: {final_output}")
     return final_output
