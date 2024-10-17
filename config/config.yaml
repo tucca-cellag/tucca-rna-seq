@@ -44,11 +44,24 @@ diffexp:
   model:
 
 params:
+  fastqc:
+    extra: "--quiet"
   salmon_index:
     kmer_len: 31
   star_index:
     sjdbOverhang: 149
+    extra: ""
   star:
+    outSAMtype: "BAM SortedByCoordinate"
+    outSAMunmapped: Within
+    outSAMattributes: Standard
+    readFilesCommand: zcat
+    outFilterMultimapNmax: 1
+    outFilterScoreMinOverLread: 0
+    outFilterMatchNminOverLread: 0
+    alignIntronMin: 1
+    alignIntronMax: 2500
+    extra: ""
 
 api_keys:
   ncbi:

@@ -6,13 +6,26 @@ rule star_pe_multi:
         ),
     output:
         # see STAR manual for additional output files
-        aln="results/star/pe/{sample}_{unit}_pe_aligned.sam",
-        log="logs/pe/{sample}_{unit}_Log.out",
-        sj="results/star/pe/{sample}_{unit}_SJ.out.tab",
+        "results/star/{sample}_{unit}_pe_aligned.sam",
+        "star/{sample}_{unit}_Log.out",
+        "results/star/{sample}_{unit}_SJ.out.tab",
     log:
-        "logs/pe/{sample}_{unit}.log",
+        "logs/{sample}_{unit}.log",
     params:
-        "",
+        outSAMtype=config["params"]["star"]["outSAMtype"],
+        outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
+        outSAMattributes=config["params"]["star"]["outSAMattributes"],
+        readFilesCommand=config["params"]["star"]["readFilesCommand"],
+        outFilterMultimapNmax=config["params"]["star"]["outFilterMultimapNmax"],
+        outFilterScoreMinOverLread=config["params"]["star"][
+            "outFilterScoreMinOverLread"
+        ],
+        outFilterMatchNminOverLread=config["params"]["star"][
+            "outFilterMatchNminOverLread"
+        ],
+        alignIntronMin=config["params"]["star"]["alignIntronMin"],
+        alignIntronMax=config["params"]["star"]["alignIntronMax"],
+        extra=config["params"]["star"]["extra"],
     threads: 12
     conda:
         "../envs/star.yaml"
@@ -22,13 +35,14 @@ rule star_pe_multi:
         --genomeDir {input.star_index} \
         --readFilesIn {wildcards.fq1} {wildcards.fq2} \
         --outFileNamePrefix results/star/{sample}_{unit}_ \
-        --outSAMtype BAM SortedByCoordinate \
-        --outSAMunmapped Within \
-        --outSAMattributes Standard \
-        --readFilesCommand zcat \
-        --outFilterMultimapNmax 1 \
-        --outFilterScoreMinOverLread 0 \
-        --outFilterMatchNminOverLread 0 \
-        --alignIntronMin 1 \
-        --alignIntronMax 2500) &> {log}
+        --outSAMtype {params.outSAMtype} \
+        --outSAMunmapped {params.outSAMunmapped} \
+        --outSAMattributes {params.outSAMattributes} \
+        --readFilesCommand {params.readFilesCommand} \
+        --outFilterMultimapNmax {params.outFilterMultimapNmax} \
+        --outFilterScoreMinOverLread {params.outFilterScoreMinOverLread} \
+        --outFilterMatchNminOverLread {params.outFilterMatchNminOverLread} \
+        --alignIntronMin {params.alignIntronMin} \
+        --alignIntronMax {params.alignIntronMax} \
+        {params.extra}) &> {log}
         """
