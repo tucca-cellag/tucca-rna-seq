@@ -38,9 +38,9 @@ rule star:
         "../envs/star.yaml"
     shell:
         """
-        (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}" \
-        echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}" \
-        STAR --runThreadN {threads} \
+        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}" \
+        echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
+        (STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]} {input.reads[1]} \
         --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
