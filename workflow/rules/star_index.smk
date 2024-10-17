@@ -35,6 +35,8 @@ rule star_index:
             "sjdbList.out.tab",
             "transcriptInfo.tab",
         ),
+    params:
+        sjdbOverhang=config["params"]["star_index"]["sjdbOverhang"],
     threads: 12
     conda:
         "../envs/star.yaml"
@@ -47,5 +49,5 @@ rule star_index:
         --genomeDir {output} \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
-        --sjdbOverhang {config["params"]["star_index"]["sjdbOverhang"]}) &> {log}
+        --sjdbOverhang {params.sjdbOverhang}) &> {log}
         """
