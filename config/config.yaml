@@ -52,6 +52,8 @@ params:
     sjdbOverhang: 149
     extra: ""
   star:
+    # Note that this Snakemake pipeline is only built to make sure there are
+    # BAM SortedByCoordinate formatted outputs currently
     outSAMtype: "BAM SortedByCoordinate"
     outSAMunmapped: Within
     outSAMattributes: Standard
