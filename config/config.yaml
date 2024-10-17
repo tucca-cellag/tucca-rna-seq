@@ -48,7 +48,6 @@ params:
     kmer_len: 31
   star_index:
     sjdbOverhang: 149
-  star:
 
 api_keys:
   ncbi:
