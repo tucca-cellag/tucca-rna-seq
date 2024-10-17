@@ -44,7 +44,7 @@ rule star:
         STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
-        --outFileNamePrefix results/star/{sample}_{unit}_ \
+        --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
         --outSAMtype {params.outSAMtype} \
         --outSAMunmapped {params.outSAMunmapped} \
         --outSAMattributes {params.outSAMattributes} \
