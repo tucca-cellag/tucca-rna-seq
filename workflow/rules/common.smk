@@ -131,7 +131,6 @@ def get_paired_reads(wildcards):
     ]
     """
     sample_units = units.loc[wildcards.sample]
-    print(sample_units)
 
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
@@ -291,9 +290,9 @@ def get_final_output():
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
-        bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
+        """ bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
             row.sample_name, row.unit_name
-        )
+        ) """
 
         print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
         print(f"  FastQC HTML (R1): {read1_fq_html}")
@@ -302,9 +301,7 @@ def get_final_output():
         print(f"  FastQC ZIP (R2): {read2_fq_zip}")
         print(f"  BAM: {bam}")
 
-        final_output.extend(
-            [read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip, bam]
-        )
+        final_output.extend([read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip])
 
     print(f"Final output list: {final_output}")
     return final_output
