@@ -16,6 +16,8 @@ rule star:
         temp(directory("results/star/{sample}_{unit}__STARtmp")),
     log:
         "logs/star/star_{sample}_{unit}.log",
+    message:
+        "Mapping {wildcards.sample} {wildcards.unit} reads to genome"
     params:
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
