@@ -131,6 +131,7 @@ def get_paired_reads(wildcards):
     ]
     """
     sample_units = units.loc[wildcards.sample]
+    print(sample_units)
 
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
