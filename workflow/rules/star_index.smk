@@ -36,7 +36,8 @@ rule star_index:
             "transcriptInfo.tab",
         ),
     params:
-        sjdbOverhang=config["params"]["star_index"]["sjdbOverhang"],
+        genome=config["ref"]["ncbi_genome_accession"],
+        sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
     threads: 12
     conda:
         "../envs/star.yaml"
@@ -46,8 +47,8 @@ rule star_index:
         """
         (STAR --runThreadN {threads} \
         --runMode genomeGenerate \
-        --genomeDir {output} \
+        --genomeDir {results/star/{params.genome}_index} \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
-        --sjdbOverhang {params.sjdbOverhang}) &> {log}
+        --sjdbOverhang {params.sjdb_overhang}) &> {log}
         """
