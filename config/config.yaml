@@ -45,9 +45,9 @@ diffexp:
 
 params:
   salmon_index:
-    kmer_len: 31
+    kmer_len: "31"
   star_index:
-    sjdbOverhang: 149
+    sjdbOverhang: "149"
 
 api_keys:
   ncbi:
