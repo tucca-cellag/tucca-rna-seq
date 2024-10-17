@@ -14,7 +14,7 @@ rule star:
             "{sample}_SJ.out.tab",
         ),
     log:
-        "logs/star/star_{sample}_{unit}.log",
+        "logs/star/star_{sample}.log",
     params:
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
