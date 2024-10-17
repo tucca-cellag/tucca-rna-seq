@@ -1,6 +1,6 @@
 rule star:
     input:
-        reads=lambda wildcards: get_paired_reads(wildcards),
+        reads=get_paired_reads,
         star_index="results/star/{genome}_index".format(
             genome=config["ref"]["ncbi_genome_accession"]
         ),
@@ -40,10 +40,10 @@ rule star:
         """
         (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
         print(f"Running STAR with the input {input.reads}")
-        echo "Running STAR with the inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
+        echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
         STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
-        --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
+        --readFilesIn {input.reads[0]} {input.reads[1]} \
         --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
         --outSAMtype {params.outSAMtype} \
         --outSAMunmapped {params.outSAMunmapped} \
