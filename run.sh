@@ -22,7 +22,7 @@ if [ ! -L data/raw_data ]; then
 fi
 
 # Load conda
-module load miniconda/23.10
+module load miniforge/24.7.1-py312
 source activate base
 source activate snakemake
 
