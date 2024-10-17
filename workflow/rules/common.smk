@@ -135,11 +135,10 @@ def get_paired_reads(wildcards):
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
         if is_paired_end(wildcards.sample):
-            fq1, fq2 = unit_info.fq1, unit_info.fq2
+            paired_reads.extend([unit_info.fq1, unit_info.fq2])
             print(
-                f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={fq1}, fq2={fq2}"
+                f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={unit_info.fq1}, fq2={unit_info.fq2}"
             )
-            paired_reads.append(fq1, fq2)
         else:
             raise ValueError(
                 f"""
