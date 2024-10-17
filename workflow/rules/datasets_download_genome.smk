@@ -16,7 +16,7 @@ rule datasets_download_genome:
     shell:
         """
         (datasets download genome accession {params.genome_accession} \
-            --include gff3,rna,cds,protein,genome,seq-report \
+            --include gtf,gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
             --filename {output} > {output}) &> {log}
         """
@@ -41,6 +41,7 @@ rule unzip_genome:
             "results/datasets/ncbi_dataset/data/{genome}/".format(
                 genome=config["ref"]["ncbi_genome_accession"]
             ),
+            "genomic.gtf",
             "genomic.gff",
             "rna.fna",
             "cds_from_genomic.fna",
