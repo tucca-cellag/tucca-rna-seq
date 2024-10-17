@@ -139,7 +139,7 @@ def get_paired_reads(wildcards):
             print(
                 f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={fq1}, fq2={fq2}"
             )
-            paired_reads.append({"unit": unit_name, "fq1": fq1, "fq2": fq2})
+            paired_reads.append(fq1, fq2)
         else:
             raise ValueError(
                 f"""
