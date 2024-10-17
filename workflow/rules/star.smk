@@ -36,6 +36,7 @@ rule star:
     shell:
         """
         set -x # activate debugging
+        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}"
         (STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
