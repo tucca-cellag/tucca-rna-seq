@@ -38,5 +38,6 @@ rule all:
         "RNA-seq pipeline run complete!"
     shell:
         """
+        mkdir last_run_config_snapshot -p
         cp config/* results/last_run_config_snapshot/
         """
