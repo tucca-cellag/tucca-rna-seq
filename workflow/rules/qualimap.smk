@@ -20,7 +20,7 @@ rule qualimap_rnaseq:
     conda:
         "../envs/qualimap.yaml"
     log:
-        "logs/qualimap/qualimap_rnaseq.log",
+        "logs/qualimap/qualimap_rnaseq_{sample}_{unit}.log",
     message:
         "Running Qualimap RNA-Seq on Bam for {wildcards.sample} {wildcards.unit}"
     shell:
