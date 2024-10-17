@@ -36,8 +36,7 @@ rule star:
         "../envs/star.yaml"
     shell:
         """
-        (set -x # activate debugging
-        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
+        (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
         echo "inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
         STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
@@ -52,6 +51,5 @@ rule star:
         --outFilterMatchNminOverLread {params.outFilterMatchNminOverLread} \
         --alignIntronMin {params.alignIntronMin} \
         --alignIntronMax {params.alignIntronMax} \
-        {params.extra} \
-        set -x # deactivate debugging) &> {log}
+        {params.extra}) &> {log}
         """
