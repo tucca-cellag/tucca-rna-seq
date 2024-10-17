@@ -65,6 +65,10 @@ params:
     alignIntronMin: 1
     alignIntronMax: 2500
     extra: ""
+  qualimap_rnaseq:
+    counting_alg: proportional
+    sequencing_protocol: non-strand-specific
+    extra: "--paired --java-mem-size=8G"
 
 api_keys:
   ncbi:
