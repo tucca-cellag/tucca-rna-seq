@@ -331,8 +331,15 @@ def get_final_output():
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
-        bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
-            row.sample_name, row.unit_name
+        qualimapReport = (
+            "results/qualimap/{}_{}.qualimap/qualimapReport.html".format(
+                row.sample_name, row.unit_name
+            ),
+        )
+        qualimap_qc_results = (
+            "results/qualimap/{}_{}.qualimap/rnaseq_qc_results.txt".format(
+                row.sample_name, row.unit_name
+            )
         )
 
         # print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
@@ -340,10 +347,16 @@ def get_final_output():
         # print(f"  FastQC HTML (R2): {read2_fq_html}")
         # print(f"  FastQC ZIP (R1): {read1_fq_zip}")
         # print(f"  FastQC ZIP (R2): {read2_fq_zip}")
-        # print(f"  BAM: {bam}")
 
         final_output.extend(
-            [read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip, bam]
+            [
+                read1_fq_html,
+                read2_fq_html,
+                read1_fq_zip,
+                read2_fq_zip,
+                qualimapReport,
+                qualimap_qc_results,
+            ]
         )
 
     # print(f"Final output list: {final_output}")
