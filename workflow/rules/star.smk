@@ -39,6 +39,7 @@ rule star:
     shell:
         """
         (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
+        print(f"Running STAR with the input {input.reads}")
         echo "inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
         STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
