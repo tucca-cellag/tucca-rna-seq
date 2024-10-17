@@ -288,7 +288,9 @@ def get_final_output():
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
-        bam = "results/star/{}_Aligned.sortedByCoord.out.bam".format(row.sample_name)
+        bam = "results/star/{}_{}_Aligned.sortedByCoord.out.bam".format(
+            row.sample_name, row.unit_name
+        )
 
         final_output.extend(
             [read1_fq_html, read2_fq_html, read1_fq_zip, read2_fq_zip, bam]
