@@ -6,8 +6,10 @@ rule star_pe_multi:
         ),
     output:
         # see STAR manual for additional output files
-        "results/star/{sample}_{unit}_pe_aligned.sam",
-        "star/{sample}_{unit}_Log.out",
+        "results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
+        "results/star/{sample}_{unit}_Log.final.out",
+        "results/star/{sample}_{unit}_Log.out",
+        "results/star/{sample}_{unit}_Log.progress.out",
         "results/star/{sample}_{unit}_SJ.out.tab",
     log:
         "logs/{sample}_{unit}.log",
