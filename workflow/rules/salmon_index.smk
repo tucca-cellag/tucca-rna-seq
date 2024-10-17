@@ -39,6 +39,9 @@ rule salmon_index:
             "seq.bin",
             "versionInfo.json",
         ),
+    params:
+        kmer_len=config["params"]["salmon_index"]["kmer_len"],
+        extra=config["params"]["salmon_index"]["extra"],
     threads: 12
     conda:
         "../envs/salmon.yaml"
@@ -51,5 +54,6 @@ rule salmon_index:
         -i results/salmon/transcriptome_index \
         -d {input.decoys} \
         -p {threads} \
-        -k {config["params"]["salmon_index"]["kmer_len"]}) &> {log}
+        -k {params.kmer_len} \
+        {params.extra}) &> {log}
         """
