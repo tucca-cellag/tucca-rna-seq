@@ -83,6 +83,7 @@ def get_fq_files(wildcards):
     'sample1_unit1_R1.fastq.gz'
     """
     u = units.loc[(wildcards.sample, wildcards.unit)]
+    print(f"Getting fq files for {wildcards.sample} {wildcards.unit}")
     if wildcards.read == "R1":
         return u.fq1
     elif wildcards.read == "R2":

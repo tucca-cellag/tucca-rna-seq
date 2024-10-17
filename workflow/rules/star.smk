@@ -40,7 +40,7 @@ rule star:
         """
         (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}\n"
         print(f"Running STAR with the input {input.reads}")
-        echo "inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
+        echo "Running STAR with the inputs: {input.reads[0]['fq1']} {input.reads[0]['fq2']}"
         STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]['fq1']} {input.reads[0]['fq2']} \
