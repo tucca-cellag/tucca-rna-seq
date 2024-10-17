@@ -36,8 +36,3 @@ rule all:
         get_final_output(),
     message:
         "RNA-seq pipeline run complete!"
-    shell:
-        """
-        mkdir results/last_run_config_snapshot -p
-        cp config/* results/last_run_config_snapshot/
-        """

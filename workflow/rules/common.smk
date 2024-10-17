@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import pandas as pd
 
 ####### load config and sample sheets #######
@@ -239,6 +240,17 @@ def get_read_from_filename(filename, convention):
     )
 
 
+def cp_config_to_res_dir():
+    os.makedirs("results/last_run_config_snapshot", exist_ok=True)
+    for item in os.listdir("config"):
+        s = os.path.join("config", item)
+        d = os.path.join("results/last_run_config_snapshot", item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        else:
+            shutil.copy2(s, d)
+
+
 def get_final_output():
     """
     Generate a list of final output file paths for FastQC results based on the
@@ -272,6 +284,9 @@ def get_final_output():
         'results/fastqc/sample2_unit2_R2_fastqc.zip'
     ]
     """
+    # Copy config files to the results directory
+    cp_config_to_res_dir()
+
     final_output = []
 
     # Ask for FastQC output files
