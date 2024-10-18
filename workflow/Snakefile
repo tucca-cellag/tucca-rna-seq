@@ -22,9 +22,9 @@ include: "rules/star_index.smk"
 include: "rules/fastqc.smk"
 include: "rules/star.smk"
 include: "rules/qualimap.smk"
+include: "rules/salmon_quant.smk"
 
 
-# include: "rules/salmon_quant.smk"
 # include: "rules/multiqc.smk"
 
 ##### target rules #####
