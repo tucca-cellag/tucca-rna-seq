@@ -22,19 +22,11 @@ report_header_info:
   - Sequencing Setup: "EXAMPLE: 2x150"
   - Reference Genome: "[ASSEMBLY SYNONYM] ([ASSEMBLY VERSION])"
 table_sample_merge:
-  "Read 1":
+  "(R1)":
     - "_R1"
     - type: regex
-      pattern: "[_.][rR]?1(_001)?$"
-  "Read 2":
+      pattern: "[_][rR]?1(_001)?$"
+  "(R2)":
     - "_R2"
     - type: regex
-      pattern: "[_.][rR]?2(_001)?$"
-  "Qualimap/STAR":
-    - "{sample}_{unit}"
-    - type: regex
-      pattern: "_lane\d+$"
-  "Salmon":
-    - "{sample}_{unit}.salmon"
-    - type: regex
-      pattern: "_lane\d+.salmon$"
+      pattern: "[_][rR]?2(_001)?$"
