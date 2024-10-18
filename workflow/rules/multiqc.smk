@@ -9,8 +9,10 @@ rule multiqc:
             report_name=config["params"]["multiqc"]["report_name"]
         ),
         temp(
-            "results/multiqc/{report_name}_data".format(
-                report_name=config["params"]["multiqc"]["report_name"]
+            directory(
+                "results/multiqc/{report_name}_data".format(
+                    report_name=config["params"]["multiqc"]["report_name"]
+                )
             )
         ),
     params:
