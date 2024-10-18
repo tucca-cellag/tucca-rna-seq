@@ -25,8 +25,8 @@ table_sample_merge:
   "Read 1":
     - "_R1"
     - type: regex
-      pattern: "[_.-][rR]?1(_001)?$"
+      pattern: "[_.][rR]?1(_001)?$"
   "Read 2":
     - "_R2"
     - type: regex
-      pattern: "[_.-][rR]?2(_001)?$"
+      pattern: "[_.][rR]?2(_001)?$"
