@@ -8,9 +8,9 @@ rule multiqc:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
         ),
-        directory("results/multiqc/multiqc_report_rnaseq_data")
+        directory("results/multiqc/multiqc_report_rnaseq_data"),
     params:
-        report_name=config["params"]["multiqc"]["report_name"]
+        report_name=config["params"]["multiqc"]["report_name"],
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
         extra=config["params"]["multiqc"]["extra"],
     conda:
