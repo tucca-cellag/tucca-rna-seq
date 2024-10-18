@@ -1,9 +1,11 @@
 rule multiqc:
     input:
-        fastqc_zip="results/fastqc/*zip",
-        star_log_final="results/star/*Log.final.out",
-        qualimap="results/qualimap/*",
-        salmon="results/salmon/*salmon",
+        glob.glob(
+            fastqc_zip="results/fastqc/*zip",
+            star_log_final="results/star/*Log.final.out",
+            qualimap="results/qualimap/*",
+            salmon="results/salmon/*salmon",
+        ),
     output:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
