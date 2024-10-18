@@ -4,7 +4,7 @@ rule salmon_quant:
         reads=get_fq_files,
     output:
         multiext(
-            "results/salmon/{sample}_{unit}.salmon",
+            "results/salmon/{sample}_{unit}.salmon/",
             "cmd_info.json",
             "lib_format_counts.json",
             "quant.sf",
