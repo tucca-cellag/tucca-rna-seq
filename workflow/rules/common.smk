@@ -341,12 +341,9 @@ def get_final_output():
                 row.sample_name, row.unit_name
             )
         )
-
-        # print(f"Adding outputs for sample {row.sample_name}, unit {row.unit_name}:")
-        # print(f"  FastQC HTML (R1): {read1_fq_html}")
-        # print(f"  FastQC HTML (R2): {read2_fq_html}")
-        # print(f"  FastQC ZIP (R1): {read1_fq_zip}")
-        # print(f"  FastQC ZIP (R2): {read2_fq_zip}")
+        salmon_quant = "results/salmon/{}_{}.salmon".format(
+            row.sample_name, row.unit_name
+        )
 
         final_output.extend(
             [
@@ -356,8 +353,8 @@ def get_final_output():
                 read2_fq_zip,
                 qualimapReport,
                 qualimap_qc_results,
+                salmon_quant,
             ]
         )
 
-    # print(f"Final output list: {final_output}")
     return final_output
