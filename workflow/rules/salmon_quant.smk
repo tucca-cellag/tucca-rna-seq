@@ -29,7 +29,7 @@ rule salmon_quant:
         -l {params.lib_type} \
         -1 {input.reads[0]} \
         -2 {input.reads[1]} \
-        -o results/salmon/{sample}_{unit}.salmon \
+        -o results/salmon/{wildcards.sample}_{wildcards.unit}.salmon \
         {input.mapping_strategy} \
         {input.bias_correction} \
         {input.extra}) &> {log}
