@@ -8,7 +8,11 @@ rule multiqc:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
         ),
-        directory("results/multiqc/multiqc_report_rnaseq_data"),
+        directory(
+            "results/multiqc/{report_name}_data".format(
+                report_name=config["params"]["multiqc"]["report_name"]
+            )
+        ),
     params:
         report_name=config["params"]["multiqc"]["report_name"],
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
