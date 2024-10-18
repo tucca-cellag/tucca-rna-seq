@@ -9,6 +9,7 @@ executor: slurm
 jobs: 100
 conda-frontend: conda
 sdm: conda
+latency-wait: 120
 default-resources:
   slurm_partition: "batch"
   slurm_account: "default"
