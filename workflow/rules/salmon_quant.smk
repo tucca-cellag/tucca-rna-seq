@@ -1,7 +1,7 @@
 rule salmon_quant:
     input:
         transcriptome="results/salmon/transcriptome_index",
-        reads=get_paired_reads,
+        reads=get_fq_files,
     output:
         multiext(
             "results/salmon/{sample}_{unit}.salmon",
