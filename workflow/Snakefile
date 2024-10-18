@@ -34,4 +34,4 @@ rule all:
     input:
         get_final_output(),
     message:
-        "RNA-seq pipeline run complete!"
+        "Checking that all required output files are available"
