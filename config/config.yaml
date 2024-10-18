@@ -76,6 +76,11 @@ params:
     mapping_strategy: "--validateMappings"
     bias_correction: "--seqBias --posBias"
     extra: "--writeUnmappedNames"
+  multiqc:
+    report_name: "multiqc_report"
+    # Leave out if you don't want to automatically overwrite existing reports
+    overwrite_existing: "-f"
+    extra: ""
 
 api_keys:
   ncbi:

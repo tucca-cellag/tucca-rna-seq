@@ -1,0 +1,32 @@
+title: "Quality Control of Sequence Alignment Data"
+subtitle: "Bulk RNA-Seq Analysis of [STUDY COMPARISON]"
+intro_text: "This MultiQC report summarizes the quality control results."
+report_comment: "The NCBI [GENBANK/REFSEQ] assembly of the [SPECIES] reference \
+  genome [ASSEMBLY SYNONYM] ([ASSEMBLY VERSION]) was used for alignment and \
+  pseudo-alignment. Additionally, the selective alignment mapping strategy 
+  was used for Salmon transcript quantification using a decoy-aware \
+  transcriptome that was built with a k-mer length of \
+  [config[params][salmon_index][kmer_len]]."
+software_versions:
+  fastqc: "0.12.1"
+  star: "2.7.11a"
+  qualimap: "2.3"
+  salmon: "1.10.1"
+  multiqc: "1.25"
+report_header_info:
+  - Contact Name: "Firstname Lastname"
+  - Contact E-mail: "firstname.lastname@university.edu"
+  - Application Type: "Bulk RNA-Seq"
+  - Library Method: "EXAMPLE: Genewiz Standard RNA-Seq with Poly(A) selection"
+  - Sequencing Platform: "EXAMPLE: Illumina NovaSeq 6000 S4"
+  - Sequencing Setup: "EXAMPLE: 2x150"
+  - Reference Genome: "[ASSEMBLY SYNONYM] ([ASSEMBLY VERSION])"
+table_sample_merge:
+  "Read 1":
+    - "_R1"
+    - type: regex
+      pattern: "[_.-][rR]?1(_001)?(\.fastq\.gz|\.fq\.gz)$"
+  "Read 2":
+    - "_R2"
+    - type: regex
+      pattern: "[_.-][rR]?2(_001)?(\.fastq\.gz|\.fq\.gz)$"

@@ -344,6 +344,9 @@ def get_final_output():
         salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
             row.sample_name, row.unit_name
         )
+        multiqc = "results/multiqc/{report_name}.html".format(
+            report_name=config["params"]["multiqc"]["report_name"]
+        )
 
         final_output.extend(
             [
@@ -354,6 +357,7 @@ def get_final_output():
                 qualimapReport,
                 qualimap_qc_results,
                 salmon_quant,
+                multiqc,
             ]
         )
 

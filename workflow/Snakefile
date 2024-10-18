@@ -8,9 +8,6 @@ min_version("8.11.3")
 configfile: "config/config.yaml"
 
 
-# report: "report/workflow.rst"
-
-
 ##### rules #####
 
 
@@ -23,9 +20,8 @@ include: "rules/fastqc.smk"
 include: "rules/star.smk"
 include: "rules/qualimap.smk"
 include: "rules/salmon_quant.smk"
+include: "rules/multiqc.smk"
 
-
-# include: "rules/multiqc.smk"
 
 ##### target rules #####
 
