@@ -32,7 +32,7 @@ rule salmon_quant:
         -1 {input.reads[0]} \
         -2 {input.reads[1]} \
         -o results/salmon/{wildcards.sample}_{wildcards.unit}.salmon \
-        {input.mapping_strategy} \
-        {input.bias_correction} \
-        {input.extra}) &> {log}
+        {params.mapping_strategy} \
+        {params.bias_correction} \
+        {params.extra}) &> {log}
         """
