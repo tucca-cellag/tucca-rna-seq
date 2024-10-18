@@ -69,6 +69,13 @@ params:
     counting_alg: proportional
     sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"
+  salmon_quant:
+    # -l A: Auto detect type of sequencing lib from which the reads came from
+    lib_type: A
+    # --validateMappings: Default mapping strategy for Salmon v1.0.0 and forward
+    mapping_strategy: "--validateMappings"
+    bias_correction: "--seqBias --posBias"
+    extra: "--writeUnmappedNames"
 
 api_keys:
   ncbi:
