@@ -8,7 +8,7 @@ rule multiqc:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
         ),
-        directory(
+        temp(
             "results/multiqc/{report_name}_data".format(
                 report_name=config["params"]["multiqc"]["report_name"]
             )
