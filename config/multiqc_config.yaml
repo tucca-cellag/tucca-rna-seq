@@ -7,6 +7,11 @@ report_comment: "The NCBI [GENBANK/REFSEQ] assembly of the [SPECIES] reference \
   was used for Salmon transcript quantification using a decoy-aware \
   transcriptome that was built with a k-mer length of \
   [REPLACE WITH config[params][salmon_index][kmer_len]]."
+show_analysis_paths: True # Set to False if sharing externally
+show_analysis_time: True # Set to False if sharing externally
+custom_logo: "../images/tucca_blk+bl_horiz.jpg"
+custom_logo_url: "https://cellularagriculture.tufts.edu/"
+custom_logo_title: "Tufts University Center for Cellular Agriculture"
 software_versions:
   fastqc: "0.12.1"
   star: "2.7.11a"
