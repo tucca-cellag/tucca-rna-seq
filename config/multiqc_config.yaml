@@ -12,12 +12,15 @@ show_analysis_time: True # Set to False if sharing externally
 custom_logo: "../images/tucca_blk+bl_horiz.jpg"
 custom_logo_url: "https://cellularagriculture.tufts.edu/"
 custom_logo_title: "Tufts University Center for Cellular Agriculture"
+versions_table_group_header: "Analysis Pipeline Step"
 software_versions:
-  fastqc: "0.12.1"
-  star: "2.7.11a"
-  qualimap: "2.3"
-  salmon: "1.10.1"
-  multiqc: "1.25"
+  reads_to_counts:
+    fastqc: "0.12.1"
+    star: "2.7.11a"
+    qualimap: "2.3"
+    salmon: "1.10.3"
+    multiqc: "1.25"
+  counts_to_de:
 report_header_info:
   - Contact Name: "Firstname Lastname"
   - Contact E-mail: "firstname.lastname@university.edu"
