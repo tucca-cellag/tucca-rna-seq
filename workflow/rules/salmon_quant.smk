@@ -22,6 +22,8 @@ rule salmon_quant:
         "../envs/salmon.yaml"
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
+    message:
+        "Running Salmon Quant for {wildcards.sample} {wildcards.unit}"
     shell:
         """
         (salmon quant -i {input.transcriptome} \
