@@ -341,9 +341,9 @@ def get_final_output():
                 row.sample_name, row.unit_name
             )
         )
-        """ salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
+        salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
             row.sample_name, row.unit_name
-        ) """
+        )
 
         final_output.extend(
             [
@@ -353,7 +353,7 @@ def get_final_output():
                 read2_fq_zip,
                 qualimapReport,
                 qualimap_qc_results,
-                # salmon_quant,
+                salmon_quant,
             ]
         )
 
