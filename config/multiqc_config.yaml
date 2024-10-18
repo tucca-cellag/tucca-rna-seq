@@ -35,6 +35,6 @@ table_sample_merge:
     - type: regex
       pattern: "_lane\d+$"
   "Salmon":
-    - "{sample}_{unit}"
+    - "{sample}_{unit}.salmon"
     - type: regex
       pattern: "_lane\d+.salmon$"
