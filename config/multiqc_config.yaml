@@ -30,3 +30,11 @@ table_sample_merge:
     - "_R2"
     - type: regex
       pattern: "[_.][rR]?2(_001)?$"
+  "Qualimap/STAR":
+    - "{sample}_{unit}"
+    - type: regex
+      pattern: "_lane\d+$"
+  "Salmon":
+    - "{sample}_{unit}"
+    - type: regex
+      pattern: "_lane\d+.salmon$"
