@@ -341,7 +341,7 @@ def get_final_output():
                 row.sample_name, row.unit_name
             )
         )
-        salmon_quant = "results/salmon/{}_{}.salmon".format(
+        salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
             row.sample_name, row.unit_name
         )
 
