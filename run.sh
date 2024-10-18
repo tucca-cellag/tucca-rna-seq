@@ -29,4 +29,4 @@ source activate snakemake
 # Run snakemake pipeline
 snakemake $TARGET_RULE $PARAMS \
   --workflow-profile profiles/slurm \
-  --latency-wait 15
+  --latency-wait 60
