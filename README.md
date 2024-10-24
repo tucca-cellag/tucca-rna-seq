@@ -8,14 +8,66 @@
 
 TUCCA's Automated RNA-Seq Snakemake Pipeline using Salmon and DESeq2
 
+# Installation for Tufts HPC Users
 
-## Usage
+## 1. Clone the repository
 
-The usage of this workflow is described in the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog/?usage=<owner>%2F<repo>).
+Go to the desired directory/folder on your file system on the Tufts HPC, then
+clone/get the repository and move into the respective directory with:
 
-If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) repository and its DOI (see above).
+```bash
+git clone https://github.com/benjibromberg/tucca-rna-seq.git
+```
 
-# TODO
+## 2. Dependencies installation
 
-* Replace `<owner>` and `<repo>` everywhere in the template (also under .github/workflows) with the correct `<repo>` name and owning user or organization.
-* The workflow will occur in the snakemake-workflow-catalog once it has been made public. Then the link under "Usage" will point to the usage instructions if `<owner>` and `<repo>` were correctly set.
+For improved reproducibility and reusability of the workflow,
+each individual step of the workflow runs either in its own [Conda][conda]
+virtual environemnt. As a consequence, running this workflow has very few 
+individual dependencies.
+
+To install the necessary dependencies run:
+
+```bash
+module load miniforge/24.7.1-py312
+conda env create -f tucca-rna-seq/install/base.yaml
+conda env create -f tucca-rna-seq/install/snakemake.yaml
+```
+
+# Set-Up the `config` Directory
+
+TODO: add this section
+
+# Running the Pipeline
+
+To run the pipeline:
+
+```bash
+cd tucca-rna-seq
+module load miniforge/24.7.1-py312
+sh run.sh <snakemake_target_rule> <extra_snakemake_parameters>
+```
+
+To perform a dry-run of the pipeline:
+
+```bash
+cd tucca-rna-seq
+module load miniforge/24.7.1-py312
+sh run.sh <snakemake_target_rule> -np <extra_snakemake_parameters>
+```
+
+When performing a dry-run using the -n (or --dry-run) flag, Snakemake will only
+show the execution plan instead of actually performing the steps. The -p flag
+instructs Snakemake to also print the resulting shell command for illustration.
+
+# TODO: necessary Fixes 
+
+* Hello world
+* Hello world 2
+
+[conda]: <https://docs.conda.io/projects/conda/en/latest/index.html>
+[rule-graph]: images/rule_graph.svg
+[sample-doc]: pipeline_documentation.md#read-sample-table
+[snakemake]: <https://snakemake.readthedocs.io/en/stable/>
+[dry-run]: <>
+[slurm]: <https://slurm.schedmd.com/documentation.html>

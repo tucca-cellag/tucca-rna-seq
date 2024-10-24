@@ -1,4 +1,4 @@
-name: tucca-rna-seq
+name: snakemake
 channels:
   - conda-forge
   - bioconda
