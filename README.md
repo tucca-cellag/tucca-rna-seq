@@ -10,7 +10,13 @@ TUCCA's Automated RNA-Seq Snakemake Pipeline using Salmon and DESeq2
 
 # Installation for Tufts HPC Users
 
-## 1. Clone the repository
+## 1. Get off of a login node
+
+```bash
+srun -p preempt -t 1-2:30:00 -n 2 --mem=32G --gres=gpu:1 --pty bash
+```
+
+## 2. Clone the repository
 
 Go to the desired directory/folder on your file system on the Tufts HPC, then
 clone/get the repository and move into the respective directory with:
@@ -19,7 +25,7 @@ clone/get the repository and move into the respective directory with:
 git clone https://github.com/benjibromberg/tucca-rna-seq.git
 ```
 
-## 2. Dependencies installation
+## 3. Dependencies installation
 
 For improved reproducibility and reusability of the workflow,
 each individual step of the workflow runs either in its own [Conda][conda]
