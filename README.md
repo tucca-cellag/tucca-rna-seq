@@ -48,7 +48,7 @@ Go to the desired directory/folder on your file system on the Tufts HPC, then
 clone/get the repository and move into the respective directory with:
 
 ```bash
-git clone https://github.com/benjibromberg/tucca-rna-seq.git
+git clone [https://github.com/benjibromberg/tucca-rna-seq.git](https://github.com/tucca-cellag/tucca-rna-seq.git)
 ```
 
 ### 4. Dependencies installation
