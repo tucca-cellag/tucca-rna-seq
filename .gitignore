@@ -9,4 +9,4 @@ bashversion
 logs/**
 results/**
 ncbi*
-*run.sh
+run.sh
