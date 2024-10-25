@@ -1,12 +1,14 @@
-results/**
-resources/**
-logs/**
+# OS Files
+.DS_Store
+
+# Workflow Output
 .snakemake
 .snakemake/**
-.template
-bashversion
-.DS_Store
 logs/**
 results/**
 ncbi*
+
+# Development Tools
 run.sh
+bashversion
+de_analysis
