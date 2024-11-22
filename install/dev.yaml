@@ -4,5 +4,7 @@ channels:
   - bioconda
 dependencies:
   - snakemake=8.11.3
+  - snakemake-executor-plugin-slurm=0.11.0
   - yte=1.5.4
+  - graphviz=12.0.0
   - snakefmt=0.10.2
