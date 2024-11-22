@@ -3,6 +3,7 @@ __use_yte__: true
 # Set yte vars
 __variables__:
   mail: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
+# TODO Set this email to be configurable in config/config.yaml
 
 # Profile Settings
 executor: slurm
@@ -13,7 +14,7 @@ latency-wait: 120
 default-resources:
   slurm_partition: "batch"
   slurm_account: "default"
-  runtime: 4320 # TODO change to batch or mpi partition and 4320 min
+  runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
   slurm_extra: ?mail
