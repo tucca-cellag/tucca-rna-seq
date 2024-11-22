@@ -48,7 +48,7 @@ Go to the desired directory/folder on your file system on the Tufts HPC, then
 clone/get the repository and move into the respective directory with:
 
 ```bash
-git clone [https://github.com/benjibromberg/tucca-rna-seq.git](https://github.com/tucca-cellag/tucca-rna-seq.git)
+git clone https://github.com/benjibromberg/tucca-rna-seq.git
 ```
 
 ### 4. Dependencies installation
@@ -145,15 +145,10 @@ rule:
 snakemake <optional-target-rule> --dag | dot -Tpdf > dag.pdf
 ```
 
-# TODO: Future Updates
-
-* [X] Add support for reads2counts
-* [ ] Add config set-up info to this README
-* [ ] Add schemas to maintain correct config file structure
-* [ ] Add tests for workflow execution on new systems
-* [ ] Add support for alternate cluster systems or local systems
-* [ ] Add support for counts2de
-* [ ] Add badges to README for other dependencies
+## Help
+If something is unclear or broken in the workflow, don't hesitate to
+[file an issue in the `tucca-rna-seq` GitHub repository]. We will try to be
+prompt with our assistance.
 
 [conda]: <https://docs.conda.io/projects/conda/en/latest/index.html>
 [sample-doc]: pipeline_documentation.md#read-sample-table
@@ -167,3 +162,6 @@ snakemake <optional-target-rule> --dag | dot -Tpdf > dag.pdf
 [dag-snake]: <https://snakemake.readthedocs.io/en/stable/executing/cli.html#visualization>
 [dag-wiki]: <https://en.wikipedia.org/wiki/Directed_acyclic_graph>
 [tucca]: <https://cellularagriculture.tufts.edu/>
+[rna-seq-star-deseq2 Snakemake workflow]: https://github.com/snakemake-workflows/rna-seq-star-deseq2/tree/b3998c158a87cc9096f7cda8ae913adf2ac6da9d
+[rna-seq-kallisto-sleuth Snakmake workflow]: https://github.com/snakemake-workflows/rna-seq-kallisto-sleuth/tree/main
+[file an issue in the `tucca-rna-seq` GitHub repository]: https://github.com/benjibromberg/tucca-rna-seq/issues/new
