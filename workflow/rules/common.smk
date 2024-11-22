@@ -93,6 +93,8 @@ def get_fq_files(wildcards):
         raise ValueError("Invalid read direction: {}".format(wildcards.read))
 
 
+# TODO: Update the function definition for get_paired_reads() and maybe others
+
 def get_paired_reads(wildcards):
     """
     Given a sample name, return a list of dictionaries containing paired reads.
