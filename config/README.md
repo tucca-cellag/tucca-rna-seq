@@ -3,11 +3,6 @@
 To configure this workflow, modify `config/config.yaml` according to your needs,
 following the explanations provided in the file.
 
-The format of this workflow was adapted from the [rna-seq-star-deseq2 Snakemake workflow](https://github.com/snakemake-workflows/rna-seq-star-deseq2/tree/b3998c158a87cc9096f7cda8ae913adf2ac6da9d) and the
-[rna-seq-kallisto-sleuth Snakmake workflow](https://github.com/snakemake-workflows/rna-seq-kallisto-sleuth/tree/main). The workflow
-has been adapted to use the [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html)
-mapping-based method of transcript quantification.
-
 ## `DESeq2` differential expression analysis
 
 To run the differential expression analysis, you must tell DESeq2 which sample
@@ -71,9 +66,9 @@ This can be done via the columns `fq1`, `fq2` and `sra`, with either of:
   `fq2` columns present, but empty). The workflow will automatically download
   the corresponding `.fastq` data (currently assumed to be paired-end). The
   accession numbers usually start with SRR or ERR and you can find accession
-  numbers for studies of interest with the [SRA Run Selector](https://trace.ncbi.nlm.nih.gov/Traces/study/).
-  If both local files and an SRA accession are specified for the same unit, the
-  local files will be used.
+  numbers for studies of interest with the [SRA Run Selector]. If both local
+  files and an SRA accession are specified for the same unit, the local files
+  will be used.
 
 ### `units.tsv` Example
 
@@ -90,5 +85,6 @@ This can be done via the columns `fq1`, `fq2` and `sra`, with either of:
 
 This file contains the general workflow configuration. Configurable options
 should be explained in the comments above the respective entry or right here in
-this `config/README.md` section. If something is unclear, don't hesitate to
-[file an issue in the `tucca-rna-seq` GitHub repository](https://github.com/benjibromberg/tucca-rna-seq/issues/new).
+this `config/README.md` section.
+
+[SRA Run Selector]: https://trace.ncbi.nlm.nih.gov/Traces/study/

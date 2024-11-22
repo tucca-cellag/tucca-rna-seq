@@ -1,7 +1,13 @@
-# path to sample sheet (TSV format, columns: sample, condition, ...)
+# Path to your sample sheet
+# TSV format
+# columns: sample_name, first_condition, ..., last_condition, replicate_num,
+#          first_batch_effect, ..., last_batch_effect
 samples: config/samples.tsv
 
-# path to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
+# Path to your sequencing unit sheet
+# TSV format
+# columns: sample_name, unit_name, fq1, fq2, convention
+#
 # Units are technical replicates (e.g. lanes, or resequencing of the same
 # biological sample).
 units: config/units.tsv
@@ -12,15 +18,30 @@ ref:
   ncbi_genome_accession: GCF_002263795.3
 
 diffexp:
-  # variables for which you would like to determine whether or not they have an
-  # effect on expression levels
-  variables_of_interest:
-    treatment_1:
+  # num_exp_conditions
+  # ------------------
+  # Integer value that lets the workflow know how many experimental conditions
+  # are in the workflow. In the provided examples in samples.tsv and units.tsv
+  # there are four experimental conditions:
+  # celltype, crispr_modified, suspension_adapted, and additional_treatment
+  num_exp_conditions: 4
+  # exp_conditions
+  # ------------------
+  # exp_conditions does not have a value itself, but it has subgroups that are
+  # experimental variables for which you would like to determine whether or
+  # not they have an effect on expression levels
+  exp_conditions:
+    celltype:
       # any fold change will be relative to this factor level
-      base_level: primary
-    treatment_2:
+      base_level: C2C12
+    crispr_modified:
       # any fold change will be relative to this factor level
-      base_level:
+      base_level: untreated
+    suspension_adapted:
+      # any fold change will be relative to this factor level
+      base_level: adherent
+  # batch_effects
+  # -------------
   # variables whose effect you want to model to separate them from your
   # variables_of_interest
   batch_effects:
@@ -36,11 +57,11 @@ diffexp:
       level_of_interest: ko
   # The default model includes all interactions among variables_of_interest
   # and batch_effects added on. For the example above this implicitly is:
-  # model: ~jointly_handled + treatment_1 * treatment_2
+  # model: ~sequencing_batch + treatment_1 * treatment_2
   # For the default model to be used, simply specify an empty `model: ""` below.
   # If you want to introduce different assumptions into your model, you can
   # specify a different model to use, for example skipping the interaction:
-  # model: ~jointly_handled + treatment_1 + treatment_2
+  # model: ~sequencing_batch + treatment_1 + treatment_2
   model:
 
 params:
