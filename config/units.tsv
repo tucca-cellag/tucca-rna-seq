@@ -1,16 +1,13 @@
-sample_name	unit_name	fq1	fq2	convention
-CHO-A	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-A_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-A_R2_001.fastq.gz	standard
-CHO-B	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-B_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-B_R2_001.fastq.gz	standard
-CHO-C	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-C_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CHO-C_R2_001.fastq.gz	standard
-HEK293T-1	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-1_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-1_R2_001.fastq.gz	standard
-HEK293T-2	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-2_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-2_R2_001.fastq.gz	standard
-HEK293T-3	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-3_R1_001.fastq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/HEK293T-3_R2_001.fastq.gz	standard
-C2C12-1	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-1_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-1_2.fq.gz	numeric
-C2C12-2	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-2_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-2_2.fq.gz	numeric
-C2C12-3	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-3_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/C2C12-3_2.fq.gz	numeric
-CriC2C12-1	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-1_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-1_2.fq.gz	numeric
-CriC2C12-2	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-2_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-2_2.fq.gz	numeric
-CriC2C12-3	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-3_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/CriC2C12-3_2.fq.gz	numeric
-SusCriC2C12-1	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-1_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-1_2.fq.gz	numeric
-SusCriC2C12-2	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-2_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-2_2.fq.gz	numeric
-SusCriC2C12-3	lane1	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-3_1.fq.gz	data/<symlinked-directory-with-raw-data>/<maybe-sub-directories>/SusCriC2C12-3_2.fq.gz	numeric
+sample_name	unit_name	fq1	fq2	sra	convention
+GM-A	lane1			SRX10665199	numeric
+GM-B	lane1			SRX10665200	numeric
+GM-C	lane1			SRX10665201	numeric
+SFGM-A	lane1			SRX10665202	numeric
+SFGM-B	lane1			SRX10665203	numeric
+SFGM-C	lane1			SRX10665204	numeric
+DM-A	lane1			SRX10665205	numeric
+DM-B	lane1			SRX10665206	numeric
+DM-C	lane1			SRX10665207	numeric
+SFDM-A	lane1			SRX10665214	numeric
+SFDM-B	lane1			SRX10665215	numeric
+SFDM-C	lane1			SRX10665216	numeric

@@ -85,63 +85,46 @@ def get_fq_files(wildcards):
     """
     u = units.loc[(wildcards.sample, wildcards.unit)]
     # print(f"Getting fq files for {wildcards.sample} {wildcards.unit}")
-    if wildcards.read == "R1":
-        return u.fq1
-    elif wildcards.read == "R2":
-        return u.fq2
+    # Check if sample is an SRA read
+    if pd.isna(u["fq1"]):
+        accession = u["sra"]
+        return "data/pe/{accession}_{read}.fastq".format(
+            accession=accession, read=wildcards.read[1]
+        )
     else:
-        raise ValueError("Invalid read direction: {}".format(wildcards.read))
+        if wildcards.read == "R1":
+            return u.fq1
+        elif wildcards.read == "R2":
+            return u.fq2
+        else:
+            raise ValueError("Invalid read direction: {}".format(wildcards.read))
 
 
-# TODO: Update the function definition for get_paired_reads() and maybe others
-
+# TODO: SRA inclusion breaks all the logic here. Need to update
+#           get_paired_reads() to work even with SRA fastqs
 def get_paired_reads(wildcards):
     """
-    Given a sample name, return a list of dictionaries containing paired reads.
-
-    This function retrieves the units associated with the specified sample from
-    the `units` DataFrame. It then checks if the sample is paired-end using the
-    `is_paired_end` function. If the sample is paired-end, it constructs a list
-    of dictionaries, each containing the unit name and the paths to the paired
-    read files (fq1 and fq2). If the sample is not paired-end, a ValueError is
-    raised.
-
-    Parameters:
-    wildcards (object): An object containing the sample name as an attribute
-                        (wildcards.sample).
-
-    Returns:
-    list: A list of dictionaries, each containing:
-        - "unit" (str): The unit name.
-        - "fq1" (str): The file path to the first read.
-        - "fq2" (str): The file path to the second read.
-
-    Raises:
-    ValueError: If a single-end read is encountered for the specified sample.
-
-    Example:
-    >>> wildcards = type('obj', (object,), {'sample': 'sample1'})
-    >>> units = pd.DataFrame({
-    ...     'sample': ['sample1', 'sample1'],
-    ...     'unit': ['unit1', 'unit2'],
-    ...     'fq1': ['sample1_unit1_R1.fastq.gz', 'sample1_unit2_R1.fastq.gz'],
-    ...     'fq2': ['sample1_unit1_R2.fastq.gz', 'sample1_unit2_R2.fastq.gz']
-    ... }).set_index(['sample', 'unit'])
-    >>> get_paired_reads(wildcards)
-    [
-        {'unit': 'unit1', 'fq1': 'sample1_unit1_R1.fastq.gz', 'fq2': 'sample1_unit1_R2.fastq.gz'},
-        {'unit': 'unit2', 'fq1': 'sample1_unit2_R1.fastq.gz', 'fq2': 'sample1_unit2_R2.fastq.gz'}
-    ]
+    TODO: Update the function definition for get_paired_reads()
     """
     sample_units = units.loc[wildcards.sample]
 
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
         if is_paired_end(wildcards.sample):
-            paired_reads.extend([unit_info.fq1, unit_info.fq2])
-            """ print(
-                f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={unit_info.fq1}, fq2={unit_info.fq2}"
-            ) """
+            # Check if sample is an SRA read
+            if pd.isna(unit_info["fq1"]):
+                # SRA sample
+                paired_reads.extend(
+                    [
+                        "data/pe/{accession}_1.fastq".format(accession=unit_info.sra),
+                        "data/pe/{accession}_2.fastq".format(accession=unit_info.sra),
+                    ]
+                )
+            else:
+                paired_reads.extend([unit_info.fq1, unit_info.fq2])
+                """ print(
+                    f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={unit_info.fq1}, fq2={unit_info.fq2}"
+                ) """
         else:
             raise ValueError(
                 f"""
@@ -197,6 +180,7 @@ def is_paired_end(sample):
     return all_paired
 
 
+# TODO change function name of get_read_from_filename to be able determining convention
 def get_read_from_filename(filename, convention):
     """
     Determine the read type (R1 or R2) from a given filename based on the
@@ -227,6 +211,8 @@ def get_read_from_filename(filename, convention):
     >>> get_read_from_filename("sample_1.fastq.gz", "numeric")
     'R1'
     """
+    # Check if sample is an SRA read
+    # TODO: SRA reads break entire logic of this function. Refactor
     if convention == "standard":
         if "_R1_" in filename:
             return "R1"
