@@ -111,16 +111,19 @@ def get_paired_reads(wildcards):
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
         print(f"unit_info: {unit_info}")
+        # Check if single-end read given
         if is_paired_end(wildcards.sample):
             # Check if sample is an SRA read
-            if pd.isna(unit_info["fq1"]):
-                # SRA sample
+            if pd.isna(unit_info["fq1"] & unit_info["fq2"]):
+                print("made it to sra read")
+                # If SRA reads
                 paired_reads.extend(
                     [
                         "data/pe/{accession}_1.fastq".format(accession=unit_info.sra),
                         "data/pe/{accession}_2.fastq".format(accession=unit_info.sra),
                     ]
                 )
+            # If sample is non-SRA and is a set of paired end reads...
             else:
                 paired_reads.extend([unit_info.fq1, unit_info.fq2])
                 """ print(
