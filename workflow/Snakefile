@@ -30,4 +30,4 @@ rule all:
     input:
         get_final_output(),
     message:
-        "Checking that all required output files are available"
+        "TODO: Write a message for rule all"
