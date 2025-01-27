@@ -1,8 +1,10 @@
 rule star:
     input:
         reads=get_paired_reads,
-        star_index="results/star/{genome}_index".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        star_index=directory(
+            "results/star/{genome}_index".format(
+                genome=config["ref"]["ncbi_genome_accession"]
+            )
         ),
     output:
         multiext(
