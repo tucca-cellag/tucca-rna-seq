@@ -222,9 +222,10 @@ def get_read_direction(filename, convention):
             return "R1"
         elif filename.endswith(("_2.fq.gz", "_2.fastq.gz")):
             return "R2"
-    elif raise ValueError(
-        "Filename does not match any known read convention: {}".format(filename)
-    )
+    else:
+        raise ValueError(
+            "Filename does not match any known read convention: {}".format(filename)
+        )
 
 
 def cp_config_to_res_dir():
