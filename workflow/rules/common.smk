@@ -180,10 +180,9 @@ def is_paired_end(sample):
     return all_paired
 
 
-# TODO change function name of get_read_from_filename to be able determining convention
-def get_read_from_filename(filename, convention):
+def get_read_direction(filename, convention):
     """
-    Determine the read type (R1 or R2) from a given filename based on the
+    Determine the read direction (R1 or R2) from a given filename based on the
     specified file naming convention.
 
     Parameters:
@@ -206,9 +205,9 @@ def get_read_from_filename(filename, convention):
         convention used by Novogene.
 
     Example:
-    >>> get_read_from_filename("sample_R1_.fastq.gz", "standard")
+    >>> get_read_direction("sample_R1_.fastq.gz", "standard")
     'R1'
-    >>> get_read_from_filename("sample_1.fastq.gz", "numeric")
+    >>> get_read_direction("sample_1.fastq.gz", "numeric")
     'R1'
     """
     # Check if sample is an SRA read
@@ -310,16 +309,16 @@ def get_final_output():
 
         # For each read
         read1_fq_html = "results/fastqc/{}_{}_{}.html".format(
-            row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
+            row.sample_name, row.unit_name, row.fq1
         )
         read2_fq_html = "results/fastqc/{}_{}_{}.html".format(
-            row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
+            row.sample_name, row.unit_name, row.fq2
         )
         read1_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
-            row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
+            row.sample_name, row.unit_name, row.fq1
         )
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
-            row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
+            row.sample_name, row.unit_name, row.fq2
         )
 
         # For each set of reads
