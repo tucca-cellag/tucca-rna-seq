@@ -223,7 +223,7 @@ def get_read_from_filename(filename, convention):
             return "R1"
         elif filename.endswith(("_2.fq.gz", "_2.fastq.gz")):
             return "R2"
-    raise ValueError(
+    elif raise ValueError(
         "Filename does not match any known read convention: {}".format(filename)
     )
 
@@ -304,9 +304,11 @@ def get_final_output():
 
     final_output = []
 
-    # Ask for FastQC output files
+    # Ask for output files
     for index, row in units.iterrows():
         convention = row["convention"]
+
+        # For each read
         read1_fq_html = "results/fastqc/{}_{}_{}.html".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq1, convention)
         )
@@ -319,6 +321,8 @@ def get_final_output():
         read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
             row.sample_name, row.unit_name, get_read_from_filename(row.fq2, convention)
         )
+
+        # For each set of reads
         qualimapReport = (
             "results/qualimap/{}_{}.qualimap/qualimapReport.html".format(
                 row.sample_name, row.unit_name
@@ -332,6 +336,8 @@ def get_final_output():
         salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
             row.sample_name, row.unit_name
         )
+
+        # MultiQC Report
         multiqc = "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
         )
