@@ -122,13 +122,9 @@ def get_paired_reads(wildcards):
                         "data/pe/{accession}_2.fastq".format(accession=unit_info.sra),
                     ]
                 )
-                print(paired_reads)
             # If sample is non-SRA and is a set of paired end reads...
             else:
                 paired_reads.extend([unit_info.fq1, unit_info.fq2])
-                """ print(
-                    f"Adding paired reads for {wildcards.sample}, unit {unit_name}: fq1={unit_info.fq1}, fq2={unit_info.fq2}"
-                ) """
         else:
             raise ValueError(
                 f"""
@@ -139,8 +135,7 @@ def get_paired_reads(wildcards):
                 """
             )
 
-    print(paired_reads)
-    # print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
+    print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
     return paired_reads
 
 
