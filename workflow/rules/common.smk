@@ -108,10 +108,9 @@ def get_paired_reads(wildcards):
     """
     sample_units = units.loc[wildcards.sample]
 
-    print(sample_units)
-
     paired_reads = []
     for unit_name, unit_info in sample_units.iterrows():
+        print(f"unit_info: {unit_info}")
         if is_paired_end(wildcards.sample):
             # Check if sample is an SRA read
             if pd.isna(unit_info["fq1"]):
