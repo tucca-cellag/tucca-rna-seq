@@ -1,4 +1,4 @@
-# DEPRECATED - NO LONGER USED IN THE PIPELINE
+# TODO: REMOVE B/C DEPRECATED - NO LONGER USED IN THE PIPELINE
 rule create_gtf:
     input:
         genome_fna=("results/datasets/ncbi_dataset/data/{genome}/genomic.gff").format(
