@@ -7,7 +7,7 @@ rule download_sra:
         "data/pe/{accession}_1.fastq",
         "data/pe/{accession}_2.fastq",
     log:
-        "logs/pe/{accession}.log",
+        "logs/pe/download_{accession}.log",
     params:
         extra="--skip-technical",
     threads: 6  # defaults to 6
