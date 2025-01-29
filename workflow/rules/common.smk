@@ -262,82 +262,65 @@ def get_final_output():
     list: A list of strings representing the file paths for the FastQC HTML,
             ZIP files, and BAM files.
 
-    Example:
-    >>> units = pd.DataFrame({
-    ...     'sample_name': ['sample1', 'sample2'],
-    ...     'unit_name': ['unit1', 'unit2'],
-    ...     'fq1': ['sample1_unit1_R1_001.fastq.gz', 'sample2_unit2_R1_001.fastq.gz'],
-    ...     'fq2': ['sample1_unit1_R2_001.fastq.gz', 'sample2_unit2_R2_001.fastq.gz'],
-    ...     'convention': ['standard', 'standard']
-    ... })
-    >>> get_final_output()
-    [
-        'results/fastqc/sample1_unit1_R1.html',
-        'results/fastqc/sample1_unit1_R2.html',
-        'results/fastqc/sample1_unit1_R1_fastqc.zip',
-        'results/fastqc/sample1_unit1_R2_fastqc.zip',
-        'results/star/sample1_unit1_Aligned.sortedByCoord.out.bam',
-        'results/fastqc/sample2_unit2_R1.html',
-        'results/fastqc/sample2_unit2_R2.html',
-        'results/fastqc/sample2_unit2_R1_fastqc.zip',
-        'results/fastqc/sample2_unit2_R2_fastqc.zip',
-        'results/star/sample2_unit2_Aligned.sortedByCoord.out.bam'
-    ]
+    TODO: finish this function def
     """
     # Copy config files to the results directory
     cp_config_to_res_dir()
 
     final_output = []
 
-    # Ask for output files
+    # Iterate over each unit to collect expected outputs
     for index, row in units.iterrows():
         convention = row["convention"]
 
-        # For each read
-        read1_fq_html = "results/fastqc/{}_{}_{}.html".format(
-            row.sample_name, row.unit_name, row.fq1
+        # Define FastQC outputs
+        read1_fq_html = f"results/fastqc/{row.sample_name}_{row.unit_name}_R1.html"
+        read2_fq_html = f"results/fastqc/{row.sample_name}_{row.unit_name}_R2.html"
+        read1_fq_zip = f"results/fastqc/{row.sample_name}_{row.unit_name}_R1_fastqc.zip"
+        read2_fq_zip = f"results/fastqc/{row.sample_name}_{row.unit_name}_R2_fastqc.zip"
+
+        # Define STAR outputs
+        bam_file = f"results/star/{row.sample_name}_{row.unit_name}_Aligned.sortedByCoord.out.bam"
+        log_final = f"results/star/{row.sample_name}_{row.unit_name}_Log.final.out"
+        log_out = f"results/star/{row.sample_name}_{row.unit_name}_Log.out"
+        log_progress = (
+            f"results/star/{row.sample_name}_{row.unit_name}_Log.progress.out"
         )
-        read2_fq_html = "results/fastqc/{}_{}_{}.html".format(
-            row.sample_name, row.unit_name, row.fq2
-        )
-        read1_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
-            row.sample_name, row.unit_name, row.fq1
-        )
-        read2_fq_zip = "results/fastqc/{}_{}_{}_fastqc.zip".format(
-            row.sample_name, row.unit_name, row.fq2
+        sj_out = f"results/star/{row.sample_name}_{row.unit_name}_SJ.out.tab"
+        star_tmp = f"results/star/{row.sample_name}_{row.unit_name}__STARtmp"
+
+        # Define Qualimap outputs
+        qualimapReport = f"results/qualimap/{row.sample_name}_{row.unit_name}.qualimap/qualimapReport.html"
+        qualimap_qc_results = f"results/qualimap/{row.sample_name}_{row.unit_name}.qualimap/rnaseq_qc_results.txt"
+
+        # Define Salmon outputs
+        salmon_quant = (
+            f"results/salmon/{row.sample_name}_{row.unit_name}.salmon/quant.sf"
         )
 
-        # For each set of reads
-        qualimapReport = (
-            "results/qualimap/{}_{}.qualimap/qualimapReport.html".format(
-                row.sample_name, row.unit_name
-            ),
-        )
-        qualimap_qc_results = (
-            "results/qualimap/{}_{}.qualimap/rnaseq_qc_results.txt".format(
-                row.sample_name, row.unit_name
-            )
-        )
-        salmon_quant = "results/salmon/{}_{}.salmon/quant.sf".format(
-            row.sample_name, row.unit_name
-        )
-
-        # MultiQC Report
-        multiqc = "results/multiqc/{report_name}.html".format(
-            report_name=config["params"]["multiqc"]["report_name"]
-        )
-
+        # Aggregate all unit-based outputs
         final_output.extend(
             [
                 read1_fq_html,
                 read2_fq_html,
                 read1_fq_zip,
                 read2_fq_zip,
+                bam_file,
+                log_final,
+                log_out,
+                log_progress,
+                sj_out,
+                star_tmp,
                 qualimapReport,
                 qualimap_qc_results,
                 salmon_quant,
-                multiqc,
             ]
         )
+
+    # Define non-unit-based outputs
+    multiqc = f"results/multiqc/{config['params']['multiqc']['report_name']}.html"
+
+    # Aggregate all non-unit-based outputs
+    final_output.extend([multiqc])
 
     return final_output
