@@ -4,11 +4,7 @@
 rule star:
     input:
         reads=get_paired_reads,
-        star_index=directory(
-            "results/star/{genome}_index".format(
-                genome=config["ref"]["ncbi_genome_accession"]
-            )
-        ),
+        star_index=lambda wildcards: f"results/star/{config['ref']['ncbi_genome_accession']}_index/",
     output:
         multiext(
             "results/star/{sample}_{unit}_",
