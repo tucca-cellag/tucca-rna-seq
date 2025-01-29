@@ -4,7 +4,27 @@
 rule star:
     input:
         reads=get_paired_reads,
-        star_index=lambda wildcards: f"results/star/{config['ref']['ncbi_genome_accession']}_index/",
+        star_index=multiext(
+            "results/star/{genome}_index/".format(
+                genome=config["ref"]["ncbi_genome_accession"]
+            ),
+            "chrLength.txt",
+            "chrName.txt",
+            "chrNameLength.txt",
+            "chrStart.txt",
+            "exonGeTrInfo.tab",
+            "exonInfo.tab",
+            "geneInfo.tab",
+            "Genome",
+            "genomeParameters.txt",
+            "Log.out",
+            "SA",
+            "SAindex",
+            "sjdbInfo.txt",
+            "sjdbList.fromGTF.out.tab",
+            "sjdbList.out.tab",
+            "transcriptInfo.tab",
+        ),
     output:
         multiext(
             "results/star/{sample}_{unit}_",
