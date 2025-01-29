@@ -1,6 +1,23 @@
 rule salmon_quant:
     input:
-        transcriptome="results/salmon/transcriptome_index",
+        transcriptome=multiext(
+            "results/salmon/transcriptome_index/",
+            "complete_ref_lens.bin",
+            "ctable.bin",
+            "ctg_offsets.bin",
+            "duplicate_clusters.tsv",
+            "info.json",
+            "mphf.bin",
+            "pos.bin",
+            "pre_indexing.log",
+            "rank.bin",
+            "refAccumLengths.bin",
+            "ref_indexing.log",
+            "reflengths.bin",
+            "refseq.bin",
+            "seq.bin",
+            "versionInfo.json",
+        ),
         reads=get_paired_reads,
     output:
         multiext(
