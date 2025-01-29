@@ -1,3 +1,5 @@
+# config.yaml
+
 # Path to your sample sheet
 # TSV format
 # columns: sample_name, first_condition, ..., last_condition, replicate_num,

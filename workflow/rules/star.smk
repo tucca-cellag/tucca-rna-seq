@@ -1,3 +1,6 @@
+# star.smk
+
+
 rule star:
     input:
         reads=get_paired_reads,

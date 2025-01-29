@@ -1,3 +1,5 @@
+# common.smk
+
 import glob
 import os
 import shutil
