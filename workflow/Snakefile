@@ -1,3 +1,5 @@
+# Snakefile
+
 from snakemake.utils import min_version
 
 ##### set minimum snakemake version #####
@@ -13,13 +15,14 @@ configfile: "config/config.yaml"
 
 include: "rules/common.smk"
 include: "rules/datasets_download_genome.smk"
+include: "rules/sra_tools.smk"
 include: "rules/salmon_decoys.smk"
 include: "rules/salmon_index.smk"
-include: "rules/star_index.smk"
-include: "rules/fastqc.smk"
-include: "rules/star.smk"
-include: "rules/qualimap.smk"
 include: "rules/salmon_quant.smk"
+include: "rules/star_index.smk"
+include: "rules/star.smk"
+include: "rules/fastqc.smk"
+include: "rules/qualimap.smk"
 include: "rules/multiqc.smk"
 
 

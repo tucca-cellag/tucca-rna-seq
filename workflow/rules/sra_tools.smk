@@ -1,4 +1,7 @@
-rule get_fastq_pe:
+# sra_tools.smk
+
+
+rule download_sra:
     output:
         # the wildcard name must be accession, pointing to an SRA number
         "data/pe/{accession}_1.fastq",
