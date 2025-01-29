@@ -102,47 +102,28 @@ def get_fq_files(wildcards):
             raise ValueError("Invalid read direction: {}".format(wildcards.read))
 
 
-# TODO: SRA inclusion breaks all the logic here. Need to update
-#           get_paired_reads() to work even with SRA fastqs
 def get_paired_reads(wildcards):
     """
-    TODO: Update the function definition for get_paired_reads()
+    Retrieve the file paths for paired-end reads for a given sample and unit.
     """
-    sample_units = units.loc[wildcards.sample]
+    u = units.loc[(wildcards.sample, wildcards.unit)]
 
-    paired_reads = []
-    for unit_name, unit_info in sample_units.iterrows():
-        print(f"unit_info: {unit_info}")
-        # Check if single-end read given
-        if is_paired_end(wildcards.sample):
-            # Check if sample is an SRA read
-            if pd.isna(unit_info["fq1"]) & pd.isna(unit_info["fq2"]):
-                # If SRA reads
-                paired_reads.extend(
-                    [
-                        "data/pe/{accession}_1.fastq".format(accession=unit_info.sra),
-                        "data/pe/{accession}_2.fastq".format(accession=unit_info.sra),
-                    ]
-                )
-            # If sample is non-SRA and is a set of paired end reads...
-            else:
-                paired_reads.extend([unit_info.fq1, unit_info.fq2])
-        else:
-            raise ValueError(
-                f"""
-                Single-end read encountered for sample {wildcards.sample},
-                unit {unit_name}. This pipeline does not currently surrort
-                single-end reads. Paired-end reads are required for the
-                pipeline to function.
-                """
-            )
-
-    print(f"Completed getting paired reads for {wildcards.sample}: {paired_reads}")
-    return paired_reads
+    # Check if sample is an SRA read
+    if pd.isna(u["fq1"]) and pd.isna(u["fq2"]):
+        # SRA-based sample; link to the download_sra rule
+        accession = u["sra"]
+        fq1 = f"data/pe/{accession}_1.fastq".format(accession=u.sra)
+        fq2 = f"data/pe/{accession}_2.fastq"
+        return [fq1, fq2]
+    else:
+        # Regular paired-end sample
+        return [u.fq1, u.fq2]
 
 
 def is_paired_end(sample):
     """
+    TODO: This function is deprecated
+
     Determine if a given sample is paired-end or single-end based on the units
     DataFrame.
 
@@ -172,6 +153,7 @@ def is_paired_end(sample):
     >>> is_paired_end('sample2')
     False
     """
+    """ 
     sample_units = units.loc[sample].dropna()
     paired = sample_units["fq2"].notna()
     all_paired = paired.all()
@@ -179,7 +161,8 @@ def is_paired_end(sample):
     assert (
         all_single or all_paired
     ), "Mixed paired-end and single-end reads found for sample {}.".format(sample)
-    return all_paired
+    return all_paired """
+    pass
 
 
 def get_read_direction(filename, convention):
