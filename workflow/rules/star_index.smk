@@ -1,3 +1,5 @@
+# star_index.smk
+
 import glob
 
 

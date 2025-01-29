@@ -1,5 +1,3 @@
-import glob
-
 # Why do this?
 # See the note on mapping using selective alignment here:
 # https://salmon.readthedocs.io/en/latest/salmon.html
@@ -16,6 +14,10 @@ import glob
 # https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
 # Thread on "How does salmon deal with decoy?"
 # https://www.biostars.org/p/456231/
+
+# salmon_decoys.smk
+
+import glob
 
 
 rule salmon_decoys:
