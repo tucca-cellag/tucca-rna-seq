@@ -1,9 +1,6 @@
-__use_yte__: true
+# profiles/slurm/config.yaml
 
-# Set yte vars
-__variables__:
-  mail: "'--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu'"
-# TODO Set this email to be configurable in config/config.yaml
+__use_yte__: true
 
 # Profile Settings
 executor: slurm
@@ -17,7 +14,8 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  slurm_extra: ?mail
+  # TODO Set email to be configurable in config/config.yaml
+  slurm_extra: "--constraint=redhat7 --mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"
 
 set-resources:
   star_index:
