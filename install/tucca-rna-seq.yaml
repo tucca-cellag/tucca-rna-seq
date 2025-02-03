@@ -1,0 +1,9 @@
+name: tucca-rna-seq
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - snakemake =8.27.1
+  - snakemake-executor-plugin-slurm =0.15.0
+  - snakefmt =0.10.2
+  - graphviz =12.0.0
