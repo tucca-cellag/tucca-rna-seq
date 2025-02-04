@@ -1,13 +1,19 @@
-sample_name	celltype	media_type	serum	replicate_num	sequencing_batch
-GM-A	btau_primary	growth	fbs	1	1
-GM-B	btau_primary	growth	fbs	2	1
-GM-C	btau_primary	growth	fbs	3	1
-SFGM-A	btau_primary	growth	sf	1	1
-SFGM-B	btau_primary	growth	sf	2	1
-SFGM-C	btau_primary	growth	sf	3	1
-DM-A	btau_primary	diff	fbs	1	1
-DM-B	btau_primary	diff	fbs	2	1
-DM-C	btau_primary	diff	fbs	3	1
-SFDM-A	btau_primary	diff	sf	1	1
-SFDM-B	btau_primary	diff	sf	2	1
-SFDM-C	btau_primary	diff	sf	3	1
+sample_name	celltype	media_type	serum	basal	replicate_num	sequencing_batch
+GM-A	btau_primary	growth	fbs	dmem	1	1
+GM-B	btau_primary	growth	fbs	dmem	2	1
+GM-C	btau_primary	growth	fbs	dmem	3	1
+SFGM-A	btau_primary	growth	cd_serum	dmem_f12	1	1
+SFGM-B	btau_primary	growth	cd_serum	dmem_f12	2	1
+SFGM-C	btau_primary	growth	cd_serum	dmem_f12	3	1
+DM-A	btau_primary	diff	fbs	dmem	1	1
+DM-B	btau_primary	diff	fbs	dmem	2	1
+DM-C	btau_primary	diff	fbs	dmem	3	1
+DMEM-A	btau_primary	diff	sf	dmem	1	1
+DMEM-B	btau_primary	diff	sf	dmem	2	1
+DMEM-C	btau_primary	diff	sf	dmem	3	1
+SFB-A	btau_primary	diff	sf	dmem_f12	1	1
+SFB-B	btau_primary	diff	sf	dmem_f12	2	1
+SFB-C	btau_primary	diff	sf	dmem_f12	3	1
+SFDM-A	btau_primary	diff	sf	dmem_f12	1	1
+SFDM-B	btau_primary	diff	sf	dmem_f12	2	1
+SFDM-C	btau_primary	diff	sf	dmem_f12	3	1
