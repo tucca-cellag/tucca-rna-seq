@@ -11,7 +11,6 @@ rule configure_sra_tools:
     shell:
         """
         vdb-config --set "/repository/user/main/remote_access" true \
-            --set "/repository/user/main/prefer_sra_lite" true \
             --set "/repository/user/main/user_repository" "$(pwd)/sra_cache" \
             --save && \
         touch {output}
