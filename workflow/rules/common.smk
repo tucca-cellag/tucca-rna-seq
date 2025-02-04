@@ -112,8 +112,8 @@ def get_paired_reads(wildcards):
     if pd.isna(u["fq1"]) and pd.isna(u["fq2"]):
         # SRA-based sample; link to the download_sra rule
         accession = u["sra"]
-        fq1 = f"data/pe/{accession}_1.fastq".format(accession=u.sra)
-        fq2 = f"data/pe/{accession}_2.fastq"
+        fq1 = f"data/pe/{accession}_1.fastq.gz".format(accession=u.sra)
+        fq2 = f"data/pe/{accession}_2.fastq.gz".format(accession=u.sra)
         return [fq1, fq2]
     else:
         # Regular paired-end sample
