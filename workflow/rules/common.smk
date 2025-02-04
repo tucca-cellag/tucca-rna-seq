@@ -90,7 +90,7 @@ def get_fq_files(wildcards):
     # Check if sample is an SRA read
     if pd.isna(u["fq1"]):
         accession = u["sra"]
-        return "data/pe/{accession}_{read}.fastq".format(
+        return "data/pe/{accession}_{read}.fastq.gz".format(
             accession=accession, read=wildcards.read[1]
         )
     else:
