@@ -1,19 +1,13 @@
-sample_name	celltype	media_type	serum	basal	replicate_num	sequencing_batch
-GM-A	btau_primary	growth	fbs	dmem	1	1
-GM-B	btau_primary	growth	fbs	dmem	2	1
-GM-C	btau_primary	growth	fbs	dmem	3	1
-SFGM-A	btau_primary	growth	cd_serum	dmem_f12	1	1
-SFGM-B	btau_primary	growth	cd_serum	dmem_f12	2	1
-SFGM-C	btau_primary	growth	cd_serum	dmem_f12	3	1
-DM-A	btau_primary	diff	fbs	dmem	1	1
-DM-B	btau_primary	diff	fbs	dmem	2	1
-DM-C	btau_primary	diff	fbs	dmem	3	1
-DMEM-A	btau_primary	diff	sf	dmem	1	1
-DMEM-B	btau_primary	diff	sf	dmem	2	1
-DMEM-C	btau_primary	diff	sf	dmem	3	1
-SFB-A	btau_primary	diff	sf	dmem_f12	1	1
-SFB-B	btau_primary	diff	sf	dmem_f12	2	1
-SFB-C	btau_primary	diff	sf	dmem_f12	3	1
-SFDM-A	btau_primary	diff	sf	dmem_f12	1	1
-SFDM-B	btau_primary	diff	sf	dmem_f12	2	1
-SFDM-C	btau_primary	diff	sf	dmem_f12	3	1
+sample_name	species	adhesion	immortalization_state	replicate_num	sequencing_batch
+IB_Primary_CEF_A	israeli_baladi	adherent	primary	1	1
+IB_Primary_CEF_B	israeli_baladi	adherent	primary	2	1
+IB_Primary_CEF_C	israeli_baladi	adherent	primary	3	1
+BR308_Primary_CEF_A	broiler_ross_308	adherent	primary	1	1
+BR308_Primary_CEF_B	broiler_ross_308	adherent	primary	2	1
+BR308_Primary_CEF_C	broiler_ross_308	adherent	primary	3	1
+IB_SI_AI_CEF_A	israeli_baladi	anchorage_independent	spontaneously_immortalized	1	1
+IB_SI_AI_CEF_B	israeli_baladi	anchorage_independent	spontaneously_immortalized	2	1
+IB_SI_AI_CEF_C	israeli_baladi	anchorage_independent	spontaneously_immortalized	3	1
+BR308_SI_AI_CEF_A	broiler_ross_308	anchorage_independent	spontaneously_immortalized	1	1
+BR308_SI_AI_CEF_B	broiler_ross_308	anchorage_independent	spontaneously_immortalized	2	1
+BR308_SI_AI_CEF_C	broiler_ross_308	anchorage_independent	spontaneously_immortalized	3	1
