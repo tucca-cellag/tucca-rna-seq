@@ -3,10 +3,7 @@
 
 rule multiqc:
     input:
-        fastqc_zip=glob.glob("results/fastqc/*zip"),
-        star_log_final=glob.glob("results/star/*Log.final.out"),
-        qualimap=glob.glob("results/qualimap/*"),
-        salmon=glob.glob("results/salmon/*salmon"),
+        lambda wc: get_final_output()[:-1],
     output:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
@@ -36,8 +33,6 @@ rule multiqc:
         -o results/multiqc/ \
         {params.overwrite_existing} \
         -c config/multiqc_config.yaml \
-        {input.fastqc_zip} \
-        {input.star_log_final} \
-        {input.qualimap} \
-        {input.salmon}) &> {log}
+        {params.extra} \
+        {input}) &> {log}
         """
