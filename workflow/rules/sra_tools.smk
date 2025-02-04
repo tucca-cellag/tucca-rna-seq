@@ -10,10 +10,10 @@ rule configure_sra_tools:
         "../envs/sra_tools.yaml"
     shell:
         """
-        vdb-config --set "/repository/user/main/remote_access" true \
+        (vdb-config --set "/repository/user/main/remote_access" true \
             --set "/repository/user/main/user_repository" "$(pwd)/sra_cache" \
             --save && \
-        touch {output}
+        touch {output}) &> {log}
         """
 
 
