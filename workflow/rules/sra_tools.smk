@@ -28,7 +28,7 @@ rule prefetch:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (prefetch {wildcards.accession} --output-directory data/sra_cache \
+        (prefetch {wildcards.accession} --output-directory data/sra_cache/ \
         --verbose) &> {log}
         """
 
