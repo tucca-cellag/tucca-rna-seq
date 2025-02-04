@@ -11,7 +11,7 @@ rule configure_sra_tools:
     shell:
         """
         (vdb-config --set "/repository/user/main/remote_access=true" --verbose
-        vdb-config --set "/repository/user/main/user_repository=$(pwd)/sra_cache" --verbose
+        vdb-config --set "/repository/user/main/user_repository=$(pwd)/data/sra_cache" --verbose
         touch {output}) &> {log}
         """
 
@@ -36,7 +36,7 @@ rule prefetch:
 rule download_sra_pe_reads:
     input:
         "results/sra_tools/sra_config_completed.txt",
-        "data/sra_cache/{accession}.sra",
+        "data/sra_cache/{accession}/{accession}.sra",
     output:
         "data/sra_reads/{accession}_1.fastq",
         "data/sra_reads/{accession}_2.fastq",
