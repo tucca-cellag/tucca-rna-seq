@@ -1,3 +1,6 @@
+# workflow/rules/multiqc.smk
+
+
 rule multiqc:
     input:
         fastqc_zip=glob.glob("results/fastqc/*zip"),

@@ -1,4 +1,4 @@
-# common.smk
+# workflow/rules/common.smk
 
 import glob
 import os

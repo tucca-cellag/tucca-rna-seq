@@ -1,4 +1,4 @@
-# star_index.smk
+# workflow/rules/star_index.smk
 
 import glob
 

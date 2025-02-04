@@ -1,3 +1,6 @@
+# workflow/rules/fastqc.smk
+
+
 rule fastqc:
     input:
         get_fq_files,

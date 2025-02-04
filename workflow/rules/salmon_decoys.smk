@@ -15,7 +15,7 @@
 # Thread on "How does salmon deal with decoy?"
 # https://www.biostars.org/p/456231/
 
-# salmon_decoys.smk
+# workflow/rules/salmon_decoys.smk
 
 import glob
 

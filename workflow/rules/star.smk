@@ -1,4 +1,4 @@
-# star.smk
+# workflow/rules/star.smk
 
 
 rule star:

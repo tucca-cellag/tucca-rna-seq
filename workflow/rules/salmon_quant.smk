@@ -1,3 +1,6 @@
+# workflow/rules/salmon_quant.smk
+
+
 rule salmon_quant:
     input:
         transcriptome=multiext(

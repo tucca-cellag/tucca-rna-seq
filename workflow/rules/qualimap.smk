@@ -1,3 +1,6 @@
+# workflow/rules/qualimap.smk
+
+
 rule qualimap_rnaseq:
     input:
         bam="results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
