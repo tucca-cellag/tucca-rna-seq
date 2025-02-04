@@ -29,7 +29,7 @@ rule multiqc:
         """
         unset DISPLAY
 
-        (multiqc -n {params.report_name} \
+        (multiqc --verbose -n {params.report_name} \
         -o results/multiqc/ \
         {params.overwrite_existing} \
         -c config/multiqc_config.yaml \
