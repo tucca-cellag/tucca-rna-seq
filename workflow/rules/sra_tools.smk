@@ -28,15 +28,15 @@ rule prefetch:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (prefetch {wildcards.accession} --output-directory {output} --verbose \
-        ) &> {log}
+        (prefetch {wildcards.accession} --output-directory data/sra_cache \
+        --verbose) &> {log}
         """
 
 
 rule download_sra_pe_reads:
     input:
         "results/sra_tools/sra_config_completed.txt",
-        "data/sra_cache/{accession}",
+        "data/sra_cache/{accession}/{accession}.sra",
     output:
         "data/sra_reads/{accession}_1.fastq",
         "data/sra_reads/{accession}_2.fastq",
