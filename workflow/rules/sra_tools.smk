@@ -22,7 +22,7 @@ rule prefetch:
     output:
         directory("sra_cache/{accession}"),
     log:
-        "logs/sra_tools/prefetch_{accession}.log",
+        "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
     conda:
         "../envs/sra_tools.yaml"
