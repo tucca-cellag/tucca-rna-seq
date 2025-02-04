@@ -12,5 +12,5 @@ rule download_sra:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (fasterq-dump {accession} --split-files) &> {log}
+        (fasterq-dump {wildcards.accession} --split-files) &> {log}
         """
