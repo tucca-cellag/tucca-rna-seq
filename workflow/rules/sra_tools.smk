@@ -3,7 +3,7 @@
 
 rule configure_sra_tools:
     output:
-        "sra_config_completed.txt",
+        "results/sra_tools/sra_config_completed.txt",
     log:
         "logs/sra_tools/configure_sra_tools.log",
     conda:
@@ -18,9 +18,9 @@ rule configure_sra_tools:
 
 rule prefetch:
     input:
-        "sra_config_completed.txt",
+        "results/sra_tools/sra_config_completed.txt",
     output:
-        directory("sra_cache/{accession}"),
+        directory("data/sra_cache/{accession}"),
     log:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
@@ -35,8 +35,8 @@ rule prefetch:
 
 rule download_sra_pe_reads:
     input:
-        "sra_config_completed.txt",
-        "sra_cache/{accession}.sra",
+        "results/sra_tools/sra_config_completed.txt",
+        "data/sra_cache/{accession}.sra",
     output:
         "data/sra_reads/{accession}_1.fastq",
         "data/sra_reads/{accession}_2.fastq",
