@@ -19,7 +19,7 @@ rule prefetch_sra:
     input:
         "results/sra_tools/sra_config_completed.txt",
     output:
-        multiext("data/sra_cache/{accession}", "{accession}.sra"),
+        multiext("data/sra_cache/{accession}/", "{accession}.sra"),
     log:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
