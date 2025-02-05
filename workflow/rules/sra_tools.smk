@@ -11,16 +11,15 @@ rule configure_sra_tools:
     shell:
         """
         (vdb-config --set "/repository/user/main/remote_access=true" --verbose
-        vdb-config --set "/repository/user/main/user_repository=$(pwd)/data/sra_cache" --verbose
         touch {output}) &> {log}
         """
 
 
-rule prefetch:
+rule prefetch_sra:
     input:
         "results/sra_tools/sra_config_completed.txt",
     output:
-        directory("data/sra_cache/{accession}"),
+        multiext("data/sra_cache/{accession}", "{accession}.sra"),
     log:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
@@ -28,8 +27,7 @@ rule prefetch:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (prefetch {wildcards.accession} --output-directory data/sra_cache/ \
-        --verbose) &> {log}
+        (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}
         """
 
 
@@ -47,6 +45,6 @@ rule download_sra_pe_reads:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (fasterq-dump {wildcards.accession} -e {threads} --split-files \
-        --verbose) &> {log}
+        (fasterq-dump {wildcards.accession} -O ./data/sra_reads -e {threads} \
+        --split-files --verbose) &> {log}
         """
