@@ -38,7 +38,9 @@ rule star:
     log:
         "logs/star/star_{sample}_{unit}.log",
     params:
-        star_index_dir="results/star/{genome}_index".format(genome=config["ref"]["ncbi_genome_accession"])
+        star_index_dir="results/star/{genome}_index".format(
+            genome=config["ref"]["ncbi_genome_accession"]
+        ),
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
         outSAMattributes=config["params"]["star"]["outSAMattributes"],
@@ -67,10 +69,12 @@ rule star:
         """
     shell:
         """
-        (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}" \
+        (echo "Running STAR alignment for sample={wildcards.sample}, \
+        unit={wildcards.unit}"
         echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
 
-        # Dynamically set readFilesCommand: use the provided command if gz, else use 'cat'
+        # Dynamically set readFilesCommand: use the provided command if gz,
+        # else use 'cat'
         readFilesCmd=""
         if [[ "{input.reads[0]}" == *.gz ]]; then
             readFilesCmd="{params.readFilesCommand}"
