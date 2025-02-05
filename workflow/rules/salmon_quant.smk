@@ -43,7 +43,14 @@ rule salmon_quant:
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
     message:
-        "Running Salmon Quant for {wildcards.sample} {wildcards.unit}"
+        """
+        Running Salmon Quant for:
+            sample = {wildcards.sample},
+            unit = {wildcards.unit}
+        Running Salmon Quant with the inputs:
+            {input.reads[0]}
+            {input.reads[1]}
+        """
     shell:
         """
         (salmon quant -i {input.transcriptome} \
