@@ -37,8 +37,6 @@ rule star:
         temp(directory("results/star/{sample}_{unit}__STARtmp")),
     log:
         "logs/star/star_{sample}_{unit}.log",
-    message:
-        "Mapping {wildcards.sample} {wildcards.unit} reads to genome"
     params:
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
@@ -57,18 +55,36 @@ rule star:
     threads: 12
     conda:
         "../envs/star.yaml"
+    message:
+        """
+        Running STAR alignment for:
+            sample = {wildcards.sample},
+            unit = {wildcards.unit}
+        Running STAR with the inputs:
+            {input.reads[0]}
+            {input.reads[1]}
+        """
     shell:
         """
-        echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}" \
+        (echo "Running STAR alignment for sample={wildcards.sample}, unit={wildcards.unit}" \
         echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
-        (STAR --runThreadN {threads} \
+
+        # Dynamically set readFilesCommand: use the provided command if gz, else use 'cat'
+        readFilesCmd=""
+        if [[ "{input.reads[0]}" == *.gz ]]; then
+            readFilesCmd="{params.readFilesCommand}"
+        else
+            readFilesCmd="cat"
+        fi
+
+        STAR --runThreadN {threads} \
         --genomeDir {input.star_index} \
         --readFilesIn {input.reads[0]} {input.reads[1]} \
+        --readFilesCommand $readFilesCmd \
         --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
         --outSAMtype {params.outSAMtype} \
         --outSAMunmapped {params.outSAMunmapped} \
         --outSAMattributes {params.outSAMattributes} \
-        --readFilesCommand {params.readFilesCommand} \
         --outFilterMultimapNmax {params.outFilterMultimapNmax} \
         --outFilterScoreMinOverLread {params.outFilterScoreMinOverLread} \
         --outFilterMatchNminOverLread {params.outFilterMatchNminOverLread} \
