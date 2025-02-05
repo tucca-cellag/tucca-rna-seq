@@ -39,7 +39,7 @@ rule download_sra_pe_reads:
         "data/sra_reads/{accession}_1.fastq",
         "data/sra_reads/{accession}_2.fastq",
     log:
-        "logs/sra_tools/fasterq_dump/download_{accession}.log",
+        "logs/sra_tools/fasterq_dump/fasterq_dump_{accession}.log",
     threads: 6
     conda:
         "../envs/sra_tools.yaml"
