@@ -33,6 +33,7 @@ rule salmon_quant:
         directory("results/salmon/{sample}_{unit}.salmon/libParams"),
         directory("results/salmon/{sample}_{unit}.salmon/logs"),
     params:
+        transcriptome_dir="results/salmon/transcriptome_index",
         lib_type=config["params"]["salmon_quant"]["lib_type"],
         mapping_strategy=config["params"]["salmon_quant"]["mapping_strategy"],
         bias_correction=config["params"]["salmon_quant"]["bias_correction"],
@@ -53,7 +54,7 @@ rule salmon_quant:
         """
     shell:
         """
-        (salmon quant -i {input.transcriptome} \
+        (salmon quant -i {params.transcriptome_dir} \
         -p {threads} \
         -l {params.lib_type} \
         -1 {input.reads[0]} \

@@ -38,6 +38,7 @@ rule star:
     log:
         "logs/star/star_{sample}_{unit}.log",
     params:
+        star_index_dir="results/star/{genome}_index".format(genome=config["ref"]["ncbi_genome_accession"])
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
         outSAMattributes=config["params"]["star"]["outSAMattributes"],
@@ -78,7 +79,7 @@ rule star:
         fi
 
         STAR --runThreadN {threads} \
-        --genomeDir {input.star_index} \
+        --genomeDir {params.star_index_dir} \
         --readFilesIn {input.reads[0]} {input.reads[1]} \
         --readFilesCommand $readFilesCmd \
         --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
