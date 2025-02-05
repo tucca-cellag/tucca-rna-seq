@@ -45,6 +45,6 @@ rule download_sra_pe_reads:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (fasterq-dump {wildcards.accession} -O ./data/sra_reads -e {threads} \
-        --split-files --verbose) &> {log}
+        (fasterq-dump ./data/sra_cache/{wildcards.accession} \
+        -O ./data/sra_reads -e {threads} --split-files --verbose) &> {log}
         """
