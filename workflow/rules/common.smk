@@ -106,12 +106,7 @@ def is_sra_read(u: pd.Series) -> bool:
     Returns:
         bool: True if the record represents an SRA read, False otherwise.
     """
-    return (
-        isinstance(u["sra"], str)
-        and u["sra"].strip() != ""
-        and u["fq1"] == ""
-        and u["fq2"] == ""
-    )
+    return str(u.sra).strip() != "" and str(u.fq1) == "" and str(u.fq2) == ""
 
 
 def get_unit_record(wildcards: Wildcard) -> pd.Series:
