@@ -152,9 +152,9 @@ def get_fq_files(wildcards: Wildcard) -> str:
         return str(get_sra_filepath(u["sra"], wildcards.read))
     else:
         if wildcards.read == "R1":
-            return u.fq1
+            return str(u.fq1)
         elif wildcards.read == "R2":
-            return u.fq2
+            return str(u.fq2)
         else:
             raise ValueError(f"Invalid read direction: {wildcards.read}")
 
