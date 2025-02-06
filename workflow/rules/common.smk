@@ -122,16 +122,20 @@ def get_unit_record(wildcards: Wildcard) -> pd.Series:
         record = units.loc[(sample, unit)]
     except KeyError:
         raise ValueError(
-            f"Combination of sample '{sample}' and unit '{unit}' not found in \
-            the metadata. Please check your samples and units files."
+            f"""
+            Combination of sample '{sample}' and unit '{unit}' not found in the
+            metadata. Please check your samples and units files.
+            """
         )
 
     # If the lookup returns a DataFrame instead of a Series then more than one
     # match was found.
     if isinstance(record, pd.DataFrame):
         raise ValueError(
-            f"Multiple entries found for sample '{sample}' and unit '{unit}'. \
-            Ensure that the metadata has one unique entry per sample and unit."
+            f"""
+            Multiple entries found for sample '{sample}' and unit '{unit}'. 
+            Ensure that the metadata has one unique entry per sample and unit.
+            """
         )
     return record
 
