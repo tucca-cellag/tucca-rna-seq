@@ -97,8 +97,8 @@ def is_sra_read(u: pd.Series) -> bool:
     Determine if a unit record indicates an SRA-based read.
 
     Conditions:
-        - u["sra"] is a non-empty string (after stripping whitespace)
-        - u["fq1"] and u["fq2"] are empty strings
+        - u.sra is a non-empty string (after stripping whitespace)
+        - u.fq1 and u.fq2 are NaN
 
     Parameters:
         u (pd.Series): A unit row with keys "sra", "fq1" and "fq2".
@@ -106,10 +106,7 @@ def is_sra_read(u: pd.Series) -> bool:
     Returns:
         bool: True if the record represents an SRA read, False otherwise.
     """
-    print(str(u.sra).strip())
-    print(str(u.fq1))
-    print(str(u.fq2))
-    return str(u.sra).strip() != "" and str(u.fq1) == "" and str(u.fq2) == ""
+    return str(u.sra).strip() != "" and pd.isna(u.fq1) and pd.isna(u.fq2)
 
 
 def get_unit_record(wildcards: Wildcard) -> pd.Series:
