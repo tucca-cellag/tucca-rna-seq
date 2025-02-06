@@ -165,54 +165,6 @@ def is_paired_end(sample):
     pass
 
 
-def get_read_direction(filename, convention):
-    """
-    Determine the read direction (R1 or R2) from a given filename based on the
-    specified file naming convention.
-
-    Parameters:
-    filename (str): The name of the file to be checked.
-    convention (str): The naming convention to be used. It can be either
-                        "standard" or "numeric".
-
-    Returns:
-    str: "R1" if the filename corresponds to the first read, "R2" if it
-            corresponds to the second read.
-
-    Raises:
-    ValueError: If the filename does not match any known read convention.
-
-    Conventions:
-    - "standard": The filename contains "_R1_" for the first read and "_R2_"
-        for the second read. Common convention used by Genewiz.
-    - "numeric": The filename ends with "_1.fq.gz" or "_1.fastq.gz" for the
-        first read and "_2.fq.gz" or "_2.fastq.gz" for the second read. Common
-        convention used by Novogene.
-
-    Example:
-    >>> get_read_direction("sample_R1_.fastq.gz", "standard")
-    'R1'
-    >>> get_read_direction("sample_1.fastq.gz", "numeric")
-    'R1'
-    """
-    # Check if sample is an SRA read
-    # TODO: SRA reads break entire logic of this function. Refactor
-    if convention == "standard":
-        if "_R1_" in filename:
-            return "R1"
-        elif "_R2_" in filename:
-            return "R2"
-    elif convention == "numeric":
-        if filename.endswith(("_1.fq.gz", "_1.fastq.gz")):
-            return "R1"
-        elif filename.endswith(("_2.fq.gz", "_2.fastq.gz")):
-            return "R2"
-    else:
-        raise ValueError(
-            "Filename does not match any known read convention: {}".format(filename)
-        )
-
-
 def cp_config_to_res_dir():
     """
     Copy the contents of the 'config' directory to the
