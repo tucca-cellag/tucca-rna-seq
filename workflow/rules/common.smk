@@ -164,10 +164,12 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
     """
     u: pd.Series = get_unit_record(wildcards)
     if is_sra_read(u):
+        print("SRA read!")
         fq1: str = str(get_sra_filepath(str(u.sra), "R1"))
         fq2: str = str(get_sra_filepath(str(u.sra), "R2"))
         return [fq1, fq2]
     else:
+        print("Not SRA read!")
         return [str(u.fq1), str(u.fq2)]
 
 
