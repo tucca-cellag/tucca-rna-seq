@@ -9,7 +9,7 @@ results/**
 ncbi*
 
 # Development Tools
-dev/**
+dev
 de_analysis
 
 # History files
