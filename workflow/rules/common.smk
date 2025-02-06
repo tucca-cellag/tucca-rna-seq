@@ -2,48 +2,70 @@
 
 import glob
 import os
-import shutil
+from pathlib import Path
 import pandas as pd
+import shutil
+from typing import Protocol, List
+import re
+
+
+# Define a protocol for wildcards so that we can expect
+# them to have attributes: sample, unit, and read.
+class Wildcard(Protocol):
+    sample: str
+    unit: str
+    read: str
+
 
 ####### load config and sample sheets #######
+
+CONFIG_DIR = Path("config")
+RESULT_SNAPSHOT = Path("results/last_run_config_snapshot")
+SRA_READS_DIR = Path("data/sra_reads")
 
 # from snakemake.utils import validate
 
 # validate(config, schema="../schemas/config.schema.yaml")
 
-samples = (
-    pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
-    .set_index("sample_name", drop=False)
-    .sort_index()
-)
+samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
+samples["sample_name"] = samples["sample_name"].str.strip()
+samples = samples.set_index("sample_name", drop=False).sort_index()
 
 # validate(samples, schema="../schemas/samples.schema.yaml")
 
-units = (
-    pd.read_csv(config["units"], sep="\t", dtype={"sample_name": str, "unit_name": str})
-    .set_index(["sample_name", "unit_name"], drop=False)
-    .sort_index()
+units = pd.read_csv(
+    config["units"], sep="\t", dtype={"sample_name": str, "unit_name": str}
 )
+units["sample_name"] = units["sample_name"].str.strip()
+units["unit_name"] = units["unit_name"].str.strip()
+units = units.set_index(["sample_name", "unit_name"], drop=False).sort_index()
 
 # validate(units, schema="../schemas/units.schema.yaml")
 
+# Check that each (sample, unit) combination is unique.
+if not units.index.is_unique:
+    raise ValueError(
+        "Each (sample, unit) combination must be unique in the units file."
+    )
 
 ####### wildcard constraints #######
 
 
-# Snakemake documentation on wildcard constraints (as of Snakemake 8.20.5)
+# Snakemake documentation on wildcard constraints
 # https://snakemake.readthedocs.io/en/stable/tutorial/additional_features.html#constraining-wildcards
 wildcard_constraints:
     # Constrain the 'sample' wildcard to match any of the sample names listed
     # in the 'samples' DataFrame.
     # This ensures that the 'sample' wildcard can only take values from the
     # specified sample names.
-    sample="|".join(samples["sample_name"]),
+    # Escape each sample name to avoid regex meta-character issues.
+    sample="|".join(re.escape(s) for s in samples.index.unique()),
     # Constrain the 'unit' wildcard to match any of the unit names listed in the
     # 'units' DataFrame.
     # This ensures that the 'unit' wildcard can only take values from the
     # specified unit names.
-    unit="|".join(units["unit_name"]),
+    # Escape each unit name similarly to each sample name.
+    unit="|".join(re.escape(u) for u in units["unit_name"].unique()),
     # Constrain the 'read' wildcard to match either "R1" or "R2".
     # This ensures that the 'read' wildcard can only take the values "R1" or
     # "R2", representing the read direction in paired-end sequencing.
@@ -53,226 +75,192 @@ wildcard_constraints:
 ####### helper functions #######
 
 
-def get_fq_files(wildcards):
+def get_sra_filepath(accession: str, read: str) -> Path:
     """
-    Retrieve the file path for a specified read direction (R1 or R2) for a
-    given sample and unit.
-
-    This function looks up the `units` DataFrame using the sample and unit
-    specified in the `wildcards` object. It then returns the file path for the
-    read direction specified in `wildcards.read`.
+    Generate the file path for an SRA read given its accession and read
+    direction.
 
     Parameters:
-    wildcards (object): An object containing the following attributes:
-        - sample (str): The name of the sample.
-        - unit (str): The name of the unit.
-        - read (str): The read direction, either "R1" or "R2".
+        accession (str): The SRA accession number.
+        read (str): The read direction (e.g., "R1" or "R2").
 
     Returns:
-    str: The file path for the specified read direction.
-
-    Raises:
-    ValueError: If the read direction is not "R1" or "R2".
-
-    Example:
-    >>> wildcards = type('obj', (object,), {'sample': 'sample1', 'unit': 'unit1', 'read': 'R1'})
-    >>> units = pd.DataFrame({
-    ...     'sample': ['sample1', 'sample1'],
-    ...     'unit': ['unit1', 'unit2'],
-    ...     'fq1': ['sample1_unit1_R1.fastq.gz', 'sample1_unit2_R1.fastq.gz'],
-    ...     'fq2': ['sample1_unit1_R2.fastq.gz', 'sample1_unit2_R2.fastq.gz']
-    ... }).set_index(['sample', 'unit'])
-    >>> get_fq_files(wildcards)
-    'sample1_unit1_R1.fastq.gz'
+        Path: The path to the SRA fastq file.
     """
-    u = units.loc[(wildcards.sample, wildcards.unit)]
-    # print(f"Getting fq files for {wildcards.sample} {wildcards.unit}")
-    # Check if sample is an SRA read
-    if pd.isna(u["fq1"]):
-        accession = u["sra"]
-        return "data/sra_reads/{accession}_{read}.fastq".format(
-            accession=accession, read=wildcards.read[1]
+    # Use read number (assumes read is like "R1" or "R2")
+    read_num = read[1]
+    return SRA_READS_DIR / f"{accession}_{read_num}.fastq"
+
+
+def is_sra_read(u: pd.Series) -> bool:
+    """
+    Determine if a unit record indicates an SRA-based read.
+
+    Conditions:
+        - u["sra"] is a non-empty string (after stripping whitespace)
+        - u["fq1"] and u["fq2"] are empty strings
+
+    Parameters:
+        u (pd.Series): A unit row with keys "sra", "fq1" and "fq2".
+
+    Returns:
+        bool: True if the record represents an SRA read, False otherwise.
+    """
+    return (
+        isinstance(u["sra"], str)
+        and u["sra"].strip() != ""
+        and u["fq1"] == ""
+        and u["fq2"] == ""
+    )
+
+
+def get_unit_record(wildcards: Wildcard) -> pd.Series:
+    # Clean the wildcard values.
+    sample = wildcards.sample.strip()
+    unit = wildcards.unit.strip()
+    try:
+        record = units.loc[(sample, unit)]
+    except KeyError:
+        raise ValueError(
+            f"Combination of sample '{sample}' and unit '{unit}' not found in \
+            the metadata. Please check your samples and units files."
         )
+
+    # If the lookup returns a DataFrame instead of a Series then more than one
+    # match was found.
+    if isinstance(record, pd.DataFrame):
+        raise ValueError(
+            f"Multiple entries found for sample '{sample}' and unit '{unit}'. \
+            Ensure that the metadata has one unique entry per sample and unit."
+        )
+    return record
+
+
+def get_fq_files(wildcards: Wildcard) -> str:
+    """
+    Retrieve the file path for a given read direction (R1 or R2) for a
+    sample/unit.
+
+    Parameters:
+        wildcards (Wildcard): An object with attributes: sample, unit, read.
+
+    Returns:
+        str: The file path for the specified read.
+    """
+    u: pd.Series = get_unit_record(wildcards)
+    if is_sra_read(u):
+        return str(get_sra_filepath(u["sra"], wildcards.read))
     else:
         if wildcards.read == "R1":
             return u.fq1
         elif wildcards.read == "R2":
             return u.fq2
         else:
-            raise ValueError("Invalid read direction: {}".format(wildcards.read))
+            raise ValueError(f"Invalid read direction: {wildcards.read}")
 
 
-def get_paired_reads(wildcards):
+def get_paired_reads(wildcards: Wildcard) -> List[str]:
     """
-    Retrieve the file paths for paired-end reads for a given sample and unit.
-    """
-    u = units.loc[(wildcards.sample, wildcards.unit)]
+    Retrieve file paths for paired-end reads for a given sample/unit.
 
-    # Check if sample is an SRA read
-    if pd.isna(u["fq1"]) and pd.isna(u["fq2"]):
-        # SRA-based sample; link to the download_sra rule
-        accession = u["sra"]
-        fq1 = f"data/sra_reads/{accession}_1.fastq".format(accession=u.sra)
-        fq2 = f"data/sra_reads/{accession}_2.fastq".format(accession=u.sra)
+    Parameters:
+        wildcards (Wildcard): An object with attributes: sample, unit, read.
+
+    Returns:
+        List[str]: A list containing the paths for R1 and R2 reads.
+    """
+    u: pd.Series = get_unit_record(wildcards)
+    if is_sra_read(u):
+        accession: str = u["sra"]
+        fq1: str = str(get_sra_filepath(accession, "R1"))
+        fq2: str = str(get_sra_filepath(accession, "R2"))
         return [fq1, fq2]
     else:
-        # Regular paired-end sample
         return [u.fq1, u.fq2]
 
 
-def is_paired_end(sample):
+def cp_config_to_res_dir() -> None:
     """
-    TODO: This function is deprecated
+    Copy configuration directory contents to a results snapshot directory.
 
-    Determine if a given sample is paired-end or single-end based on the units
-    DataFrame.
-
-    This function checks the `fq2` column in the `units` DataFrame for the
-    specified sample. If all entries in the `fq2` column are non-null, the
-    sample is considered paired-end. If all entries in the `fq2` column are
-    null, the sample is considered single-end. If there is a mix of non-null
-    and null entries, an assertion error is raised.
-
-    Parameters:
-    sample (str): The name of the sample to be checked.
-
-    Returns:
-    bool: True if the sample is paired-end, False if the sample is single-end.
-
-    Raises:
-    AssertionError: If the sample contains a mix of paired-end and single-end
-    reads.
-
-    Example:
-    >>> units = pd.DataFrame({
-    ...     'fq1': ['sample1_R1.fastq.gz', 'sample2_R1.fastq.gz'],
-    ...     'fq2': ['sample1_R2.fastq.gz', None]
-    ... }, index=['sample1', 'sample2'])
-    >>> is_paired_end('sample1')
-    True
-    >>> is_paired_end('sample2')
-    False
+    Creates the destination if it does not exist and copies both files and
+    directories.
     """
-    """ 
-    sample_units = units.loc[sample].dropna()
-    paired = sample_units["fq2"].notna()
-    all_paired = paired.all()
-    all_single = (~paired).all()
-    assert (
-        all_single or all_paired
-    ), "Mixed paired-end and single-end reads found for sample {}.".format(sample)
-    return all_paired """
-    pass
-
-
-def cp_config_to_res_dir():
-    """
-    Copy the contents of the 'config' directory to the
-    'results/last_run_config_snapshot' directory.
-
-    This function creates the 'results/last_run_config_snapshot' directory if
-    it does not already exist. It then iterates over all items in the 'config'
-    directory. For each item, it checks if the item is a directory or a file.
-    If it is a directory, it uses `shutil.copytree` to copy the entire directory
-    tree to the destination. If it is a file, it uses `shutil.copy2` to copy
-    the file to the destination.
-
-    The `dirs_exist_ok=True` parameter in `shutil.copytree` ensures that
-    existing directories are not overwritten, and the `exist_ok=True` parameter
-    in `os.makedirs` ensures that no error is raised if the directory already
-    exists.
-
-    Example:
-    >>> cp_config_to_res_dir()
-    This will copy all files and directories from 'config' to
-    'results/last_run_config_snapshot'.
-
-    Raises:
-    OSError: If an error occurs while creating the directory or copying files.
-    """
-    os.makedirs("results/last_run_config_snapshot", exist_ok=True)
-    for item in os.listdir("config"):
-        s = os.path.join("config", item)
-        d = os.path.join("results/last_run_config_snapshot", item)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, dirs_exist_ok=True)
+    RESULT_SNAPSHOT.mkdir(parents=True, exist_ok=True)
+    for item in CONFIG_DIR.iterdir():
+        dest: Path = RESULT_SNAPSHOT / item.name
+        if item.is_dir():
+            shutil.copytree(item, dest, dirs_exist_ok=True)
         else:
-            shutil.copy2(s, d)
+            shutil.copy2(item, dest)
 
 
-def get_final_output():
+# Helper function for FastQC output paths.
+def get_fastqc_paths(row: pd.Series) -> List[str]:
+    sample: str = row.sample_name
+    unit: str = row.unit_name
+    paths: List[str] = [
+        f"results/fastqc/{sample}_{unit}_R1.html",
+        f"results/fastqc/{sample}_{unit}_R2.html",
+        f"results/fastqc/{sample}_{unit}_R1_fastqc.zip",
+        f"results/fastqc/{sample}_{unit}_R2_fastqc.zip",
+    ]
+    return paths
+
+
+# Helper function for STAR output paths.
+def get_star_paths(row: pd.Series) -> List[str]:
+    sample: str = row.sample_name
+    unit: str = row.unit_name
+    paths: List[str] = [
+        f"results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
+        f"results/star/{sample}_{unit}_Log.final.out",
+        f"results/star/{sample}_{unit}_Log.out",
+        f"results/star/{sample}_{unit}_Log.progress.out",
+        f"results/star/{sample}_{unit}_SJ.out.tab",
+        f"results/star/{sample}_{unit}__STARtmp",
+    ]
+    return paths
+
+
+# Helper function for Qualimap output paths.
+def get_qualimap_paths(row: pd.Series) -> List[str]:
+    sample: str = row.sample_name
+    unit: str = row.unit_name
+    paths: List[str] = [
+        f"results/qualimap/{sample}_{unit}.qualimap/qualimapReport.html",
+        f"results/qualimap/{sample}_{unit}.qualimap/rnaseq_qc_results.txt",
+    ]
+    return paths
+
+
+# Helper function for Salmon output paths.
+def get_salmon_paths(row: pd.Series) -> List[str]:
+    sample: str = row.sample_name
+    unit: str = row.unit_name
+    return [f"results/salmon/{sample}_{unit}.salmon/quant.sf"]
+
+
+# Main function that aggregates all expected outputs. Called by rule all.
+def get_final_output() -> List[str]:
     """
-    Generate a list of final output file paths for FastQC results and BAM files
-    based on the units DataFrame.
-
-    This function iterates over each row in the `units` DataFrame and constructs
-    the paths for the FastQC HTML and ZIP files for both read 1 and read 2,
-    as well as the BAM file, based on the naming convention specified in
-    each row.
+    Aggregate a list of final output file paths (for FastQC, STAR, Qualimap,
+    Salmon, etc.) and a MultiQC report.
 
     Returns:
-    list: A list of strings representing the file paths for the FastQC HTML,
-            ZIP files, and BAM files.
-
-    TODO: finish this function def
+        List[str]: A list of file paths representing the expected outputs.
     """
-    # Copy config files to the results directory
-    cp_config_to_res_dir()
+    final_output: List[str] = []
 
-    final_output = []
+    # Iterate over each unit to collect outputs using helper functions.
+    for _, row in units.iterrows():
+        final_output.extend(get_fastqc_paths(row))
+        final_output.extend(get_star_paths(row))
+        final_output.extend(get_qualimap_paths(row))
+        final_output.extend(get_salmon_paths(row))
 
-    # Iterate over each unit to collect expected outputs
-    for index, row in units.iterrows():
-        convention = row["convention"]
-
-        # Define FastQC outputs
-        read1_fq_html = f"results/fastqc/{row.sample_name}_{row.unit_name}_R1.html"
-        read2_fq_html = f"results/fastqc/{row.sample_name}_{row.unit_name}_R2.html"
-        read1_fq_zip = f"results/fastqc/{row.sample_name}_{row.unit_name}_R1_fastqc.zip"
-        read2_fq_zip = f"results/fastqc/{row.sample_name}_{row.unit_name}_R2_fastqc.zip"
-
-        # Define STAR outputs
-        bam_file = f"results/star/{row.sample_name}_{row.unit_name}_Aligned.sortedByCoord.out.bam"
-        log_final = f"results/star/{row.sample_name}_{row.unit_name}_Log.final.out"
-        log_out = f"results/star/{row.sample_name}_{row.unit_name}_Log.out"
-        log_progress = (
-            f"results/star/{row.sample_name}_{row.unit_name}_Log.progress.out"
-        )
-        sj_out = f"results/star/{row.sample_name}_{row.unit_name}_SJ.out.tab"
-        star_tmp = f"results/star/{row.sample_name}_{row.unit_name}__STARtmp"
-
-        # Define Qualimap outputs
-        qualimapReport = f"results/qualimap/{row.sample_name}_{row.unit_name}.qualimap/qualimapReport.html"
-        qualimap_qc_results = f"results/qualimap/{row.sample_name}_{row.unit_name}.qualimap/rnaseq_qc_results.txt"
-
-        # Define Salmon outputs
-        salmon_quant = (
-            f"results/salmon/{row.sample_name}_{row.unit_name}.salmon/quant.sf"
-        )
-
-        # Aggregate all unit-based outputs
-        final_output.extend(
-            [
-                read1_fq_html,
-                read2_fq_html,
-                read1_fq_zip,
-                read2_fq_zip,
-                bam_file,
-                log_final,
-                log_out,
-                log_progress,
-                sj_out,
-                star_tmp,
-                qualimapReport,
-                qualimap_qc_results,
-                salmon_quant,
-            ]
-        )
-
-    # Define non-unit-based outputs
-    multiqc = f"results/multiqc/{config['params']['multiqc']['report_name']}.html"
-
-    # Aggregate all non-unit-based outputs
-    final_output.extend([multiqc])
+    # Define non-unit-based output (e.g., MultiQC report)
+    multiqc: str = f"results/multiqc/{config['params']['multiqc']['report_name']}.html"
+    final_output.append(multiqc)
 
     return final_output
