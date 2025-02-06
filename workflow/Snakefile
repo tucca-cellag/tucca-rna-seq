@@ -31,7 +31,14 @@ include: "rules/multiqc.smk"
 
 rule snapshot_config:
     input:
-        directory("config"),
+        multiext(
+            "config/",
+            "config.yaml",
+            "multiqc_config.yaml",
+            "README.md",
+            "samples.tsv",
+            "units.tsv",
+        ),
     output:
         "results/last_run_config_snapshot/snapshot_done.txt",
     run:
