@@ -8,15 +8,6 @@ import shutil
 from typing import Protocol, List
 import re
 
-
-# Define a protocol for wildcards so that we can expect
-# them to have attributes: sample, unit, and read.
-class Wildcard(Protocol):
-    sample: str
-    unit: str
-    read: str
-
-
 ####### load config and sample sheets #######
 
 CONFIG_DIR = Path("config")
@@ -114,7 +105,7 @@ def is_sra_read(u: pd.Series) -> bool:
     )
 
 
-def get_unit_record(wildcards: Wildcard) -> pd.Series:
+def get_unit_record(wildcards) -> pd.Series:
     # Clean the wildcard values.
     sample = wildcards.sample.strip()
     unit = wildcards.unit.strip()
@@ -134,7 +125,7 @@ def get_unit_record(wildcards: Wildcard) -> pd.Series:
     return record
 
 
-def get_fq_files(wildcards: Wildcard) -> str:
+def get_fq_files(wildcards) -> str:
     """
     Retrieve the file path for a given read direction (R1 or R2) for a
     sample/unit.
@@ -157,7 +148,7 @@ def get_fq_files(wildcards: Wildcard) -> str:
             raise ValueError(f"Invalid read direction: {wildcards.read}")
 
 
-def get_paired_reads(wildcards: Wildcard) -> List[str]:
+def get_paired_reads(wildcards) -> List[str]:
     """
     Retrieve file paths for paired-end reads for a given sample/unit.
 
