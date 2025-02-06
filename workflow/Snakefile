@@ -57,3 +57,30 @@ rule all:
         Workflow completed successfully! All final reports and intermediate
         files have been generated.
         """
+
+
+rule test_fq_functions:
+    message:
+        "Testing get_fq_files and get_paired_reads with dummy wildcard values."
+    run:
+        # Define a simple dummy wildcard container.
+        class Dummy:
+            pass
+
+
+        dummy = Dummy()
+        # Set dummy values that match your samples/units
+        # (make sure that these values exist in your samples.tsv and units.tsv)
+        dummy.sample = "sample1"  # use a sample present in your metadata
+        dummy.unit = "unit1"  # use a unit that exists for sample1
+        dummy.read = "R1"
+
+        # Now call the functions
+        fq_file = get_fq_files(dummy)
+        paired_files = get_paired_reads(dummy)
+
+        # Print out the results (or write them to a file for inspection)
+        print("get_fq_files returned:")
+        print(fq_file)
+        print("\nget_paired_reads returned:")
+        print(paired_files)
