@@ -106,6 +106,9 @@ def is_sra_read(u: pd.Series) -> bool:
     Returns:
         bool: True if the record represents an SRA read, False otherwise.
     """
+    print(str(u.sra).strip())
+    print(str(u.fq1))
+    print(str(u.fq2))
     return str(u.sra).strip() != "" and str(u.fq1) == "" and str(u.fq2) == ""
 
 
