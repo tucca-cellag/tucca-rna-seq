@@ -176,7 +176,7 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
         fq2: str = str(get_sra_filepath(accession, "R2"))
         return [fq1, fq2]
     else:
-        return [u.fq1, u.fq2]
+        return [str(u.fq1), str(u.fq2)]
 
 
 def cp_config_to_res_dir() -> None:
