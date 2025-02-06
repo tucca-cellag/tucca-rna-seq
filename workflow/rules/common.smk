@@ -21,6 +21,7 @@ class Wildcard(Protocol):
 
 CONFIG_DIR = Path("config")
 RESULT_SNAPSHOT = Path("results/last_run_config_snapshot")
+SRA_READS_DIR = Path("")
 
 # from snakemake.utils import validate
 
@@ -88,7 +89,7 @@ def get_sra_filepath(accession: str, read: str) -> Path:
     """
     # Use read number (assumes read is like "R1" or "R2")
     read_num = read[1]
-    return f"data/sra_reads_{accession}_{read_num}.fastq"
+    return f"data/sra_reads/{accession}_{read_num}.fastq"
 
 
 def is_sra_read(u: pd.Series) -> bool:
