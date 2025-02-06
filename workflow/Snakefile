@@ -1,9 +1,9 @@
-# Snakefile
+# workflow/Snakefile
 
 from snakemake.utils import min_version
 
 ##### set minimum snakemake version #####
-min_version("8.11.3")
+min_version("8.27.1")
 
 
 ##### setup report #####
@@ -33,4 +33,7 @@ rule all:
     input:
         get_final_output(),
     message:
-        "TODO: Write a message for rule all"
+        """
+        Workflow completed successfully! All final reports and intermediate
+        files have been generated.
+        """
