@@ -149,7 +149,7 @@ def get_fq_files(wildcards: Wildcard) -> str:
     """
     u: pd.Series = get_unit_record(wildcards)
     if is_sra_read(u):
-        return str(get_sra_filepath(u["sra"], wildcards.read))
+        return str(get_sra_filepath(str(u.sra), wildcards.read))
     else:
         if wildcards.read == "R1":
             return str(u.fq1)
@@ -171,9 +171,8 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
     """
     u: pd.Series = get_unit_record(wildcards)
     if is_sra_read(u):
-        accession: str = u["sra"]
-        fq1: str = str(get_sra_filepath(accession, "R1"))
-        fq2: str = str(get_sra_filepath(accession, "R2"))
+        fq1: str = str(get_sra_filepath(str(u.sra), "R1"))
+        fq2: str = str(get_sra_filepath(str(u.sra), "R2"))
         return [fq1, fq2]
     else:
         return [str(u.fq1), str(u.fq2)]
