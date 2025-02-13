@@ -1,3 +1,5 @@
+# install/1.0.0.yaml
+
 name: tucca-rna-seq-1.0.0
 channels:
   - conda-forge
