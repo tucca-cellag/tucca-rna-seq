@@ -68,8 +68,8 @@ if ! conda env list | awk '{print $1}' | grep -q "^${ENV_NAME}$"; then
   echo "Current conda channels configuration:"
   conda config --show channels
 
-  echo "Creating environment '${ENV_NAME}' from install/tucca-rna-seq-1.0.0.yaml..."
-  conda env create -f install/tucca-rna-seq-1.0.0.yaml -y
+  echo "Creating environment '${ENV_NAME}' from install/1.0.0.yaml..."
+  conda env create -f install/1.0.0.yaml -y
 else
   echo "Workflow conda environment '${ENV_NAME}' already exists."
 
