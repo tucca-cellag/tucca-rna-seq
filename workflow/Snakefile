@@ -25,6 +25,7 @@ include: "rules/fastqc.smk"
 include: "rules/qualimap.smk"
 include: "rules/multiqc.smk"
 include: "rules/snapshot_config.smk"
+include: "rules/jupyter.smk"
 
 
 ##### target rules #####
