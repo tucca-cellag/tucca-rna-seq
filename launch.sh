@@ -41,7 +41,7 @@ if [ ! -f "$CONDA_PROFILE" ]; then
 fi
 
 echo "Sourcing conda initialization from ${CONDA_PROFILE}..."
-if ! . "$CONDA_PROFILE"; then
+if ! source "$CONDA_PROFILE"; then
   echo "Error: Failed to source conda initialization from ${CONDA_PROFILE}"
   return 1 2>/dev/null || exit 1
 fi
