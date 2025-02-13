@@ -1,4 +1,5 @@
 # profiles/slurm/config.yaml
+# Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
 executor: slurm
