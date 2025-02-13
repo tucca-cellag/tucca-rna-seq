@@ -46,6 +46,8 @@ if ! source "$CONDA_PROFILE"; then
   return 1 2>/dev/null || exit 1
 fi
 
+export PATH="/cluster/tufts/hpc/tools/miniforge3/24.11.2/bin:$PATH"
+
 # 4. Check if the workflow conda environment (tucca-rna-seq) exists.
 ENV_NAME="tucca-rna-seq-1.0.0"
 if ! conda env list | awk '{print $1}' | grep -q "^${ENV_NAME}$"; then
