@@ -1,5 +1,2 @@
 sample_name	unit_name	fq1	fq2	sra	convention
 IB_Primary_CEF_A	lane1			SRR14027951	numeric
-BR308_Primary_CEF_A	lane1			SRR14027954	numeric
-IB_SI_AI_CEF_A	lane1			SRR14027957	numeric
-BR308_SI_AI_CEF_A	lane1			SRR14027960	numeric

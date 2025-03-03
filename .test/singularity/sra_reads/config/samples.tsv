@@ -1,5 +1,2 @@
 sample_name	species	adhesion	immortalization_state	replicate_num	sequencing_batch
 IB_Primary_CEF_A	israeli_baladi	adherent	primary	1	1
-BR308_Primary_CEF_A	broiler_ross_308	adherent	primary	1	1
-IB_SI_AI_CEF_A	israeli_baladi	anchorage_independent	spontaneously_immortalized	1	1
-BR308_SI_AI_CEF_A	broiler_ross_308	anchorage_independent	spontaneously_immortalized	1	1
