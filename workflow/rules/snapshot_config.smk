@@ -17,5 +17,5 @@ rule snapshot_config:
         "docker://python:latest"
     log:
         "logs/snapshot_config/snapshot_config.log",
-    script:
-        "workflow/scripts/snapshot_config.py"
+    shell:
+        "(python3 workflow/scripts/snapshot_config.py {output}) &> {log}"

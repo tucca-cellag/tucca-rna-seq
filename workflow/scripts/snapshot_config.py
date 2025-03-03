@@ -7,31 +7,34 @@ into the results snapshot directory. It uses the cp_config_to_res_dir()
 function from common.smk.
 """
 
-from contextlib import redirect_stdout
+import shutil
 import sys
+from pathlib import Path
 
-# Import the cp_config_to_res_dir function from common.smk.
-# Ensure that the workflow/rules directory is set as a module (i.e. has an __init__.py file)
-from workflow.rules.common import cp_config_to_res_dir
+CONFIG_DIR = Path("config")
+RESULT_SNAPSHOT = Path("results/last_run_config_snapshot")
+
+
+def cp_config_to_res_dir() -> None:
+    """
+    Copy configuration directory contents to a results snapshot directory.
+    """
+    RESULT_SNAPSHOT.mkdir(parents=True, exist_ok=True)
+    for item in CONFIG_DIR.iterdir():
+        destination = RESULT_SNAPSHOT / item.name
+        if item.is_dir():
+            shutil.copytree(item, destination, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, destination)
 
 
 def main():
-    # Write log output if a log file is specified.
-    if snakemake.log:
-        # If snakemake.log is a list, use the first element.
-        log_file = snakemake.log[0] if isinstance(
-            snakemake.log, list) and snakemake.log else snakemake.log
-        with open(log_file, "w") as logfile:
-            with redirect_stdout(logfile):
-                cp_config_to_res_dir()
-                print("Configuration snapshot completed.")
-    else:
-        cp_config_to_res_dir()
-        print("Configuration snapshot completed.")
-
-    # Write the marker file to indicate the snapshot is complete.
-    with open(snakemake.output[0], "w") as marker:
-        marker.write("Configuration snapshot completed.")
+    cp_config_to_res_dir()
+    print("Configuration snapshot completed.")
+    # The marker file is provided as the first command-line argument.
+    marker_file = sys.argv[1]
+    with open(marker_file, "w") as f:
+        f.write("Configuration snapshot completed.")
 
 
 if __name__ == "__main__":

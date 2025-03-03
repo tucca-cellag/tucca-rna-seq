@@ -19,8 +19,6 @@ class Wildcard(Protocol):
 
 ####### load config and sample sheets #######
 
-CONFIG_DIR = Path("config")
-RESULT_SNAPSHOT = Path("results/last_run_config_snapshot")
 SRA_READS_DIR = Path("")
 
 # from snakemake.utils import validate
@@ -169,22 +167,6 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
         return [fq1, fq2]
     else:
         return [str(u.fq1), str(u.fq2)]
-
-
-def cp_config_to_res_dir() -> None:
-    """
-    Copy configuration directory contents to a results snapshot directory.
-
-    Creates the destination if it does not exist and copies both files and
-    directories.
-    """
-    RESULT_SNAPSHOT.mkdir(parents=True, exist_ok=True)
-    for item in CONFIG_DIR.iterdir():
-        dest: Path = RESULT_SNAPSHOT / item.name
-        if item.is_dir():
-            shutil.copytree(item, dest, dirs_exist_ok=True)
-        else:
-            shutil.copy2(item, dest)
 
 
 # Helper function for FastQC output paths.
