@@ -63,6 +63,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-singularity-
 
+      # Cache the Conda packages directory to avoid re-downloading packages
+      - name: Cache Conda Packages
+        uses: actions/cache@v4
+        with:
+          # Path used in your setup; adjust if you use a different directory.
+          path: /home/runner/conda_pkgs_dir
+          # Use the environment file hash to update the cache whenever it changes.
+          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-pkgs-
+
+      # Cache the snakemake environment directory
+      - name: Cache snakemake Conda Environment
+        uses: actions/cache@v4
+        with:
+          # Adjust this path to where your environment is created.
+          path: /home/runner/miniconda3/envs/snakemake
+          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-snakemake-env-
+
       # Install Singularity (or Apptainer) version 3.8.4.
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
