@@ -62,7 +62,7 @@ rule unzip_genome:
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     container:
-        "docker://quay.io/biocontainers/unzip:6.0"
+        "docker://quay.io/biocontainers/p7zip:16.02"
     log:
         "logs/datasets/unzip_genome.log",
     message:
@@ -71,6 +71,5 @@ rule unzip_genome:
         )
     shell:
         """
-        (mkdir -p results/datasets
-        unzip -o {input} -d results/datasets) &> {log}
+        (mkdir -p results/datasets && 7z x {input} -oresults/datasets) &> {log}
         """
