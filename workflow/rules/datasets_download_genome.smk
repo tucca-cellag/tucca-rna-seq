@@ -62,7 +62,7 @@ rule unzip_genome:
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     container:
-        "docker://ubuntu:latest"
+        "quay.io/biocontainers/unzip:6.0"
     log:
         "logs/datasets/unzip_genome.log",
     message:
