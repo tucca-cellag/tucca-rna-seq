@@ -1,10 +1,10 @@
-# profiles/slurm/config.yaml
+# profiles/slurm/config.v8+.yaml
 # Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
 executor: slurm
-jobs: 100
 sdm: apptainer
+jobs: 100
 latency-wait: 120
 default-resources:
   slurm_partition: "batch"
