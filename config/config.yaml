@@ -104,6 +104,8 @@ params:
     # Leave out if you don't want to automatically overwrite existing reports
     overwrite_existing: "-f"
     extra: ""
+  sra_tools:
+    vdb_config_ra_path: "/repository/user/main/remote_access=true"
 
 api_keys:
   ncbi:

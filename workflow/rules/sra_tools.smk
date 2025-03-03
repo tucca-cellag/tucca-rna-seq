@@ -4,13 +4,15 @@
 rule configure_sra_tools:
     output:
         "results/sra_tools/sra_config_completed.txt",
+    params:
+        vdb_config_ra_path=config["params"]["sra_tools"]["vdb_config_ra_path"],
     log:
         "logs/sra_tools/configure_sra_tools.log",
     container:
         "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
-        (vdb-config --set "/repository/user/main/remote_access=true" --verbose
+        (vdb-config --set {params.vdb_config_ra_path} --verbose
         touch {output}) &> {log}
         """
 
