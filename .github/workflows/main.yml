@@ -11,8 +11,12 @@ jobs:
   Formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Formatting
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Super-Linter
         uses: github/super-linter@v7
         env:
           VALIDATE_ALL_CODEBASE: false
