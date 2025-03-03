@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+File: snapshot_config.py
+
 This script snapshots the configuration directory by copying its contents
 into the results snapshot directory. It uses the cp_config_to_res_dir()
 function from common.smk.
