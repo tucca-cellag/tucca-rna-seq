@@ -71,5 +71,5 @@ rule unzip_genome:
         )
     shell:
         """
-        (mkdir -p results/datasets && 7z x {input} -oresults/datasets) &> {log}
+        (mkdir -p results/datasets && 7z x {input} -o results/datasets) &> {log}
         """
