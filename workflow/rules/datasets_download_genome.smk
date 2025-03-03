@@ -62,7 +62,7 @@ rule unzip_genome:
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     container:
-        None
+        "docker://ubuntu:latest"
     log:
         "logs/datasets/unzip_genome.log",
     message:
