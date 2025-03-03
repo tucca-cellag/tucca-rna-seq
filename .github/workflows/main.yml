@@ -90,8 +90,8 @@ jobs:
         with:
           singularity-version: "3.8.4"
 
-      # Run the Snakemake workflow on SRA reads.
-      - name: Run workflow on SRA reads
+      # Run the Snakemake workflow to generate cache files.
+      - name: Run Snakemake on dummy_all_images to create cache files
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
           directory: "." # Working directory
