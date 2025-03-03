@@ -13,6 +13,8 @@ rule snapshot_config:
         ),
     output:
         "results/last_run_config_snapshot/snapshot_done.txt",
+    container:
+        "docker://ubuntu:latest"
     log:
         "logs/snapshot_config/snapshot_config.log",
     script:
