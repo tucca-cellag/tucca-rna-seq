@@ -59,7 +59,7 @@ jobs:
       - name: Run workflow on SRA reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
-          directory: ".test/singularity/sra_reads" # Working directory
+          directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
           args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml"
           show-disk-usage-on-error: true
@@ -70,7 +70,7 @@ jobs:
       - name: Run workflow on local reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
-          directory: ".test/singularity/local_reads" # Working directory
+          directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
           args: "all --workflow-profile profiles/local --configfile .test/singularity/local_reads/config/config.yaml"
           show-disk-usage-on-error: true

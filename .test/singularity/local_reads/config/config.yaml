@@ -4,7 +4,7 @@
 # TSV format
 # columns: sample_name, first_condition, ..., last_condition, replicate_num,
 #          first_batch_effect, ..., last_batch_effect
-samples: config/samples.tsv
+samples: .test/singularity/local_reads/config/samples.tsv
 
 # Path to your sequencing unit sheet
 # TSV format
@@ -12,7 +12,7 @@ samples: config/samples.tsv
 #
 # Units are technical replicates (e.g. lanes, or resequencing of the same
 # biological sample).
-units: config/units.tsv
+units: .test/singularity/local_reads/config/units.tsv
 
 ref:
   # NCBI genome accession
