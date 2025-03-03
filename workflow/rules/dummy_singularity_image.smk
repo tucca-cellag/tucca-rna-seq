@@ -21,12 +21,10 @@ rule dummy_container:
     output:
         "results/singularity/dummy_{cont}_init.txt",
     container:
-        # Choose the container image from the config based on wildcards.cont
-        lambda wc: config["containers"][wc.cont]
+        get_container()
     log:
         "logs/singularity/{cont}.log",
     shell:
         """
-        (echo "Pulling container: {wildcards.cont}"
-        touch {output}) &> {log}
+        (echo "Pulling container: {wildcards.cont}" && touch {output}) &> {log}
         """

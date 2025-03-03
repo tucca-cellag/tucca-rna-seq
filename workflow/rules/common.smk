@@ -73,6 +73,10 @@ wildcard_constraints:
 ####### helper functions #######
 
 
+def get_container(wildcards):
+    return config["containers"][wildcards.cont]
+
+
 def get_sra_filepath(accession: str, read: str) -> Path:
     """
     Generate the file path for an SRA read given its accession and read
