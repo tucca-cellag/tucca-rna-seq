@@ -55,7 +55,7 @@ rule star:
         extra=config["params"]["star"]["extra"],
     threads: 12
     container:
-        "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
+        config["containers"]["star"]
     message:
         """
         Running STAR alignment for:

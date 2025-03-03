@@ -43,7 +43,7 @@ rule star_index:
         extra=config["params"]["star_index"]["extra"],
     threads: 12
     container:
-        "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
+        config["containers"]["star"]
     log:
         "logs/star/star_index.log",
     shell:

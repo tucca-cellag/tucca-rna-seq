@@ -20,7 +20,7 @@ rule multiqc:
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
         extra=config["params"]["multiqc"]["extra"],
     container:
-        "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
+        config["containers"]["multiqc"]
     log:
         "logs/multiqc/multiqc.log",
     message:

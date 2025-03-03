@@ -19,6 +19,19 @@ ref:
   # TODO: test GenBank and RefSeq
   ncbi_genome_accession: GCF_002263795.3
 
+# Containers to be used for each rule (via Singularity)
+containers:
+  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
+  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
+  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
+  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
+  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
+  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
+  python: "docker://python:latest"
+  ubuntu: "docker://ubuntu:latest"
+  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
+  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
+
 diffexp:
   # num_exp_conditions
   # ------------------

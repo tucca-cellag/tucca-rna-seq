@@ -46,7 +46,7 @@ rule salmon_index:
         extra=config["params"]["salmon_index"]["extra"],
     threads: 12
     container:
-        "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
+        config["containers"]["salmon"]
     log:
         "logs/salmon/transcriptome_index.log",
     shell:

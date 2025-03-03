@@ -42,7 +42,7 @@ rule salmon_quant:
         extra=config["params"]["salmon_quant"]["extra"],
     threads: 12
     container:
-        "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
+        config["containers"]["salmon"]
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
     message:

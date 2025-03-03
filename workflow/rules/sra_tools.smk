@@ -44,7 +44,7 @@ rule download_sra_pe_reads:
         "logs/sra_tools/fasterq_dump/fasterq_dump_{accession}.log",
     threads: 6
     container:
-        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
+        config["containers"]["sra_tools"]
     shell:
         """
         (fasterq-dump ./data/sra_cache/{wildcards.accession} \

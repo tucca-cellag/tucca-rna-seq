@@ -21,7 +21,7 @@ rule qualimap_rnaseq:
         sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
         extra=config["params"]["qualimap_rnaseq"]["extra"],
     container:
-        "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
+        config["containers"]["qualimap"]
     log:
         "logs/qualimap/qualimap_rnaseq_{sample}_{unit}.log",
     message:

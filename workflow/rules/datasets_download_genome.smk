@@ -12,7 +12,7 @@ rule datasets_download_genome:
         genome_accession=config["ref"]["ncbi_genome_accession"],
         api_key=config["api_keys"]["ncbi"],
     container:
-        "docker://staphb/ncbi-datasets:16.41.0"
+        config["containers"]["ncbi_datasets"]
     log:
         "logs/datasets/datasets_download_genome.log",
     message:
@@ -62,7 +62,7 @@ rule unzip_genome:
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
     container:
-        "docker://quay.io/biocontainers/p7zip:16.02"
+        config["containers"]["p7zip"]
     log:
         "logs/datasets/unzip_genome.log",
     message:
