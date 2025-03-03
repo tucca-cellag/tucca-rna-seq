@@ -4,12 +4,7 @@
 # Profile Settings
 executor: slurm
 jobs: 100
-conda-frontend: conda
 sdm: apptainer
-conda-cleanup-envs: true
-conda-cleanup-pkgs: cache
-container-cleanup-images: true
-singularity-args: "--bind $PWD:$PWD"
 latency-wait: 120
 default-resources:
   slurm_partition: "batch"
