@@ -1,6 +1,0 @@
-name: qualimap
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - qualimap =2.3

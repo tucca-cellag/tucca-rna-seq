@@ -1,4 +1,0 @@
-# qualimap.def
-
-Bootstrap: docker
-From: quay.io/biocontainers/qualimap:2.3--hdfd78af_0

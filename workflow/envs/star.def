@@ -1,4 +1,0 @@
-# star.def
-
-Bootstrap: docker
-From: quay.io/biocontainers/star:2.7.11b--h5ca1c30_5
