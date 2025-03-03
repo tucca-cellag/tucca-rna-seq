@@ -15,7 +15,7 @@ rule fastqc:
     conda:
         "../envs/fastqc.yaml"
     singularity:
-        "../envs/fastqc.sif"
+        "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
     log:
         "logs/fastqc/{sample}_{unit}_{read}.log",
     message:
