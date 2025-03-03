@@ -2,18 +2,18 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - "*"
   pull_request:
-    branches: [ main ]
-
+    branches: [main]
 
 jobs:
   Formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Formatting
-        uses: github/super-linter@v4
+        uses: github/super-linter@v7
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
@@ -23,32 +23,57 @@ jobs:
   Linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Lint workflow
-      uses: snakemake/snakemake-github-action@v1.24.0
-      with:
-        directory: .
-        snakefile: workflow/Snakefile
-        args: "--lint"
+      - uses: actions/checkout@v4
+      - name: Lint workflow
+        uses: snakemake/snakemake-github-action@v2.0.0
+        with:
+          directory: .
+          snakefile: workflow/Snakefile
+          args: "--lint"
 
   Testing:
+    name: Run Snakemake Workflow with Singularity v3.8.4
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - Linting
       - Formatting
     steps:
-    - uses: actions/checkout@v2
+      # 1. Check out your repository (including your Snakefile and profiles directory)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Test workflow
-      uses: snakemake/snakemake-github-action@v1.24.0
-      with:
-        directory: .test
-        snakefile: workflow/Snakefile
-        args: "--use-conda --show-failed-logs --cores 3 --conda-cleanup-pkgs cache --all-temp"
+      # 2. Install Singularity (or Apptainer) version 3.8.4.
+      #    This uses the install action defined in your repository.
+      - name: Install Singularity 3.8.4
+        uses: singularityhub/install-singularity@main
+        with:
+          singularity-version: "3.8.4"
 
-    - name: Test report
-      uses: snakemake/snakemake-github-action@v1.24.0
-      with:
-        directory: .test
-        snakefile: workflow/Snakefile
-        args: "--report report.zip"
+      # 3. Run the Snakemake workflow using the snakemake GitHub Action.
+      #    This action accepts a working directory, the Snakefile name,
+      #    and any additional arguments.
+      - name: Run Snakemake via the GitHub Action
+        uses: snakemake/snakemake-github-action@v2.0.0
+        with:
+          directory: ".test/singularity/sra_reads" # Working directory
+          snakefile: "workflow/Snakefile" # Snakefile location
+          args: "all --workflow-profile profiles/local --verbose"
+          show-disk-usage-on-error: true
+
+      # 4. Run the Snakemake workflow using the snakemake GitHub Action.
+      #    This action accepts a working directory, the Snakefile name,
+      #    and any additional arguments.
+      - name: Run Snakemake via the GitHub Action
+        uses: snakemake/snakemake-github-action@v2.0.0
+        with:
+          directory: ".test/singularity/local_reads" # Working directory
+          snakefile: "workflow/Snakefile" # Snakefile location
+          args: "all --workflow-profile profiles/local --verbose"
+          show-disk-usage-on-error: true
+
+      #- name: Test report
+      #  uses: snakemake/snakemake-github-action@v2.0.0
+      #  with:
+      #    directory: .test
+      #    snakefile: workflow/Snakefile
+      #    args: "--report report.zip"
