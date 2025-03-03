@@ -22,7 +22,7 @@ rule multiqc:
     conda:
         "../envs/multiqc.yaml"
     singularity:
-        "../envs/multiqc.sif"
+        "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
     log:
         "logs/multiqc/multiqc.log",
     message:

@@ -59,7 +59,7 @@ rule star:
     conda:
         "../envs/star.yaml"
     singularity:
-        "../envs/star.sif"
+        "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
     message:
         """
         Running STAR alignment for:

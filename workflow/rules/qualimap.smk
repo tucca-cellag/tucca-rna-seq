@@ -23,7 +23,7 @@ rule qualimap_rnaseq:
     conda:
         "../envs/qualimap.yaml"
     singularity:
-        "../envs/qualimap.sif"
+        "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
     log:
         "logs/qualimap/qualimap_rnaseq_{sample}_{unit}.log",
     message:

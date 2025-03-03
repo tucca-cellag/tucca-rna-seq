@@ -14,7 +14,7 @@ rule datasets_download_genome:
     conda:
         "../envs/ncbi_datasets_cli.yaml"
     singularity:
-        "../envs/ncbi_datasets_cli.sif"
+        "docker://staphb/ncbi-datasets:16.41.0"
     log:
         "logs/datasets/datasets_download_genome.log",
     message:

@@ -40,7 +40,7 @@ rule salmon_decoys:
     conda:
         "../envs/salmon.yaml"
     singularity:
-        "../envs/salmon.sif"
+        "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
     log:
         "logs/salmon/decoys.log",
     shell:

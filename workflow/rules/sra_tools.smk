@@ -8,6 +8,8 @@ rule configure_sra_tools:
         "logs/sra_tools/configure_sra_tools.log",
     conda:
         "../envs/sra_tools.yaml"
+    singularity:
+        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
         (vdb-config --set "/repository/user/main/remote_access=true" --verbose
@@ -26,7 +28,7 @@ rule prefetch_sra:
     conda:
         "../envs/sra_tools.yaml"
     singularity:
-        "../envs/sra_tools.sif"
+        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
         (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}
