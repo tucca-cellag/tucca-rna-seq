@@ -8,6 +8,7 @@ conda-frontend: conda
 sdm: apptainer
 conda-cleanup-envs: true
 conda-cleanup-pkgs: cache
+container-cleanup-images: true
 latency-wait: 120
 default-resources:
   slurm_partition: "batch"
