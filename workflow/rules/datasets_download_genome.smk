@@ -11,8 +11,6 @@ rule datasets_download_genome:
     params:
         genome_accession=config["ref"]["ncbi_genome_accession"],
         api_key=config["api_keys"]["ncbi"],
-    conda:
-        "../envs/ncbi_datasets_cli.yaml"
     container:
         "docker://staphb/ncbi-datasets:16.41.0"
     log:

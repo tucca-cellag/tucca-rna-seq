@@ -42,8 +42,6 @@ rule star_index:
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12
-    conda:
-        "../envs/star.yaml"
     container:
         "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
     log:

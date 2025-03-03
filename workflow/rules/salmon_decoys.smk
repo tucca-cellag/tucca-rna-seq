@@ -37,8 +37,6 @@ rule salmon_decoys:
         gentrome="results/salmon/gentrome.fasta.gz",
         decoys="results/salmon/decoys.txt",
     threads: 12
-    conda:
-        "../envs/salmon.yaml"
     container:
         "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
     log:

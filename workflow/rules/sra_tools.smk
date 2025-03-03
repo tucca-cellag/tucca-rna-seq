@@ -6,8 +6,6 @@ rule configure_sra_tools:
         "results/sra_tools/sra_config_completed.txt",
     log:
         "logs/sra_tools/configure_sra_tools.log",
-    conda:
-        "../envs/sra_tools.yaml"
     container:
         "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
@@ -25,8 +23,6 @@ rule prefetch_sra:
     log:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
-    conda:
-        "../envs/sra_tools.yaml"
     container:
         "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
@@ -45,8 +41,8 @@ rule download_sra_pe_reads:
     log:
         "logs/sra_tools/fasterq_dump/fasterq_dump_{accession}.log",
     threads: 6
-    conda:
-        "../envs/sra_tools.yaml"
+    container:
+        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
         (fasterq-dump ./data/sra_cache/{wildcards.accession} \

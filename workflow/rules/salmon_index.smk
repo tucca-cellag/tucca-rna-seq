@@ -45,8 +45,6 @@ rule salmon_index:
         kmer_len=config["params"]["salmon_index"]["kmer_len"],
         extra=config["params"]["salmon_index"]["extra"],
     threads: 12
-    conda:
-        "../envs/salmon.yaml"
     container:
         "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
     log:

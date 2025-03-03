@@ -39,8 +39,6 @@ rule salmon_quant:
         bias_correction=config["params"]["salmon_quant"]["bias_correction"],
         extra=config["params"]["salmon_quant"]["extra"],
     threads: 12
-    conda:
-        "../envs/salmon.yaml"
     container:
         "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
     log:

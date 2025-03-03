@@ -20,8 +20,6 @@ rule qualimap_rnaseq:
         counting_alg=config["params"]["qualimap_rnaseq"]["counting_alg"],
         sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
         extra=config["params"]["qualimap_rnaseq"]["extra"],
-    conda:
-        "../envs/qualimap.yaml"
     container:
         "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
     log:

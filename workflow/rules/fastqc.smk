@@ -12,8 +12,6 @@ rule fastqc:
     threads: 1
     resources:
         mem_mb=1024,
-    conda:
-        "../envs/fastqc.yaml"
     container:
         "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
     log:

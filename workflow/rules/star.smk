@@ -56,8 +56,6 @@ rule star:
         alignIntronMax=config["params"]["star"]["alignIntronMax"],
         extra=config["params"]["star"]["extra"],
     threads: 12
-    conda:
-        "../envs/star.yaml"
     container:
         "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
     message:
