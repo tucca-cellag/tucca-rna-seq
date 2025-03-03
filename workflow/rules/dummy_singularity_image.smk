@@ -21,7 +21,7 @@ rule dummy_container:
     output:
         "results/singularity/dummy_{cont}_init.txt",
     container:
-        get_container(wildcards.cont)
+        get_container
     log:
         "logs/singularity/{cont}.log",
     shell:
