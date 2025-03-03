@@ -96,7 +96,7 @@ jobs:
         with:
           directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "dummy_all_images --workflow-profile profiles/local"
+          args: "dummy_all_containers --workflow-profile profiles/local"
           show-disk-usage-on-error: true
 
   Testing_Workflow:
