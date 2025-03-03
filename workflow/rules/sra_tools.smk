@@ -8,7 +8,7 @@ rule configure_sra_tools:
         "logs/sra_tools/configure_sra_tools.log",
     conda:
         "../envs/sra_tools.yaml"
-    singularity:
+    container:
         "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
@@ -27,7 +27,7 @@ rule prefetch_sra:
     threads: 6
     conda:
         "../envs/sra_tools.yaml"
-    singularity:
+    container:
         "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """

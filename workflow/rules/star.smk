@@ -58,7 +58,7 @@ rule star:
     threads: 12
     conda:
         "../envs/star.yaml"
-    singularity:
+    container:
         "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
     message:
         """

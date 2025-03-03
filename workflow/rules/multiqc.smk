@@ -21,7 +21,7 @@ rule multiqc:
         extra=config["params"]["multiqc"]["extra"],
     conda:
         "../envs/multiqc.yaml"
-    singularity:
+    container:
         "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
     log:
         "logs/multiqc/multiqc.log",

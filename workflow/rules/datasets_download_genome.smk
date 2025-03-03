@@ -13,7 +13,7 @@ rule datasets_download_genome:
         api_key=config["api_keys"]["ncbi"],
     conda:
         "../envs/ncbi_datasets_cli.yaml"
-    singularity:
+    container:
         "docker://staphb/ncbi-datasets:16.41.0"
     log:
         "logs/datasets/datasets_download_genome.log",

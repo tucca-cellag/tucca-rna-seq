@@ -14,7 +14,7 @@ rule fastqc:
         mem_mb=1024,
     conda:
         "../envs/fastqc.yaml"
-    singularity:
+    container:
         "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
     log:
         "logs/fastqc/{sample}_{unit}_{read}.log",
