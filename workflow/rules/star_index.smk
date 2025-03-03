@@ -44,6 +44,8 @@ rule star_index:
     threads: 12
     conda:
         "../envs/star.yaml"
+    singularity:
+        "../envs/star.sif"
     log:
         "logs/star/star_index.log",
     shell:

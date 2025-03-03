@@ -1,0 +1,4 @@
+# sra_tools.def
+
+Bootstrap: docker
+From: quay.io/biocontainers/sra-tools:3.2.0--h4304569_0

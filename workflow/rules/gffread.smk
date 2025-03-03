@@ -10,6 +10,8 @@ rule create_gtf:
         ),
     conda:
         "../envs/gffread.yaml"
+    singularity:
+        "../envs/gffread.sif"
     log:
         "logs/gffread/gffread.log",
     shell:

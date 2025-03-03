@@ -47,6 +47,8 @@ rule salmon_index:
     threads: 12
     conda:
         "../envs/salmon.yaml"
+    singularity:
+        "../envs/salmon.sif"
     log:
         "logs/salmon/transcriptome_index.log",
     shell:

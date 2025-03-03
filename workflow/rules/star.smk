@@ -58,6 +58,8 @@ rule star:
     threads: 12
     conda:
         "../envs/star.yaml"
+    singularity:
+        "../envs/star.sif"
     message:
         """
         Running STAR alignment for:

@@ -39,6 +39,8 @@ rule salmon_decoys:
     threads: 12
     conda:
         "../envs/salmon.yaml"
+    singularity:
+        "../envs/salmon.sif"
     log:
         "logs/salmon/decoys.log",
     shell:

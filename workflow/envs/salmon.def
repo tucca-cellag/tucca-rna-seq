@@ -1,0 +1,4 @@
+# salmon.def
+
+Bootstrap: docker
+From: quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4

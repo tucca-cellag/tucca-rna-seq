@@ -22,6 +22,8 @@ rule qualimap_rnaseq:
         extra=config["params"]["qualimap_rnaseq"]["extra"],
     conda:
         "../envs/qualimap.yaml"
+    singularity:
+        "../envs/qualimap.sif"
     log:
         "logs/qualimap/qualimap_rnaseq_{sample}_{unit}.log",
     message:

@@ -25,6 +25,8 @@ rule prefetch_sra:
     threads: 6
     conda:
         "../envs/sra_tools.yaml"
+    singularity:
+        "../envs/sra_tools.sif"
     shell:
         """
         (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}

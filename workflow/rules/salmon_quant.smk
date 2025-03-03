@@ -41,6 +41,8 @@ rule salmon_quant:
     threads: 12
     conda:
         "../envs/salmon.yaml"
+    singularity:
+        "../envs/salmon.sif"
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
     message:

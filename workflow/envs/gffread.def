@@ -1,0 +1,4 @@
+# gffread.def
+
+Bootstrap: docker
+From: quay.io/biocontainers/gffread:0.12.7--h077b44d_6

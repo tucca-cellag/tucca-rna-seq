@@ -21,6 +21,8 @@ rule multiqc:
         extra=config["params"]["multiqc"]["extra"],
     conda:
         "../envs/multiqc.yaml"
+    singularity:
+        "../envs/multiqc.sif"
     log:
         "logs/multiqc/multiqc.log",
     message:
