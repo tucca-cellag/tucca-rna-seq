@@ -74,7 +74,17 @@ wildcard_constraints:
 
 
 def get_container(wildcards):
-    return config["containers"][wildcards.cont]
+    # Look up the container string using the wildcard value.
+    img = config["containers"].get(wildcards.cont)
+    print("DEBUG: get_container() for '{}' returned: {}".format(wildcards.cont, img))
+    # Ensure that 'img' is really a string. If not, raise an error.
+    if not isinstance(img, str):
+        raise TypeError(
+            "Expected container image as string for '{}', but got type: {}.".format(
+                wildcards.cont, type(img)
+            )
+        )
+    return img
 
 
 def get_sra_filepath(accession: str, read: str) -> Path:
