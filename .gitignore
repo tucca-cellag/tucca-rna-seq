@@ -12,6 +12,9 @@ ncbi*
 dev
 de_analysis
 
+# Singularity files
+*.sif
+
 # History files
 .Rhistory
 .Rapp.history
