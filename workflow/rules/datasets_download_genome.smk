@@ -24,7 +24,7 @@ rule datasets_download_genome:
         (datasets download genome accession {params.genome_accession} \
             --include gtf,gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
-            --filename {output} > {output}) &> {log}
+            --filename {output}) &> {log}
         """
 
 
