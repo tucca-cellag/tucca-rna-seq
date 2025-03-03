@@ -1,0 +1,13 @@
+# profiles/local/config.v8+.yaml
+# Configured for exclusive use with snakemake-executor-plugin-slurm
+
+# Profile Settings
+sdm: apptainer
+jobs: 100
+cores: 12
+default-resources:
+  mem_mb: 32000
+
+set-resources:
+  star_index:
+    mem_mb: 64000

@@ -1,0 +1,33 @@
+name: Test Snakemake Workflow
+
+on:
+  push:
+    branches: [main, singularity]
+  pull_request:
+
+jobs:
+  test-snakemake:
+    name: Run Snakemake Workflow with Singularity v3.8.4
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out your repository (including your Snakefile and profiles directory)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Install Singularity (or Apptainer) version 3.8.4.
+      #    This uses the install action defined in your repository.
+      - name: Install Singularity 3.8.4
+        uses: singularityhub/install-singularity@main
+        with:
+          singularity-version: "3.8.4"
+
+      # 3. Run the Snakemake workflow using the snakemake GitHub Action.
+      #    This action accepts a working directory, the Snakefile name,
+      #    and any additional arguments.
+      - name: Run Snakemake via the GitHub Action
+        uses: snakemake/snakemake-github-action@v2
+        with:
+          directory: "." # Working directory
+          snakefile: "Snakefile" # Snakefile location
+          args: "all --workflow-profile profiles/local --verbose"
