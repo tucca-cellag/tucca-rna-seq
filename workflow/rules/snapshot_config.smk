@@ -13,8 +13,15 @@ rule snapshot_config:
         ),
     output:
         "results/last_run_config_snapshot/snapshot_done.txt",
+    log:
+        "logs/snapshot_config/snapshot_config.log",
     run:
-        cp_config_to_res_dir()
-        # Write a marker file to signal completion of the snapshot
+        from contextlib import redirect_stdout
+
+        with open(log[0], "w") as logfile:
+            with redirect_stdout(logfile):
+                cp_config_to_res_dir()
+                print("Configuration snapshot completed.")
+                # Also write a marker file for Snakemake’s output requirement
         with open(output[0], "w") as f:
             f.write("Configuration snapshot completed.")
