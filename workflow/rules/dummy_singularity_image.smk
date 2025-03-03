@@ -16,8 +16,10 @@ rule dummy_all_images:
         touch("results/singularity/dummy_all_images_init.txt"),
     container:
         config["containers"]["ubuntu"]
+    log:
+        "logs/singularity/dummy_all_images.log",
     shell:
-        "echo 'All container images have been pulled.' && touch {output}"
+        "(echo 'All container images have been pulled.' && touch {output}) &> {log}"
 
 
 rule dummy_fastqc:
