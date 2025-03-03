@@ -48,20 +48,28 @@ jobs:
       - Linting
       - Formatting
     steps:
-      # 1. Check out your repository (including your Snakefile and profiles directory)
+      # Check out your repository (including your Snakefile and profiles directory)
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Install Singularity (or Apptainer) version 3.8.4.
-      #    This uses the install action defined in your repository.
+      # Cache the Singularity images directory.
+      - name: Cache Singularity Images
+        uses: actions/cache@v4
+        with:
+          # Adjust the path if your Singularity images are stored elsewhere.
+          path: .snakemake/singularity
+          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
+          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
+          restore-keys: |
+            ${{ runner.os }}-singularity-
+
+      # Install Singularity (or Apptainer) version 3.8.4.
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: "3.8.4"
 
-      # 3. Run the Snakemake workflow using the snakemake GitHub Action.
-      #    This action accepts a working directory, the Snakefile name,
-      #    and any additional arguments.
+      # Run the Snakemake workflow on SRA reads.
       - name: Run workflow on SRA reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
@@ -70,9 +78,7 @@ jobs:
           args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml"
           show-disk-usage-on-error: true
 
-      # 4. Run the Snakemake workflow using the snakemake GitHub Action.
-      #    This action accepts a working directory, the Snakefile name,
-      #    and any additional arguments.
+      # Run the Snakemake workflow on local reads.
       - name: Run workflow on local reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
