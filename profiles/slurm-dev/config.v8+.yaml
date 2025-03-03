@@ -1,0 +1,22 @@
+# profiles/slurm/dev.config.v8+.yaml
+# Configured for exclusive use with snakemake-executor-plugin-slurm
+
+# Profile Settings
+executor: slurm
+sdm: apptainer
+verbose: true
+show-failed-logs: true
+jobs: 100
+latency-wait: 120
+default-resources:
+  slurm_partition: "batch"
+  slurm_account: "default"
+  runtime: 4320
+  mem_mb: 32000
+  cpus_per_task: 12
+  # TODO Set email to be configurable in config/config.yaml
+  slurm_extra: '"--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"'
+
+set-resources:
+  star_index:
+    mem_mb: 64000
