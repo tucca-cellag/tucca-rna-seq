@@ -61,7 +61,7 @@ jobs:
         with:
           directory: ".test/singularity/sra_reads" # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml --verbose"
+          args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml --verbose --show-failed-logs"
           show-disk-usage-on-error: true
 
       # 4. Run the Snakemake workflow using the snakemake GitHub Action.
@@ -72,7 +72,7 @@ jobs:
         with:
           directory: ".test/singularity/local_reads" # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --configfile .test/singularity/local_reads/config/config.yaml --verbose"
+          args: "all --workflow-profile profiles/local --configfile .test/singularity/local_reads/config/config.yaml --verbose --show-failed-logs"
           show-disk-usage-on-error: true
 
       #- name: Test report
