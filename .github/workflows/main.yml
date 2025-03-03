@@ -56,23 +56,23 @@ jobs:
       # 3. Run the Snakemake workflow using the snakemake GitHub Action.
       #    This action accepts a working directory, the Snakefile name,
       #    and any additional arguments.
-      - name: Run Snakemake via the GitHub Action
+      - name: Run workflow on SRA reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
           directory: ".test/singularity/sra_reads" # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --verbose"
+          args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml --verbose"
           show-disk-usage-on-error: true
 
       # 4. Run the Snakemake workflow using the snakemake GitHub Action.
       #    This action accepts a working directory, the Snakefile name,
       #    and any additional arguments.
-      - name: Run Snakemake via the GitHub Action
+      - name: Run workflow on local reads
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
           directory: ".test/singularity/local_reads" # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --verbose"
+          args: "all --workflow-profile profiles/local --configfile .test/singularity/local_reads/config/config.yaml --verbose"
           show-disk-usage-on-error: true
 
       #- name: Test report
