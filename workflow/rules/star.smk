@@ -38,9 +38,7 @@ rule star:
     log:
         "logs/star/star_{sample}_{unit}.log",
     params:
-        star_index_dir="results/star/{genome}_index".format(
-            genome=config["ref"]["ncbi_genome_accession"]
-        ),
+        star_index_dir=lambda wildcards, input: os.path.dirname(input.star_index[0]),
         outSAMtype=config["params"]["star"]["outSAMtype"],
         outSAMunmapped=config["params"]["star"]["outSAMunmapped"],
         outSAMattributes=config["params"]["star"]["outSAMattributes"],
