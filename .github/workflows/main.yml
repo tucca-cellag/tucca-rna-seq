@@ -23,6 +23,10 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_SNAKEMAKE_SNAKEFMT: true
+          VALIDATE_MARKDOWN_PRETTIER: true
+          VALIDATE_YAML: true
+          VALIDATE_R: true
+          VALIDATE_PYTHON_PYLINT: true
 
   Linting:
     runs-on: ubuntu-latest
