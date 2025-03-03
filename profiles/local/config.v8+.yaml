@@ -1,8 +1,13 @@
 # profiles/local/config.v8+.yaml
-# Configured for exclusive use with snakemake-executor-plugin-slurm
+# Configured for exclusive use with GitHub Actions testing workflow 
+# See .github/workflows/main.yml
 
 # Profile Settings
 sdm: apptainer
+show-failed-logs: true
+rerun-incomplete: true
+forceall: true
+verbose: true
 jobs: 100
 cores: 12
 default-resources:
