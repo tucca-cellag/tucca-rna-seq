@@ -26,7 +26,7 @@ rule salmon_decoys:
             "results/datasets/ncbi_dataset/data/{genome}/rna.fna",
             genome=config["ref"]["ncbi_genome_accession"],
         )[0],
-        genome=glob.glob(
+        genome=lambda wildcards: glob.glob(
             (
                 "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
                 + "*"
