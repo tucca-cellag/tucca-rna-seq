@@ -9,10 +9,10 @@ rerun-incomplete: true
 forceall: true
 verbose: true
 jobs: 100
-cores: 12
+cores: 4
 default-resources:
-  mem_mb: 32000
+  mem_mb: 16000
 
 set-resources:
   star_index:
-    mem_mb: 64000
+    mem_mb: 16000
