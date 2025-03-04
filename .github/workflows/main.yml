@@ -42,7 +42,7 @@ jobs:
           args: "--lint"
 
   Testing_Snakemake_Init:
-    name: Init Snakemake Workflow with Singularity v3.8.4
+    name: Init Snakemake Workflow Cache with Singularity v3.8.4
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -151,20 +151,30 @@ jobs:
 
       # Run the Snakemake workflow on SRA reads.
       - name: Run workflow on SRA reads
+        env:
+          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
           directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --configfile .test/singularity/sra_reads/config/config.yaml"
+          args: >
+            all --workflow-profile profiles/local
+            --configfile .test/singularity/sra_reads/config/config.yaml
+            --config api_keys.ncbi=${{ secrets.BB_NCBI_API_KEY }}
           show-disk-usage-on-error: true
 
       # Run the Snakemake workflow on local reads.
       - name: Run workflow on local reads
+        env:
+          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
         uses: snakemake/snakemake-github-action@v2.0.0
         with:
           directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
-          args: "all --workflow-profile profiles/local --configfile .test/singularity/local_reads/config/config.yaml"
+          args: >
+            all --workflow-profile profiles/local
+            --configfile .test/singularity/local_reads/config/config.yaml
+            --config api_keys.ncbi=${{ secrets.BB_NCBI_API_KEY }}
           show-disk-usage-on-error: true
 
       #- name: Test report
