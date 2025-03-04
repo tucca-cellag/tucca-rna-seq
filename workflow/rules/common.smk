@@ -73,24 +73,6 @@ wildcard_constraints:
 ####### helper functions #######
 
 
-def get_container_string(wildcards):
-    # Look up the container string from the config based on the wildcard value.
-    container_str = config["containers"].get(wildcards.cont)
-    print(
-        "DEBUG: For container '{}', get_container_string() returned: {}".format(
-            wildcards.cont, container_str
-        )
-    )
-    # Explicitly ensure it is a string.
-    if not isinstance(container_str, str):
-        raise TypeError(
-            "Expected container image as string for '{}', got '{}'".format(
-                wildcards.cont, type(container_str)
-            )
-        )
-    return container_str
-
-
 def get_sra_filepath(accession: str, read: str) -> Path:
     """
     Generate the file path for an SRA read given its accession and read
