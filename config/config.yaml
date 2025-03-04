@@ -19,6 +19,9 @@ ref:
   # TODO: test GenBank and RefSeq
   ncbi_genome_accession: GCF_002263795.3
 
+api_keys:
+  ncbi: 
+
 # Containers to be used for each rule (via Singularity)
 containers:
   fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
@@ -119,6 +122,3 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
-
-api_keys:
-  ncbi:
