@@ -1,4 +1,4 @@
-# config/multiqc_config.yaml
+# .test/singularity/local_reads/config/multiqc_config.yaml
 
 title: "Quality Control of Sequence Alignment Data"
 subtitle: "Bulk RNA-Seq Analysis of [STUDY COMPARISON]"
