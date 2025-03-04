@@ -160,7 +160,7 @@ jobs:
           args: >
             all --workflow-profile profiles/local
             --configfile .test/singularity/sra_reads/config/config.yaml
-            --config api_keys.ncbi=${{ secrets.BB_NCBI_API_KEY }}
+            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
 
       # Run the Snakemake workflow on local reads.
@@ -174,7 +174,7 @@ jobs:
           args: >
             all --workflow-profile profiles/local
             --configfile .test/singularity/local_reads/config/config.yaml
-            --config api_keys.ncbi=${{ secrets.BB_NCBI_API_KEY }}
+            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
 
       #- name: Test report
