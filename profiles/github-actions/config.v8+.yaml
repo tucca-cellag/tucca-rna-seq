@@ -1,4 +1,4 @@
-# profiles/local/config.v8+.yaml
+# profiles/github-actions/config.v8+.yaml
 # Configured for exclusive use with GitHub Actions testing workflow 
 # See .github/workflows/main.yml
 
