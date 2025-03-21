@@ -4,6 +4,8 @@
 # Profile Settings
 executor: slurm
 sdm: apptainer
+verbose: true
+show-failed-logs: true
 jobs: 100
 latency-wait: 120
 default-resources:
