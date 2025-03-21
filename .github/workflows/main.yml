@@ -40,36 +40,12 @@ jobs:
           snakefile: workflow/Snakefile
           args: "--lint"
 
-  Generate_Genome:
-    name: Generate Genome Artifact
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Run datasets_download_genome rule
-        # This step runs Snakemake with target "datasets_download_genome",
-        # which will generate the heavy file (e.g. ncbi_dataset_GCF_002263795.3.zip)
-        uses: snakemake/snakemake-github-action@v2.0.0
-        with:
-          directory: "."
-          snakefile: "workflow/Snakefile"
-          args: >
-            datasets_download_genome --workflow-profile profiles/github-actions
-          show-disk-usage-on-error: true
-      - name: Upload Genome Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: genome-artifact
-          # Adjust the path if needed so that the file appears where your Snakefile expects it.
-          path: "ncbi_dataset_*.zip"
-
-  Testing_Snakemake_Init:
+  Snakemake_Env_Init:
     name: Init Snakemake Workflow Cache with Singularity v3.8.4
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
-      - Generate_Genome
     steps:
       # Check out your repository (including your Snakefile and profiles directory)
       - name: Checkout Repository
@@ -117,13 +93,74 @@ jobs:
           args: "dummy_all_images --workflow-profile profiles/github-actions"
           show-disk-usage-on-error: true
 
+  Generate_Genome:
+    name: Generate Genome Artifact
+    runs-on: ubuntu-latest
+    needs:
+      - Linting
+      - Formatting
+      - Snakemake_Env_Init
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      # Cache the Singularity images directory.
+      - name: Cache Singularity Images
+        uses: actions/cache@v4
+        with:
+          # Adjust the path if your Singularity images are stored elsewhere.
+          path: .snakemake/singularity
+          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
+          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
+          restore-keys: |
+            ${{ runner.os }}-singularity-
+      # Cache the Conda packages directory to avoid re-downloading packages
+      - name: Cache Conda Packages
+        uses: actions/cache@v4
+        with:
+          # Path used in your setup; adjust if you use a different directory.
+          path: /home/runner/conda_pkgs_dir
+          # Use the environment file hash to update the cache whenever it changes.
+          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-pkgs-
+      # Cache the snakemake environment directory
+      - name: Cache snakemake Conda Environment
+        uses: actions/cache@v4
+        with:
+          # Adjust this path to where your environment is created.
+          path: /home/runner/miniconda3/envs/snakemake
+          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-snakemake-env-
+      # Install Singularity (or Apptainer) version 3.8.4.
+      - name: Install Singularity 3.8.4
+        uses: singularityhub/install-singularity@main
+        with:
+          singularity-version: "3.8.4"
+      - name: Run datasets_download_genome rule
+        # This step runs Snakemake with target "datasets_download_genome",
+        # which will generate the heavy file (e.g. ncbi_dataset_GCF_002263795.3.zip)
+        uses: snakemake/snakemake-github-action@v2.0.0
+        with:
+          directory: "."
+          snakefile: "workflow/Snakefile"
+          args: >
+            datasets_download_genome --workflow-profile profiles/github-actions
+          show-disk-usage-on-error: true
+      - name: Upload Genome Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: genome-artifact
+          # Adjust the path if needed so that the file appears where your Snakefile expects it.
+          path: "ncbi_dataset_*.zip"
+
   Testing_Workflow:
     name: Run Snakemake Workflow with Singularity v3.8.4
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
-      - Testing_Snakemake_Init
+      - Snakemake_Env_Init
       - Generate_Genome
     steps:
       # Check out your repository (including your Snakefile and profiles directory)
