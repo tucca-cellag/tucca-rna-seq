@@ -157,7 +157,7 @@ jobs:
             datasets_download_genome --workflow-profile profiles/github-actions
           show-disk-usage-on-error: true
       - name: Upload Genome Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: genome-artifact
           # Adjust the path if needed so that the file appears where your Snakefile expects it.
@@ -177,7 +177,7 @@ jobs:
         uses: actions/checkout@v4
       # Download required artifacts
       - name: Download Genome Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: genome-artifact
           path: .
