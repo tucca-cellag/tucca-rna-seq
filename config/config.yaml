@@ -85,7 +85,7 @@ diffexp:
 params:
   fastqc:
     memory: 1024
-    extra: "--quiet"
+    extra: ""
   salmon_index:
     kmer_len: 31
     extra: ""
