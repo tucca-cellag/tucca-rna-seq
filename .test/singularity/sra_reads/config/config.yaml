@@ -1,10 +1,10 @@
-# config/config.yaml
+# .test/singularity/sra_reads/config/config.yaml
 
 # Path to your sample sheet
 # TSV format
 # columns: sample_name, first_condition, ..., last_condition, replicate_num,
 #          first_batch_effect, ..., last_batch_effect
-samples: config/samples.tsv
+samples: .test/singularity/sra_reads/config/samples.tsv
 
 # Path to your sequencing unit sheet
 # TSV format
@@ -12,28 +12,12 @@ samples: config/samples.tsv
 #
 # Units are technical replicates (e.g. lanes, or resequencing of the same
 # biological sample).
-units: config/units.tsv
+units: .test/singularity/sra_reads/config/units.tsv
 
 ref:
   # NCBI genome accession
   # TODO: test GenBank and RefSeq
   ncbi_genome_accession: GCF_002263795.3
-
-api_keys:
-  ncbi: 
-
-# Containers to be used for each rule (via Singularity)
-containers:
-  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
-  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
-  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
-  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
-  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
-  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
-  python: "docker://python:latest"
-  ubuntu: "docker://ubuntu:latest"
-  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
-  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
 
 diffexp:
   # num_exp_conditions
@@ -122,3 +106,6 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
+
+api_keys:
+  ncbi:

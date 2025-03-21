@@ -45,8 +45,8 @@ rule salmon_index:
         kmer_len=config["params"]["salmon_index"]["kmer_len"],
         extra=config["params"]["salmon_index"]["extra"],
     threads: 12
-    conda:
-        "../envs/salmon.yaml"
+    container:
+        config["containers"]["salmon"]
     log:
         "logs/salmon/transcriptome_index.log",
     shell:

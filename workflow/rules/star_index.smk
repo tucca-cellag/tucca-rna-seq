@@ -5,12 +5,10 @@ import glob
 
 rule star_index:
     input:
-        genome_fna=glob.glob(
-            (
-                "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
-                + "*"
-                + "_genomic.fna"
-            ).format(genome=config["ref"]["ncbi_genome_accession"])
+        genome_fna=lambda wildcards: glob.glob(
+            "results/datasets/ncbi_dataset/data/{genome}/{genome}_*_genomic.fna".format(
+                genome=config["ref"]["ncbi_genome_accession"]
+            )
         ),
         genome_gtf="results/datasets/ncbi_dataset/data/{genome}/genomic.gtf".format(
             genome=config["ref"]["ncbi_genome_accession"]
@@ -42,8 +40,8 @@ rule star_index:
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12
-    conda:
-        "../envs/star.yaml"
+    container:
+        config["containers"]["star"]
     log:
         "logs/star/star_index.log",
     shell:

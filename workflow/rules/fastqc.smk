@@ -12,8 +12,8 @@ rule fastqc:
     threads: 1
     resources:
         mem_mb=1024,
-    conda:
-        "../envs/fastqc.yaml"
+    container:
+        config["containers"]["fastqc"]
     log:
         "logs/fastqc/{sample}_{unit}_{read}.log",
     message:

@@ -13,8 +13,9 @@ rule snapshot_config:
         ),
     output:
         "results/last_run_config_snapshot/snapshot_done.txt",
-    run:
-        cp_config_to_res_dir()
-        # Write a marker file to signal completion of the snapshot
-        with open(output[0], "w") as f:
-            f.write("Configuration snapshot completed.")
+    container:
+        config["containers"]["python"]
+    log:
+        "logs/snapshot_config/snapshot_config.log",
+    shell:
+        "(python3 workflow/scripts/snapshot_config.py {output}) &> {log}"

@@ -1,8 +1,0 @@
-# workflow/envs/sra_tools.yaml
-
-name: sra_tools
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - sra-tools =3.2.0

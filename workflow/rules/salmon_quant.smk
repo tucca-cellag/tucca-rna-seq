@@ -33,14 +33,16 @@ rule salmon_quant:
         directory("results/salmon/{sample}_{unit}.salmon/libParams"),
         directory("results/salmon/{sample}_{unit}.salmon/logs"),
     params:
-        transcriptome_dir="results/salmon/transcriptome_index",
+        transcriptome_dir=lambda wildcards, input: os.path.dirname(
+            input.transcriptome[0]
+        ),
         lib_type=config["params"]["salmon_quant"]["lib_type"],
         mapping_strategy=config["params"]["salmon_quant"]["mapping_strategy"],
         bias_correction=config["params"]["salmon_quant"]["bias_correction"],
         extra=config["params"]["salmon_quant"]["extra"],
     threads: 12
-    conda:
-        "../envs/salmon.yaml"
+    container:
+        config["containers"]["salmon"]
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
     message:

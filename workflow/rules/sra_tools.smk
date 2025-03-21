@@ -4,13 +4,15 @@
 rule configure_sra_tools:
     output:
         "results/sra_tools/sra_config_completed.txt",
+    params:
+        vdb_config_ra_path=config["params"]["sra_tools"]["vdb_config_ra_path"],
     log:
         "logs/sra_tools/configure_sra_tools.log",
-    conda:
-        "../envs/sra_tools.yaml"
+    container:
+        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
-        (vdb-config --set "/repository/user/main/remote_access=true" --verbose
+        (vdb-config --set {params.vdb_config_ra_path} --verbose
         touch {output}) &> {log}
         """
 
@@ -23,8 +25,8 @@ rule prefetch_sra:
     log:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
-    conda:
-        "../envs/sra_tools.yaml"
+    container:
+        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
     shell:
         """
         (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}
@@ -41,8 +43,8 @@ rule download_sra_pe_reads:
     log:
         "logs/sra_tools/fasterq_dump/fasterq_dump_{accession}.log",
     threads: 6
-    conda:
-        "../envs/sra_tools.yaml"
+    container:
+        config["containers"]["sra_tools"]
     shell:
         """
         (fasterq-dump ./data/sra_cache/{wildcards.accession} \

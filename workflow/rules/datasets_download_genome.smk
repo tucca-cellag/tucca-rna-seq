@@ -11,8 +11,8 @@ rule datasets_download_genome:
     params:
         genome_accession=config["ref"]["ncbi_genome_accession"],
         api_key=config["api_keys"]["ncbi"],
-    conda:
-        "../envs/ncbi_datasets_cli.yaml"
+    container:
+        config["containers"]["ncbi_datasets"]
     log:
         "logs/datasets/datasets_download_genome.log",
     message:
@@ -24,7 +24,7 @@ rule datasets_download_genome:
         (datasets download genome accession {params.genome_accession} \
             --include gtf,gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
-            --filename {output} > {output}) &> {log}
+            --filename {output}) &> {log}
         """
 
 
@@ -61,6 +61,8 @@ rule unzip_genome:
                 + "_genomic.fna"
             ).format(genome=config["ref"]["ncbi_genome_accession"])
         ),
+    container:
+        config["containers"]["p7zip"]
     log:
         "logs/datasets/unzip_genome.log",
     message:
@@ -69,6 +71,5 @@ rule unzip_genome:
         )
     shell:
         """
-        (mkdir -p results/datasets
-        unzip -o {input} -d results/datasets) &> {log}
+        (mkdir -p results/datasets && 7z x {input} -oresults/datasets) &> {log}
         """

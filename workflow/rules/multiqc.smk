@@ -19,8 +19,8 @@ rule multiqc:
         report_name=config["params"]["multiqc"]["report_name"],
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
         extra=config["params"]["multiqc"]["extra"],
-    conda:
-        "../envs/multiqc.yaml"
+    container:
+        config["containers"]["multiqc"]
     log:
         "logs/multiqc/multiqc.log",
     message:
