@@ -9,7 +9,7 @@ rule configure_sra_tools:
     log:
         "logs/sra_tools/configure_sra_tools.log",
     container:
-        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
+        config["containers"]["sra_tools"]
     shell:
         """
         (vdb-config --set {params.vdb_config_ra_path} --verbose
@@ -26,7 +26,7 @@ rule prefetch_sra:
         "logs/sra_tools/prefetch/prefetch_{accession}.log",
     threads: 6
     container:
-        "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
+        config["containers"]["sra_tools"]
     shell:
         """
         (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}
