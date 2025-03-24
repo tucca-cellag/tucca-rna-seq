@@ -9,9 +9,8 @@ rule fastqc:
         zips="results/fastqc/{sample}_{unit}_{read}_fastqc.zip",
     params:
         extra=config["params"]["fastqc"]["extra"],
+        memory=config["params"]["fastqc"]["memory"],
     threads: 12
-    resources:
-        config["params"]["fastqc"]["memory"],
     container:
         config["containers"]["fastqc"]
     log:
