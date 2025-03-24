@@ -216,19 +216,6 @@ jobs:
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: "3.8.4"
-      # Run the Snakemake workflow on SRA reads.
-      - name: Run workflow on SRA reads
-        env:
-          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
-        uses: snakemake/snakemake-github-action@v2.0.0
-        with:
-          directory: "." # Working directory
-          snakefile: "workflow/Snakefile" # Snakefile location
-          args: >
-            all --workflow-profile profiles/github-actions
-            --configfile .test/singularity/sra_reads/config/config.yaml
-            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
-          show-disk-usage-on-error: true
       # Run the Snakemake workflow on local reads.
       - name: Run workflow on local reads
         env:
@@ -240,6 +227,19 @@ jobs:
           args: >
             all --workflow-profile profiles/github-actions
             --configfile .test/singularity/local_reads/config/config.yaml
+            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
+          show-disk-usage-on-error: true
+      # Run the Snakemake workflow on SRA reads.
+      - name: Run workflow on SRA reads
+        env:
+          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
+        uses: snakemake/snakemake-github-action@v2.0.0
+        with:
+          directory: "." # Working directory
+          snakefile: "workflow/Snakefile" # Snakefile location
+          args: >
+            download_sra_pe_reads --workflow-profile profiles/github-actions
+            --configfile .test/singularity/sra_reads/config/config.yaml
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
 

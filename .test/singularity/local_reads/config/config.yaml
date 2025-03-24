@@ -17,7 +17,10 @@ units: .test/singularity/local_reads/config/units.tsv
 ref:
   # NCBI genome accession
   # TODO: test GenBank and RefSeq
-  ncbi_genome_accession: GCF_002263795.3
+  ncbi_genome_accession: GCF_000146045.2
+
+api_keys:
+  ncbi:
 
 diffexp:
   # num_exp_conditions
@@ -68,7 +71,8 @@ diffexp:
 
 params:
   fastqc:
-    extra: "--quiet"
+    memory: ""
+    extra: ""
   salmon_index:
     kmer_len: 31
     extra: ""
@@ -106,6 +110,3 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
-
-api_keys:
-  ncbi:
