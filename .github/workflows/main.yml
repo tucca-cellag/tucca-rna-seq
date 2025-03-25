@@ -298,8 +298,8 @@ jobs:
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
 
-  GGallus_SRA_Download:
-    name: Test download of G. gallus SRA reads
+  GGallus_SRA_Download_and_FastQC:
+    name: Test download of G. gallus SRA reads and run against FastQC
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -359,7 +359,7 @@ jobs:
           directory: "." # Working directory
           snakefile: "workflow/Snakefile" # Snakefile location
           args: >
-            download_sra_pe_reads --workflow-profile profiles/github-actions
+            fastqc --workflow-profile profiles/github-actions
             --configfile .test/singularity/sra_reads/config/config.yaml
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
