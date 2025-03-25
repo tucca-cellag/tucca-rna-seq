@@ -3,6 +3,7 @@
 # `THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-brightgreen.svg)](https://snakemake.github.io)
+[![Singularity](https://img.shields.io/badge/singularity-≥3.8.4-brightgreen.svg)](https://snakemake.github.io)
 [![GitHub license](https://img.shields.io/github/license/benjibromberg/tucca-rna-seq?color=orange)](https://github.com/benjibromberg/tucca-rna-seq/blob/main/LICENSE)
 [![tucca-rna-seq docs](https://img.shields.io/badge/documentation-tucca--rna--seq_docs-blue)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
 
