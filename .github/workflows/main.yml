@@ -43,7 +43,7 @@ jobs:
           snakemake-version: 8.27.1
 
   Snakemake_Env_Init:
-    name: Init Snakemake Workflow Cache with Singularity v3.8.4
+    name: Build Snakemake workflow cache with Singularity v3.8.4
     # The job only runs if:
     # • The event is not a push (e.g. a PR or manual trigger),
     # • OR the push is to main,
@@ -104,7 +104,7 @@ jobs:
           snakemake-version: 8.27.1
 
   Generate_SCerevisiae_Genome:
-    name: Generate Genome Artifact
+    name: Generate S. cerevisiae genome artifact
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -168,7 +168,7 @@ jobs:
           path: "ncbi_dataset_*.zip"
 
   Generate_GGallus_Genome:
-    name: Generate Genome Artifact
+    name: Generate G. Gallus genome artifact
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -231,8 +231,8 @@ jobs:
           # Adjust the path if needed so that the file appears where your Snakefile expects it.
           path: "ncbi_dataset_*.zip"
 
-  Testing_SCerevisiae_Reads:
-    name: Run Snakemake Workflow with Singularity v3.8.4
+  SCerevisiae_Reads:
+    name: Run workflow on S. Cerevisiae reads
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -298,8 +298,8 @@ jobs:
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
 
-  Testing_GGallus_Reads:
-    name: Run Snakemake Workflow with Singularity v3.8.4
+  GGallus_SRA_Download:
+    name: Test download of G. gallus SRA reads
     runs-on: ubuntu-latest
     needs:
       - Linting
