@@ -2,166 +2,117 @@
 
 # `THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
+[![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-brightgreen.svg)](https://snakemake.github.io)
 [![GitHub license](https://img.shields.io/github/license/benjibromberg/tucca-rna-seq?color=orange)](https://github.com/benjibromberg/tucca-rna-seq/blob/main/LICENSE)
+[![tucca-rna-seq docs](https://img.shields.io/badge/documentation-tucca--rna--seq_docs-blue)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
 
-The Tufts University Center for Cellular Agriculture's ([TUCCA][tucca])
-RNA-Seq Snakemake Workflow for Cellular Agriculture Projects
+This workflow is the
+[Tufts University Center for Cellular Agriculture's (TUCCA)] RNA-Seq Snakemake
+Workflow for Cellular Agriculture Projects.
 
-* Currently only supporting reads2counts
+The usage of this workflow is described in our documentation at [TUCCA's Bioinformatics Docs for tucca-rna-seq].
 
-# Installation
+This workflow is a standardized usage Snakemake workflow and can be found in
+the [Snakemake Workflow Catalog].
 
-## Installation For Tufts HPC Users
+If you use this workflow in a paper, don't forget to give credits to the authors
+by citing the URL of this (original) repository and its DOI (above if
+available).
 
-### 1. Login to the Tufts HPC
+## What is Cellular Agriculture? 🧬🌱
 
-* [Tufts HPC]
-  * Main page for the Tufts HPC with helpful cheat sheets for the cluster at
-    the bottom of the page
-* [Tufts HPC's Welcome Page]
-  * Contains links to many introductory resources for the Tufts HPC
-* [Tufts HPC's New User Support]
-  * Box folder with many helpful introductory PDFs. The most recent version of
-    the `Intro to Tufts HPC` workshop is highly recommend.
+**Cellular Agriculture** is a cutting-edge field that harnesses biotechnology
+to produce agricultural products directly from cells. Unlike traditional
+farming, which relies on raising and harvesting whole organisms, cellular
+agriculture focuses on cultivating animal cells in controlled environments to
+create sustainable alternatives for meat, dairy, and other animal-derived
+products.
 
-### 2. Get off of a login node
+### **Why Cellular Agriculture Matters**
 
-Once logged into the Tufts HPC run the following to get off a login node and
-onto a compute node so that you can start performing computations.
+- **Sustainability 🌍:** Reduces the environmental impact associated with
+  conventional agriculture, including lower greenhouse gas emissions, reduced
+  land and water usage, and minimized waste production.
+- **Ethical Considerations 🐮❤️:** Offers humane alternatives by eliminating the
+  need for animal slaughter, addressing animal welfare concerns.
+- **Food Security 🍽️:** Enhances the ability to produce food in areas with
+  limited agricultural resources, contributing to global food security.
+- **Innovation and Research 🔬:** Drives advancements in biotechnology,
+  genetics, and bioinformatics, fostering interdisciplinary collaboration and
+  novel scientific discoveries.
 
-```bash
-srun -p interactive --pty bash
-```
+## About the Workflow
 
-This will allocate a compute node with bash shell, 1 CPU core (default),
-4 hours (interactive partition default and maxmimum value), and 2GB of CPU
-memory (default). If desired, modify with number of CPU cores `-n` , memory
-`--mem=` , an alternative partition `-p` , and/or runtime `--time=` .
+The **`tucca-rna-seq`** workflow is designed to provide a seamless and efficient
+pipeline for RNA-Seq data analysis, tailored specifically for cellular
+agriculture applications. Here's what makes our workflow stand out ⭐:
 
-Depending on the current usage of the Tufts HPC, you may need to wait in a
-queue to be allocated enough resources.
+- **Cell Ag-Specfic Analysis Modes** 🥩🍔:
+  - 🚧 More Info Coming Soon! 🚧
 
-### 3. Clone the repository
+- **Automated with Snakemake** 🐍: Utilizes `Snakemake`, a Python-based workflow
+management system, to create readable and maintainable pipelines that simplify
+complex bioinformatics tasks.
+  
+- **Comprehensive Data Processing** 📂:
+  - **Quality Control** 📋: Implements `FastQC` and `Qualimap` for quality
+    assessment.
+  - **Salmon for Quantification** 🐟: Employs `Salmon` for fast, accurate
+    transcript quantification, while taking into account experimental attributes
+    and biases commonly observed in RNA-Seq data.
+  - **Meta-Analysis** 📊: Aggregates these results using `MultiQC` to provide a
+    unified overview of your data quality and processing metrics.
+  
+- **Differential Gene Expression Analysis** 🧬:
+  - **Robust Statistical Tools** ✖️➗: Leverages `DESeq2` for differential
+    expression analysis, ensuring reliable and statistically sound results.
+  - **Parallel Processing** ⚙️⏱️: Employs `BiocParallel` and other R
+    parallelization packages to efficiently parallelize differential gene
+    expression analyses across multiple `DESeq2` contrasts simultaneously,
+    significantly reducing computation time.
+  - **Pathway and Enrichment Analysis** 🧩: Integrates `ClusterProfiler`, `GO`,
+    `KEGG`, `msigdbr`, and `SPIA` to facilitate comprehensive pathway and
+    functional enrichment analyses. These analyses include:
+    - **Over-Representation Analysis (ORA):** Identifies pathways or gene sets
+      that are over-represented in your differentially expressed genes compared
+      to a background set.
+    - **Functional Class Scoring Analyses (e.g., Gene Set Enrichment Analysis
+      [GSEA]):** Assesses whether predefined sets of genes show statistically
+      significant differences between two biological states.
+    - **Topology-Based Analyses (e.g., SPIA):** Incorporates pathway topology
+      information to evaluate the impact of gene expression changes on specific
+      biological pathways.
+  - **Visualization** 📸: Utilizes `ggplot2`, `EnhancedVolcano`, `pheatmap`,
+    `ClusterProfiler`, and many other visualization tools to create insightful
+    and publication-ready figures.
+  
+- **High Reproducibility** 🔄:
+  - **Environment Management** 🔧🌐: Employs `singularity` and `renv` to manage and
+    replicate computational environments, ensuring consistency across different
+    systems and projects.
 
-Go to the desired directory/folder on your file system on the Tufts HPC, then
-clone/get the repository and move into the respective directory with:
+- **Scalability and Flexibility** 📈🎛️: Designed to handle datasets of varying
+  sizes and complexities, making it suitable for both small-scale studies and
+  large, high-throughput projects.
 
-```bash
-git clone https://github.com/benjibromberg/tucca-rna-seq.git
-```
+By integrating these powerful tools into a cohesive workflow,
+**`tucca-rna-seq`** provides a reliable and efficient platform for your RNA-Seq
+data analysis needs, allowing you to focus on deriving meaningful biological
+insights 🧠 without getting bogged down by technical complexities ⚙️.
 
-### 4. Dependencies installation
+## Connect With Us
 
-For improved reproducibility and reusability of the workflow,
-each individual step of the workflow runs either in its own [Conda][conda]
-virtual environment. As a consequence, running this workflow has very few
-individual dependencies.
+We're here to help! If you have questions, feedback, or need assistance, feel
+free to reach out through our social channels:
 
-You will need to add the `bioconda` channel to your `base` conda environment
-which loads everytime you load a conda manager like [miniforge][miniforge].
-If this is problematic for some reason, you will need to load another conda
-environment that includes the `conda-forge`, `bioconda`, and `default` channels
-before loading the `snakemake` conda environment which will require manually
-modifying the `run.sh` runner script.
+- [Tufts University Center for Cellular Agriculture](https://cellularagriculture.tufts.edu/)
+- [TUCCA on LinkedIn](https://www.linkedin.com/company/tufts-cell-ag/)
+- [TUCCA on X](https://twitter.com/tuftscellag)
+- [TUCCA on YouTube](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
 
-To add the `bioconda` channel to your `base` conda environment run:
+Alternatively, visit our [GitHub Repository](https://github.com/tucca-cellag)
+to explore more of TUCCA's computational projects.
 
-```bash
-module load miniforge/24.7.1-py312
-conda activate base
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-conda config --show channels
-```
-
-The result of the final command should match the following:
-
-```bash
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-```
-
-Then run the following to create the `snakemake` conda environment:
-
-```bash
-conda env create -f tucca-rna-seq/install/snakemake.yaml
-```
-
-# Set-Up the `config` Directory
-
-TODO: add this section
-
-# Running the Workflow
-
-## Running the Workflow For Tufts HPC Users
-
-### Load the Required Dependencies
-
-```bash
-cd tucca-rna-seq
-module load miniforge/24.7.1-py312
-conda activate base
-conda activate snakemake
-```
-
-### To run the entire workflow
-
-```bash
-snakemake all <extra-snakemake-parameters> --workflow-profile profiles/slurm
-```
-
-### To perform a dry-run of the entire workflow
-
-```bash
-snakemake all -np <extra-snakemake-parameters> --workflow-profile profiles/slurm
-```
-
-When performing a [dry-run][dry-run] using the `-n` (or `--dry-run`) flag,
-Snakemake will only show the execution plan instead of actually performing the
-steps. The `-p` flag instructs Snakemake to also print the resulting shell
-command for illustration.
-
-### To run the workflow targeting a specific target rule
-
-```bash
-snakemake <snakemake-target-rule> <extra-snakemake-parameters> --workflow-profile profiles/slurm
-```
-
-### Workflow Visualization
-
-To visualize the workflow, one can use the option `--dag`. This creates a
-representation of the [DAG][dag-snake] in the graphviz dot language which has
-to be postprocessed by the graphviz tool dot. This yields a
-[directed acyclic graph][dag-wiki] (DAG) of jobs where the edges represent
-dependencies. To visualize the DAG that would be executed running the workflow,
-you can execute the following command optionally targeting a specific target
-rule:
-
-```bash
-snakemake <optional-target-rule> --dag | dot -Tpdf > dag.pdf
-```
-
-## Help
-If something is unclear or broken in the workflow, don't hesitate to
-[file an issue in the `tucca-rna-seq` GitHub repository]. We will try to be
-prompt with our assistance.
-
-[conda]: <https://docs.conda.io/projects/conda/en/latest/index.html>
-[sample-doc]: pipeline_documentation.md#read-sample-table
-[snakemake]: <https://snakemake.readthedocs.io/en/stable/>
-[dry-run]: <https://learn.flowdeploy.com/snakemake-dry-run>
-[slurm]: <https://slurm.schedmd.com/documentation.html>
-[Tufts HPC's Welcome Page]: <https://it.tufts.edu/high-performance-computing/hpc-welcome-page>
-[Tufts HPC's New User Support]: <https://tufts.app.box.com/v/HPC-New-User/folder/46988375653>
-[Tufts HPC]: <https://it.tufts.edu/high-performance-computing>
-[miniforge]: <https://github.com/conda-forge/miniforge>
-[dag-snake]: <https://snakemake.readthedocs.io/en/stable/executing/cli.html#visualization>
-[dag-wiki]: <https://en.wikipedia.org/wiki/Directed_acyclic_graph>
-[tucca]: <https://cellularagriculture.tufts.edu/>
-[rna-seq-star-deseq2 Snakemake workflow]: https://github.com/snakemake-workflows/rna-seq-star-deseq2/tree/b3998c158a87cc9096f7cda8ae913adf2ac6da9d
-[rna-seq-kallisto-sleuth Snakmake workflow]: https://github.com/snakemake-workflows/rna-seq-kallisto-sleuth/tree/main
-[file an issue in the `tucca-rna-seq` GitHub repository]: https://github.com/benjibromberg/tucca-rna-seq/issues/new
+[Tufts University Center for Cellular Agriculture's (TUCCA)]: (https://cellularagriculture.tufts.edu/)
+[TUCCA's Bioinformatics Docs for tucca-rna-seq]: (https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+[Snakemake Workflow Catalog]: (https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html)
