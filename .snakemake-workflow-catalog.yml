@@ -1,9 +1,6 @@
 # configuration of display in snakemake workflow catalog: https://snakemake.github.io/snakemake-workflow-catalog
 
 usage:
-  mandatory-flags: # optional definition of additional flags
-    desc: # describe your flags here in a few sentences (they will be inserted below the example commands)
-    flags: # put your flags here
   software-stack-deployment: # definition of software deployment method (at least one of conda, singularity, or singularity+conda)
     conda: false # whether pipeline works with --use-conda
     singularity: true # whether pipeline works with --use-singularity
