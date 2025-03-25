@@ -1,0 +1,39 @@
+# .github/workflow/linting.yml
+
+name: Linting and Formatting
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  Formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Super-Linter
+        uses: github/super-linter@v7
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_SNAKEMAKE_SNAKEFMT: true
+          VALIDATE_YAML: true
+          VALIDATE_R: true
+          VALIDATE_PYTHON_PYLINT: true
+
+  Linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint workflow
+        uses: snakemake/snakemake-github-action@v2
+        with:
+          directory: .
+          snakefile: workflow/Snakefile
+          args: "--lint"
+          snakemake-version: 8.27.1
