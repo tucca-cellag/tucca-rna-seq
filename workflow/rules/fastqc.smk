@@ -9,9 +9,8 @@ rule fastqc:
         zips="results/fastqc/{sample}_{unit}_{read}_fastqc.zip",
     params:
         extra=config["params"]["fastqc"]["extra"],
-    threads: 1
-    resources:
-        mem_mb=1024,
+        memory=config["params"]["fastqc"]["memory"],
+    threads: 12
     container:
         config["containers"]["fastqc"]
     log:
@@ -26,7 +25,7 @@ rule fastqc:
     shell:
         """
         (# Perform fastqc on each read
-        fastqc --threads {threads} --memory {resources.mem_mb} \
+        fastqc --threads {threads} --memory {params.memory} \
         {params.extra} --outdir results/fastqc/ {input}
         
         # Determine the base name by removing known fastq extensions
