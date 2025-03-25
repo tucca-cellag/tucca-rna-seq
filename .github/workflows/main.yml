@@ -163,7 +163,7 @@ jobs:
       - name: Upload Genome Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: genome-artifact
+          name: Sc-genome-artifact
           # Adjust the path if needed so that the file appears where your Snakefile expects it.
           path: "ncbi_dataset_*.zip"
 
@@ -227,7 +227,7 @@ jobs:
       - name: Upload Genome Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: genome-artifact
+          name: Gg-genome-artifact
           # Adjust the path if needed so that the file appears where your Snakefile expects it.
           path: "ncbi_dataset_*.zip"
 
@@ -247,7 +247,7 @@ jobs:
       - name: Download Genome Artifact
         uses: actions/download-artifact@v4
         with:
-          name: genome-artifact
+          name: Sc-genome-artifact
           path: .
       # Cache the Singularity images directory.
       - name: Cache Singularity Images
@@ -314,7 +314,7 @@ jobs:
       - name: Download Genome Artifact
         uses: actions/download-artifact@v4
         with:
-          name: genome-artifact
+          name: Gg-genome-artifact
           path: .
       # Cache the Singularity images directory.
       - name: Cache Singularity Images
