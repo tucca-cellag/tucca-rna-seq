@@ -7,13 +7,13 @@
 [![tucca-rna-seq docs](https://img.shields.io/badge/documentation-tucca--rna--seq_docs-blue)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
 
 This workflow is the
-[Tufts University Center for Cellular Agriculture's (TUCCA)] RNA-Seq Snakemake
+[Tufts University Center for Cellular Agriculture's (TUCCA)](https://cellularagriculture.tufts.edu/) RNA-Seq Snakemake
 Workflow for Cellular Agriculture Projects.
 
-The usage of this workflow is described in our documentation at [TUCCA's Bioinformatics Docs for tucca-rna-seq].
+The usage of this workflow is described in our documentation at [TUCCA's Bioinformatics Docs for tucca-rna-seq](https://tucca-cellag.github.io/tucca-rna-seq/introduction).
 
 This workflow is a standardized usage Snakemake workflow and can be found in
-the [Snakemake Workflow Catalog].
+the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html).
 
 If you use this workflow in a paper, don't forget to give credits to the authors
 by citing the URL of this (original) repository and its DOI (above if
@@ -112,7 +112,3 @@ free to reach out through our social channels:
 
 Alternatively, visit our [GitHub Repository](https://github.com/tucca-cellag)
 to explore more of TUCCA's computational projects.
-
-[Tufts University Center for Cellular Agriculture's (TUCCA)]: (https://cellularagriculture.tufts.edu/)
-[TUCCA's Bioinformatics Docs for tucca-rna-seq]: (https://tucca-cellag.github.io/tucca-rna-seq/introduction)
-[Snakemake Workflow Catalog]: (https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html)
