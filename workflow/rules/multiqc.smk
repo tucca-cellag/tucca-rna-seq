@@ -18,6 +18,7 @@ rule multiqc:
     params:
         report_name=config["params"]["multiqc"]["report_name"],
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
+        multiqc_config_path=config["params"]["multiqc"]["multiqc_config_path"],
         extra=config["params"]["multiqc"]["extra"],
     container:
         config["containers"]["multiqc"]
@@ -32,7 +33,7 @@ rule multiqc:
         (multiqc --verbose -n {params.report_name} \
         -o results/multiqc/ \
         {params.overwrite_existing} \
-        -c config/multiqc_config.yaml \
+        -c {params.multiqc_config_path} \
         {params.extra} \
         {input}) &> {log}
         """
