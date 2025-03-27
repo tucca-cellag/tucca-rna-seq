@@ -69,7 +69,7 @@ rule aggregate_sra_pe_reads:
             accession=[r.sra for _, r in units.iterrows() if is_sra_read(r)],
         ),
     output:
-        "results/sra_tools/sra_pe_aggregate.done",
+        touch("results/sra_tools/sra_pe_aggregate.done"),
     log:
         "logs/sra_tools/aggregate_sra_pe_reads.log",
     shell:
