@@ -15,4 +15,4 @@ genome:
   #   https://www.ncbi.nlm.nih.gov/datasets/genome/
   # TODO: Workflow is only currently validated to work on RefSeq genomes
   assembly_accession: GCF_000146045.2 # Saccharomyces cerevisiae S288C
-  assembly_name: "R64"
+  assembly_name: R64
