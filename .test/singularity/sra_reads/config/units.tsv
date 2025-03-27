@@ -1,5 +1,5 @@
 sample_name	unit_name	sra	fq1	fq2
-PlusDy24hours	lane1	SRR32876238		
+PlusDy24	lane1	SRR32876238		
 MinusDy24	lane1	SRR32876239		
 PlusDy18	lane1	SRR32876240		
 MinusDy18	lane1	SRR32876241		
