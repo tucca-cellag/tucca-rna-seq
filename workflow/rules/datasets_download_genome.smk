@@ -71,5 +71,8 @@ rule unzip_genome:
         )
     shell:
         """
-        (mkdir -p results/datasets && 7z x {input} -oresults/datasets) &> {log}
+        (mkdir -p results/datasets && \
+        7z x {input} -oresults/datasets $$ \
+        echo "Directory structure in results/datasets:" && \
+        ls -laR results/datasets) &> {log}
         """
