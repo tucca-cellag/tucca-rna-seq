@@ -1,13 +1,13 @@
-sample_name	unit_name	fq1	fq2	sra	convention
-IB_Primary_CEF_A	lane1			SRR14027951	numeric
-IB_Primary_CEF_B	lane1			SRR14027952	numeric
-IB_Primary_CEF_C	lane1			SRR14027953	numeric
-BR308_Primary_CEF_A	lane1			SRR14027954	numeric
-BR308_Primary_CEF_B	lane1			SRR14027955	numeric
-BR308_Primary_CEF_C	lane1			SRR14027956	numeric
-IB_SI_AI_CEF_A	lane1			SRR14027957	numeric
-IB_SI_AI_CEF_B	lane1			SRR14027958	numeric
-IB_SI_AI_CEF_C	lane1			SRR14027959	numeric
-BR308_SI_AI_CEF_A	lane1			SRR14027960	numeric
-BR308_SI_AI_CEF_B	lane1			SRR14027961	numeric
-BR308_SI_AI_CEF_C	lane1			SRR14027962	numeric
+sample_name	unit_name	fq1	fq2	sra
+IB_Primary_CEF_A	lane1			SRR14027951
+IB_Primary_CEF_B	lane1			SRR14027952
+IB_Primary_CEF_C	lane1			SRR14027953
+BR308_Primary_CEF_A	lane1			SRR14027954
+BR308_Primary_CEF_B	lane1			SRR14027955
+BR308_Primary_CEF_C	lane1			SRR14027956
+IB_SI_AI_CEF_A	lane1			SRR14027957
+IB_SI_AI_CEF_B	lane1			SRR14027958
+IB_SI_AI_CEF_C	lane1			SRR14027959
+BR308_SI_AI_CEF_A	lane1			SRR14027960
+BR308_SI_AI_CEF_B	lane1			SRR14027961
+BR308_SI_AI_CEF_C	lane1			SRR14027962

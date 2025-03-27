@@ -1,20 +1,17 @@
 # .test/singularity/local_reads/config/config.yaml
 
-# Path to your sample sheet
-# TSV format
-# columns: sample_name, first_condition, ..., last_condition, replicate_num,
-#          first_batch_effect, ..., last_batch_effect
+# Path to your SAMPLE SHEET which keeps track of your biological replicates
 samples: .test/singularity/local_reads/config/samples.tsv
 
-# Path to your sequencing unit sheet
-# TSV format
-# columns: sample_name, unit_name, fq1, fq2, convention
-#
-# Units are technical replicates (e.g. lanes, or resequencing of the same
-# biological sample).
+# Path to your sequencing UNIT SHEET which keeps track of your technical
+# replicates (e.g. sequencer lanes or resequencing of the same biological
+# sample)
 units: .test/singularity/local_reads/config/units.tsv
 
 ref:
-  # NCBI genome accession
-  # TODO: test GenBank and RefSeq
-  ncbi_genome_accession: GCF_000146045.2
+  # GenBank or RefSeq accession number for the genome of the species of
+  # interest (or closest related species if no reference genome exists)
+  # Find the accession number here:
+  #   https://www.ncbi.nlm.nih.gov/datasets/genome/
+  # TODO: Workflow is only currently validated to work on RefSeq genomes
+  ncbi_genome_accession: GCF_000146045.2 # Saccharomyces cerevisiae S288C
