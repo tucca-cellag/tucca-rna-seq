@@ -184,6 +184,10 @@ jobs:
         with:
           name: ${{ matrix.artifactName }}
           path: .
+      - name: Debug file tree
+        run: |
+          sudo apt-get update && sudo apt-get install -y tree
+          tree -a -I ".snakemake|dev|de_analysis|renv|.RProj.user|data|.github|.git|.Rprofile|.Rhistory|.DS_Store|*.user"
       - name: Cache Singularity Images
         uses: actions/cache@v4
         with:
