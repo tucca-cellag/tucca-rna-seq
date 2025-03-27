@@ -5,18 +5,17 @@ import glob
 
 rule star_index:
     input:
-        genome_fna=lambda wildcards: glob.glob(
-            "results/datasets/ncbi_dataset/data/{genome}/{genome}_*_genomic.fna".format(
-                genome=config["ref"]["ncbi_genome_accession"]
-            )
+        genome_fna="results/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+            genome_asc=config["genome"]["assembly_accession"],
+            genome_name=config["genome"]["assembly_name"],
         ),
-        genome_gtf="results/datasets/ncbi_dataset/data/{genome}/genomic.gtf".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        genome_gtf="results/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+            genome_asc=config["genome"]["assembly_accession"],
         ),
     output:
         multiext(
-            "results/star/{genome}_index/".format(
-                genome=config["ref"]["ncbi_genome_accession"]
+            "results/star/{genome_asc}_index/".format(
+                genome_asc=config["genome"]["assembly_accession"],
             ),
             "chrLength.txt",
             "chrName.txt",
@@ -36,7 +35,7 @@ rule star_index:
             "transcriptInfo.tab",
         ),
     params:
-        genome=config["ref"]["ncbi_genome_accession"],
+        genome_asc=config["genome"]["assembly_accession"],
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12
@@ -48,7 +47,7 @@ rule star_index:
         """
         (STAR --runThreadN {threads} \
         --runMode genomeGenerate \
-        --genomeDir results/star/{params.genome}_index \
+        --genomeDir results/star/{params.genome_asc}_index \
         --genomeFastaFiles {input.genome_fna} \
         --sjdbGTFfile {input.genome_gtf} \
         --sjdbOverhang {params.sjdb_overhang} \

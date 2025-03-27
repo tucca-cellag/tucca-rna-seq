@@ -21,13 +21,15 @@ samples: config/samples.tsv
 # sample)
 units: config/units.tsv
 
-ref:
+genome:
   # GenBank or RefSeq accession number for the genome of the species of
   # interest (or closest related species if no reference genome exists)
   # Find the accession number here:
   #   https://www.ncbi.nlm.nih.gov/datasets/genome/
   # TODO: Workflow is only currently validated to work on RefSeq genomes
-  ncbi_genome_accession: GCF_016699485.2 # Gallus gallus
+  assembly_accession: GCF_016699485.2 # Gallus gallus
+  assembly_name: "bGalGal1.mat.broiler.GRCg7b"
+
 
 # If you are running this workflow too frequently, NCBI's datasets software may
 # throttle your API calls without an API key.

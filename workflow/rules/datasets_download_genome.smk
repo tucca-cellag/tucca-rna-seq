@@ -5,23 +5,23 @@ import glob
 
 rule datasets_download_genome:
     output:
-        "ncbi_dataset_{genome}.zip".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        "ncbi_dataset_{genome_asc}.zip".format(
+            genome_asc=config["genome"]["assembly_accession"]
         ),
     params:
-        genome_accession=config["ref"]["ncbi_genome_accession"],
+        genome_asc=config["genome"]["assembly_accession"],
         api_key=config["api_keys"]["ncbi"],
     container:
         config["containers"]["ncbi_datasets"]
     log:
         "logs/datasets/datasets_download_genome.log",
     message:
-        "Downloading genome for NCBI genome accession: {genome}".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        "Downloading genome for NCBI genome accession: {genome_asc}".format(
+            genome_asc=config["genome"]["assembly_accession"]
         )
     shell:
         """
-        (datasets download genome accession {params.genome_accession} \
+        (datasets download genome accession {params.genome_asc} \
             --include gtf,gff3,rna,cds,protein,genome,seq-report \
             --api-key {params.api_key} \
             --filename {output}) &> {log}
@@ -30,8 +30,8 @@ rule datasets_download_genome:
 
 rule unzip_genome:
     input:
-        "ncbi_dataset_{genome}.zip".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        "ncbi_dataset_{genome_asc}.zip".format(
+            genome_asc=config["genome"]["assembly_accession"]
         ),
     output:
         multiext(
@@ -44,8 +44,8 @@ rule unzip_genome:
             "dataset_catalog.json",
         ),
         multiext(
-            "results/datasets/ncbi_dataset/data/{genome}/".format(
-                genome=config["ref"]["ncbi_genome_accession"]
+            "results/datasets/ncbi_dataset/data/{genome_asc}/".format(
+                genome_asc=config["genome"]["assembly_accession"]
             ),
             "genomic.gtf",
             "genomic.gff",
@@ -53,21 +53,18 @@ rule unzip_genome:
             "cds_from_genomic.fna",
             "protein.faa",
             "sequence_report.jsonl",
-        ),
-        glob.glob(
-            (
-                "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
-                + "*"
-                + "_genomic.fna"
-            ).format(genome=config["ref"]["ncbi_genome_accession"])
+            "{genome_asc}_{genome_name}_genomic.fna".format(
+                genome_asc=config["genome"]["assembly_accession"],
+                genome_name=config["genome"]["assembly_name"],
+            ),
         ),
     container:
         config["containers"]["p7zip"]
     log:
         "logs/datasets/unzip_genome.log",
     message:
-        "Unzipping genome for NCBI genome accession: {genome}".format(
-            genome=config["ref"]["ncbi_genome_accession"]
+        "Unzipping genome for NCBI genome accession: {genome_asc}".format(
+            genome_asc=config["genome"]["assembly_accession"]
         )
     shell:
         """
