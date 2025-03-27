@@ -5,17 +5,19 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   ./run_snakemake_tests.sh {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra} [NCBI_API_KEY]
+#   ./run_snakemake_tests.sh {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}
 #
-# For targets that require an NCBI API key (sc-genome, gg-genome, sc-reads, gg-sra),
-# the second parameter (NCBI_API_KEY) must be provided.
+# IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
 # This script assumes that you are in the repository root where the Snakefile
 # (workflow/Snakefile) and the profiles directory exist, and that both the
 # singularity and snakemake modules are loaded.
 #
 # Example:
-#   ./run_snakemake_tests.sh sc-genome AAAAAAAAAAAAAAAAAAAA
+#   ./run_snakemake_tests.sh sc-genome
+
+# Hard-coded API key—replace this placeholder with your actual NCBI API key.
+API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that singularity is in the PATH.
 if ! command -v singularity &>/dev/null; then
@@ -87,7 +89,7 @@ gg-sra)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra} [NCBI_API_KEY]"
+  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}"
   exit 1
   ;;
 esac
