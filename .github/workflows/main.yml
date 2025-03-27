@@ -44,7 +44,7 @@ jobs:
         with:
           directory: .
           snakefile: workflow/Snakefile
-          args: "--lint"
+          args: --lint
           snakemake-version: 8.27.1
 
   Snakemake_Env_Init:
@@ -82,13 +82,13 @@ jobs:
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: "3.8.4"
+          singularity-version: 3.8.4
       - name: Run Snakemake on dummy_all_images to create cache files
         uses: snakemake/snakemake-github-action@v2
         with:
-          directory: "."
-          snakefile: "workflow/Snakefile"
-          args: "dummy_all_images --workflow-profile profiles/github-actions"
+          directory: .
+          snakefile: workflow/Snakefile
+          args: dummy_all_images --workflow-profile profiles/github-actions
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload ./logs/
@@ -99,21 +99,12 @@ jobs:
           path: logs/
 
   Generate_Genome:
-    name: "Generate ${{ matrix.organism }} Genome Artifact"
+    name: Generate SCerevisiae Genome Artifact
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
       - Snakemake_Env_Init
-    strategy:
-      matrix:
-        include:
-          - organism: SCerevisiae
-            configfile: .test/singularity/local_reads/config/config.yaml
-            artifactName: Sc-genome-artifact
-          - organism: GGallus
-            configfile: .test/singularity/sra_reads/config/config.yaml
-            artifactName: Gg-genome-artifact
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -143,32 +134,32 @@ jobs:
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: "3.8.4"
+          singularity-version: 3.8.4
       - name: Run datasets_download_genome rule
         uses: snakemake/snakemake-github-action@v2
         with:
-          directory: "."
-          snakefile: "workflow/Snakefile"
+          directory: .
+          snakefile: workflow/Snakefile
           args: >
             datasets_download_genome --workflow-profile profiles/github-actions
-            --configfile ${{ matrix.configfile }}
+            --configfile .test/singularity/local_reads/config/config.yaml
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload Genome Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifactName }}
-          path: "ncbi_dataset_*.zip"
+          name: Sc-genome-artifact
+          path: ncbi_dataset_*.zip
       - name: Upload ./logs/
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gen-genome-${{ matrix.organism }}-logs
+          name: gen-scerevisiae-genome-logs
           path: logs/
 
   Run_Workflow:
-    name: "Run workflow on ${{ matrix.organism }} reads"
+    name: Run workflow for ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -178,14 +169,22 @@ jobs:
     strategy:
       matrix:
         include:
-          - organism: SCerevisiae
-            artifactName: Sc-genome-artifact
+          - name: Local Reads (dryrun)
+            log_name: local-run-dryrun
             configfile: .test/singularity/local_reads/config/config.yaml
-            target: all
-          - organism: GGallus
-            artifactName: Gg-genome-artifact
+            extra_args: --dryrun --printshellcmds
+          - name: Local Reads
+            log_name: local-run
+            configfile: .test/singularity/local_reads/config/config.yaml
+            extra_args:
+          - name: SRA Reads (dryrun)
+            log_name: sra-run-dryrun
             configfile: .test/singularity/sra_reads/config/config.yaml
-            target: results/sra_tools/sra_pe_aggregate.done
+            extra_args: --dryrun --printshellcmds
+          - name: SRA Reads
+            log_name: sra-run
+            configfile: .test/singularity/sra_reads/config/config.yaml
+            extra_args:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -194,7 +193,7 @@ jobs:
       - name: Download Genome Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.artifactName }}
+          name: Sc-genome-artifact
           path: .
       - name: Debug file tree
         run: |
@@ -224,25 +223,26 @@ jobs:
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: "3.8.4"
-      - name: Run workflow on ${{ matrix.organism }} reads
+          singularity-version: 3.8.4
+      - name: Run workflow
         env:
           BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
         uses: snakemake/snakemake-github-action@v2
         with:
-          directory: "."
-          snakefile: "workflow/Snakefile"
+          directory: .
+          snakefile: workflow/Snakefile
           args: >
-            ${{ matrix.target }} --workflow-profile profiles/github-actions
+            all --workflow-profile profiles/github-actions
             --configfile ${{ matrix.configfile }}
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
+            ${{ matrix.extra_args }}
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload ./logs/
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: workflow-${{ matrix.organism }}-logs
+          name: workflow-${{ matrix.log_name }}-logs
           path: logs/
 
       #- name: Test report
