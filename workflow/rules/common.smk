@@ -192,7 +192,6 @@ def get_star_paths(row: pd.Series) -> List[str]:
         f"results/star/{sample}_{unit}_Log.out",
         f"results/star/{sample}_{unit}_Log.progress.out",
         f"results/star/{sample}_{unit}_SJ.out.tab",
-        f"results/star/{sample}_{unit}__STARtmp",
     ]
     return paths
 
