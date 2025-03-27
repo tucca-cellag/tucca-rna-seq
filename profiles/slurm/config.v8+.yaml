@@ -5,7 +5,6 @@
 executor: slurm
 sdm: apptainer
 verbose: true
-printshellcmds: true
 show-failed-logs: true
 jobs: 100
 latency-wait: 120 # Required for unzipping downloaded genomes
