@@ -12,7 +12,7 @@ rule snapshot_config:
             "units.tsv",
         ),
     output:
-        "results/last_run_config_snapshot/snapshot_done.txt",
+        "results/last_run_config_snapshot/snapshot_done.done",
     container:
         config["containers"]["python"]
     log:

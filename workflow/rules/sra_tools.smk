@@ -3,7 +3,7 @@
 
 rule configure_sra_tools:
     output:
-        "results/sra_tools/sra_config_completed.txt",
+        "results/sra_tools/sra_config_completed.done",
     params:
         vdb_config_ra_path=config["params"]["sra_tools"]["vdb_config_ra_path"],
     log:
@@ -19,7 +19,7 @@ rule configure_sra_tools:
 
 rule prefetch_sra:
     input:
-        "results/sra_tools/sra_config_completed.txt",
+        "results/sra_tools/sra_config_completed.done",
     output:
         multiext("data/sra_cache/{accession}/", "{accession}.sra"),
     log:
@@ -35,7 +35,7 @@ rule prefetch_sra:
 
 rule download_sra_pe_reads:
     input:
-        "results/sra_tools/sra_config_completed.txt",
+        "results/sra_tools/sra_config_completed.done",
         "data/sra_cache/{accession}/{accession}.sra",
     output:
         "data/sra_reads/{accession}_1.fastq",
