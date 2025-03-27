@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
       - name: Run Super-Linter
         uses: github/super-linter@v7
         env:
@@ -35,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Lint workflow
         uses: snakemake/snakemake-github-action@v2
         with:
@@ -50,49 +53,40 @@ jobs:
       - Linting
       - Formatting
     steps:
-      # Check out your repository (including your Snakefile and profiles directory)
       - name: Checkout Repository
         uses: actions/checkout@v4
-      # Cache the Singularity images directory.
+        with:
+          submodules: true
       - name: Cache Singularity Images
         uses: actions/cache@v4
         with:
-          # Adjust the path if your Singularity images are stored elsewhere.
           path: .snakemake/singularity
-          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
           key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
             ${{ runner.os }}-singularity-
-      # Cache the Conda packages directory to avoid re-downloading packages
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
-          # Path used in your setup; adjust if you use a different directory.
           path: /home/runner/conda_pkgs_dir
-          # Use the environment file hash to update the cache whenever it changes.
           key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-conda-pkgs-
-      # Cache the snakemake environment directory
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
-          # Adjust this path to where your environment is created.
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-snakemake-env-
-      # Install Singularity (or Apptainer) version 3.8.4.
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: "3.8.4"
-      # Run the Snakemake workflow to generate cache files.
       - name: Run Snakemake on dummy_all_images to create cache files
         uses: snakemake/snakemake-github-action@v2
         with:
-          directory: "." # Working directory
-          snakefile: "workflow/Snakefile" # Snakefile location
+          directory: "."
+          snakefile: "workflow/Snakefile"
           args: "dummy_all_images --workflow-profile profiles/github-actions"
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
@@ -116,6 +110,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Cache Singularity Images
         uses: actions/cache@v4
         with:
@@ -180,6 +176,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Download Genome Artifact
         uses: actions/download-artifact@v4
         with:
