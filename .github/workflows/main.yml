@@ -97,265 +97,129 @@ jobs:
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
 
-  Generate_SCerevisiae_Genome:
-    name: Generate S. cerevisiae genome artifact
+  Generate_Genome:
+    name: "Generate ${{ matrix.organism }} Genome Artifact"
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
       - Snakemake_Env_Init
+    strategy:
+      matrix:
+        include:
+          - organism: SCerevisiae
+            configfile: .test/singularity/local_reads/config/config.yaml
+            artifactName: Sc-genome-artifact
+          - organism: GGallus
+            configfile: .test/singularity/sra_reads/config/config.yaml
+            artifactName: Gg-genome-artifact
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      # Cache the Singularity images directory.
       - name: Cache Singularity Images
         uses: actions/cache@v4
         with:
-          # Adjust the path if your Singularity images are stored elsewhere.
           path: .snakemake/singularity
-          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
           key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
             ${{ runner.os }}-singularity-
-      # Cache the Conda packages directory to avoid re-downloading packages
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
-          # Path used in your setup; adjust if you use a different directory.
           path: /home/runner/conda_pkgs_dir
-          # Use the environment file hash to update the cache whenever it changes.
           key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-conda-pkgs-
-      # Cache the snakemake environment directory
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
-          # Adjust this path to where your environment is created.
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-snakemake-env-
-      # Install Singularity (or Apptainer) version 3.8.4.
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: "3.8.4"
       - name: Run datasets_download_genome rule
-        # This step runs Snakemake with target "datasets_download_genome",
-        # which will generate the heavy file (e.g. ncbi_dataset_GCF_002263795.3.zip)
         uses: snakemake/snakemake-github-action@v2
         with:
           directory: "."
           snakefile: "workflow/Snakefile"
           args: >
             datasets_download_genome --workflow-profile profiles/github-actions
-            --configfile .test/singularity/local_reads/config/config.yaml
+            --configfile ${{ matrix.configfile }}
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload Genome Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Sc-genome-artifact
-          # Adjust the path if needed so that the file appears where your Snakefile expects it.
+          name: ${{ matrix.artifactName }}
           path: "ncbi_dataset_*.zip"
 
-  Generate_GGallus_Genome:
-    name: Generate G. Gallus genome artifact
+  Run_Reads_Workflow:
+    name: "Run workflow on ${{ matrix.organism }} reads"
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
       - Snakemake_Env_Init
+      - Generate_Genome
+    strategy:
+      matrix:
+        include:
+          - organism: SCerevisiae
+            artifactName: Sc-genome-artifact
+            configfile: .test/singularity/local_reads/config/config.yaml
+            target: all
+          - organism: GGallus
+            artifactName: Gg-genome-artifact
+            configfile: .test/singularity/sra_reads/config/config.yaml
+            target: results/sra_tools/sra_pe_aggregate.done
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      # Cache the Singularity images directory.
+      - name: Download Genome Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.artifactName }}
+          path: .
       - name: Cache Singularity Images
         uses: actions/cache@v4
         with:
-          # Adjust the path if your Singularity images are stored elsewhere.
           path: .snakemake/singularity
-          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
           key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
             ${{ runner.os }}-singularity-
-      # Cache the Conda packages directory to avoid re-downloading packages
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
-          # Path used in your setup; adjust if you use a different directory.
           path: /home/runner/conda_pkgs_dir
-          # Use the environment file hash to update the cache whenever it changes.
           key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-conda-pkgs-
-      # Cache the snakemake environment directory
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
-          # Adjust this path to where your environment is created.
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
             ${{ runner.os }}-snakemake-env-
-      # Install Singularity (or Apptainer) version 3.8.4.
       - name: Install Singularity 3.8.4
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: "3.8.4"
-      - name: Run datasets_download_genome rule
-        # This step runs Snakemake with target "datasets_download_genome",
-        # which will generate the heavy file (e.g. ncbi_dataset_GCF_002263795.3.zip)
+      - name: Run workflow on ${{ matrix.organism }} reads
+        env:
+          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
         uses: snakemake/snakemake-github-action@v2
         with:
           directory: "."
           snakefile: "workflow/Snakefile"
           args: >
-            datasets_download_genome --workflow-profile profiles/github-actions
-            --configfile .test/singularity/sra_reads/config/config.yaml
-            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
-          show-disk-usage-on-error: true
-          snakemake-version: 8.27.1
-      - name: Upload Genome Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Gg-genome-artifact
-          # Adjust the path if needed so that the file appears where your Snakefile expects it.
-          path: "ncbi_dataset_*.zip"
-
-  SCerevisiae_Reads:
-    name: Run workflow on S. Cerevisiae reads
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-      - Snakemake_Env_Init
-      - Generate_SCerevisiae_Genome
-    steps:
-      # Check out your repository (including your Snakefile and profiles directory)
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      # Download required artifacts
-      - name: Download Genome Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Sc-genome-artifact
-          path: .
-      # Cache the Singularity images directory.
-      - name: Cache Singularity Images
-        uses: actions/cache@v4
-        with:
-          # Adjust the path if your Singularity images are stored elsewhere.
-          path: .snakemake/singularity
-          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
-          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
-          restore-keys: |
-            ${{ runner.os }}-singularity-
-      # Cache the Conda packages directory to avoid re-downloading packages
-      - name: Cache Conda Packages
-        uses: actions/cache@v4
-        with:
-          # Path used in your setup; adjust if you use a different directory.
-          path: /home/runner/conda_pkgs_dir
-          # Use the environment file hash to update the cache whenever it changes.
-          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-pkgs-
-      # Cache the snakemake environment directory
-      - name: Cache snakemake Conda Environment
-        uses: actions/cache@v4
-        with:
-          # Adjust this path to where your environment is created.
-          path: /home/runner/miniconda3/envs/snakemake
-          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-snakemake-env-
-      # Install Singularity (or Apptainer) version 3.8.4.
-      - name: Install Singularity 3.8.4
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: "3.8.4"
-      # Run the Snakemake workflow on local reads.
-      - name: Run workflow on local reads
-        env:
-          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
-        uses: snakemake/snakemake-github-action@v2
-        with:
-          directory: "." # Working directory
-          snakefile: "workflow/Snakefile" # Snakefile location
-          args: >
-            all --workflow-profile profiles/github-actions
-            --configfile .test/singularity/local_reads/config/config.yaml
-            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
-          show-disk-usage-on-error: true
-          snakemake-version: 8.27.1
-
-  GGallus_SRA_Download_and_FastQC:
-    name: Test download of G. gallus SRA reads and run against FastQC
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-      - Snakemake_Env_Init
-      - Generate_GGallus_Genome
-    steps:
-      # Check out your repository (including your Snakefile and profiles directory)
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      # Download required artifacts
-      - name: Download Genome Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Gg-genome-artifact
-          path: .
-      # Cache the Singularity images directory.
-      - name: Cache Singularity Images
-        uses: actions/cache@v4
-        with:
-          # Adjust the path if your Singularity images are stored elsewhere.
-          path: .snakemake/singularity
-          # Here we use a key that combines the OS and a hash of all .smk files in the rules directory.
-          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
-          restore-keys: |
-            ${{ runner.os }}-singularity-
-      # Cache the Conda packages directory to avoid re-downloading packages
-      - name: Cache Conda Packages
-        uses: actions/cache@v4
-        with:
-          # Path used in your setup; adjust if you use a different directory.
-          path: /home/runner/conda_pkgs_dir
-          # Use the environment file hash to update the cache whenever it changes.
-          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-pkgs-
-      # Cache the snakemake environment directory
-      - name: Cache snakemake Conda Environment
-        uses: actions/cache@v4
-        with:
-          # Adjust this path to where your environment is created.
-          path: /home/runner/miniconda3/envs/snakemake
-          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-snakemake-env-
-      # Install Singularity (or Apptainer) version 3.8.4.
-      - name: Install Singularity 3.8.4
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: "3.8.4"
-      # Run the Snakemake workflow on SRA reads.
-      - name: Run workflow on SRA reads
-        env:
-          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
-        uses: snakemake/snakemake-github-action@v2
-        with:
-          directory: "." # Working directory
-          snakefile: "workflow/Snakefile" # Snakefile location
-          args: >
-            results/sra_tools/sra_pe_aggregate.done
-            --workflow-profile profiles/github-actions
-            --configfile .test/singularity/sra_reads/config/config.yaml
+            ${{ matrix.target }} --workflow-profile profiles/github-actions
+            --configfile ${{ matrix.configfile }}
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
