@@ -32,23 +32,12 @@ if ! command -v snakemake &>/dev/null; then
 fi
 
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra} [NCBI_API_KEY]"
+  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}"
   exit 1
 fi
 
 # The first positional parameter is the task.
 TASK=$1
-
-# For tasks that require an API key, use the second parameter.
-if [[ "$TASK" =~ ^(sc-genome|gg-genome|sc-reads|gg-sra)$ ]]; then
-  if [ -z "$2" ]; then
-    echo "Error: This task requires an NCBI API key as a second parameter."
-    echo "Usage: $0 ${TASK} [NCBI_API_KEY]"
-    exit 1
-  else
-    API_KEY="$2"
-  fi
-fi
 
 # Global settings for the Snakemake call.
 PROFILE="profiles/slurm-dev"
