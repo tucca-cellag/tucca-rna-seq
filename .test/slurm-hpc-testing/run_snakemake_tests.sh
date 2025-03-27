@@ -32,7 +32,7 @@ if ! command -v snakemake &>/dev/null; then
 fi
 
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}"
+  echo "Usage: $0 {lint|env-init|sc-reads|gg-sra}"
   exit 1
 fi
 
@@ -52,18 +52,6 @@ env-init)
   echo "Running dummy_all_images (build cache) ..."
   snakemake dummy_all_images --profile ${PROFILE}
   ;;
-sc-genome)
-  echo "Generating S. cerevisiae genome artifact ..."
-  snakemake datasets_download_genome --profile ${PROFILE} \
-    --configfile .test/singularity/local_reads/config/config.yaml \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
-  ;;
-gg-genome)
-  echo "Generating G. gallus genome artifact ..."
-  snakemake datasets_download_genome --profile ${PROFILE} \
-    --configfile .test/singularity/sra_reads/config/config.yaml \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
-  ;;
 sc-reads)
   echo "Running Snakemake workflow on S. cerevisiae reads ..."
   snakemake all --profile ${PROFILE} \
@@ -78,7 +66,7 @@ gg-sra)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}"
+  echo "Usage: $0 {lint|env-init|sc-reads|gg-sra}"
   exit 1
   ;;
 esac
