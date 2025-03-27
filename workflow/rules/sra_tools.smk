@@ -70,6 +70,8 @@ rule aggregate_sra_pe_reads:
         ),
     output:
         touch("results/sra_tools/sra_pe_aggregate.done"),
+    container:
+        config["containers"]["ubuntu"]
     log:
         "logs/sra_tools/aggregate_sra_pe_reads.log",
     shell:
