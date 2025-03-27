@@ -5,8 +5,6 @@
 # Profile Settings
 sdm: apptainer
 show-failed-logs: true
-rerun-incomplete: true
-forceall: true
 verbose: true
 jobs: 100
 latency-wait: 120 # Required for unzipping downloaded genomes
