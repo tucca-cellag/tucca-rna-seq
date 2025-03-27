@@ -5,7 +5,7 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   ./run_snakemake_tests.sh {lint|env-init|sc-genome|gg-genome|sc-reads|gg-sra}
+#   ./run_snakemake_tests.sh {lint|env-init|local-reads|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -32,7 +32,7 @@ if ! command -v snakemake &>/dev/null; then
 fi
 
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|sc-reads|gg-sra}"
+  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
   exit 1
 fi
 
@@ -52,21 +52,21 @@ env-init)
   echo "Running dummy_all_images (build cache) ..."
   snakemake dummy_all_images --profile ${PROFILE}
   ;;
-sc-reads)
-  echo "Running Snakemake workflow on S. cerevisiae reads ..."
+local-reads)
+  echo "Running Snakemake workflow on local reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/local_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
-gg-sra)
-  echo "Testing G. gallus SRA download and FastQC workflow ..."
-  snakemake results/sra_tools/sra_pe_aggregate.done --profile ${PROFILE} \
+sra-reads)
+  echo "Running Snakemake workflow on SRA reads ..."
+  snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/sra_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|env-init|sc-reads|gg-sra}"
+  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
   exit 1
   ;;
 esac
