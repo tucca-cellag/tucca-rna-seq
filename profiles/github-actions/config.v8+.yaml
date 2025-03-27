@@ -6,6 +6,7 @@
 sdm: apptainer
 show-failed-logs: true
 verbose: true
+printshellcmds: true
 jobs: 100
 latency-wait: 120 # Required for unzipping downloaded genomes
 cores: 4

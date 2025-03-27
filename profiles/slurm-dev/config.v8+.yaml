@@ -5,6 +5,7 @@
 executor: slurm
 sdm: apptainer
 verbose: true
+printshellcmds: true
 show-failed-logs: true
 rerun-incomplete: true
 forceall: true
