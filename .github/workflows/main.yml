@@ -92,6 +92,7 @@ jobs:
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload ./logs/
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: env-init-logs
@@ -160,6 +161,7 @@ jobs:
           name: ${{ matrix.artifactName }}
           path: "ncbi_dataset_*.zip"
       - name: Upload ./logs/
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: gen-genome-${{ matrix.organism }}-logs
@@ -237,6 +239,7 @@ jobs:
           show-disk-usage-on-error: true
           snakemake-version: 8.27.1
       - name: Upload ./logs/
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: workflow-${{ matrix.organism }}-logs
