@@ -4,8 +4,9 @@
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-brightgreen.svg)](https://snakemake.github.io)
 [![Singularity](https://img.shields.io/badge/singularity-≥3.8.4-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub license](https://img.shields.io/github/license/benjibromberg/tucca-rna-seq?color=orange)](https://github.com/benjibromberg/tucca-rna-seq/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/tucca-cellag/tucca-rna-seq?color=orange)](https://github.com/tucca-cellag/tucca-rna-seq/blob/main/LICENSE)
 [![tucca-rna-seq docs](https://img.shields.io/badge/documentation-tucca--rna--seq_docs-blue)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+[![GitHub actions status](https://github.com/tucca-cellag/tucca-rna-seq/workflows/Tests/badge.svg?branch=master)](https://github.com/tucca-cellag/tucca-rna-seq/actions?query=branch%3Amaster+workflow%3ATests)
 
 This workflow is the
 [Tufts University Center for Cellular Agriculture's (TUCCA)](https://cellularagriculture.tufts.edu/) RNA-Seq Snakemake
