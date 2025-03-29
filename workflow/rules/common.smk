@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 import shutil
 from typing import Protocol, List
+from snakemake.utils import validate
 import re
 
 
@@ -21,15 +22,14 @@ class Wildcard(Protocol):
 
 SRA_READS_DIR = Path("")
 
-# from snakemake.utils import validate
 
-# validate(config, schema="../schemas/config.schema.yaml")
+# TODO: validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
 samples = samples.set_index("sample_name", drop=False).sort_index()
 
-# validate(samples, schema="../schemas/samples.schema.yaml")
+validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_csv(
     config["units"], sep="\t", dtype={"sample_name": str, "unit_name": str}
@@ -38,7 +38,7 @@ units["sample_name"] = units["sample_name"].str.strip()
 units["unit_name"] = units["unit_name"].str.strip()
 units = units.set_index(["sample_name", "unit_name"], drop=False).sort_index()
 
-# validate(units, schema="../schemas/units.schema.yaml")
+validate(units, schema="../schemas/units.schema.yaml")
 
 # Check that each (sample, unit) combination is unique.
 if not units.index.is_unique:

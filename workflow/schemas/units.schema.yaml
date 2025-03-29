@@ -1,0 +1,44 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+
+description: an entry in the units sheet
+properties:
+  sample_name:
+    type: string
+    description: >
+      Sample name/identifier:
+      A unique identifier for the sample, representing an individual biological
+      replicate. The identifier should be an alphanumeric string and may
+      include underscores ("_") and hyphens ("-").
+    pattern: "^[a-zA-Z_0-9-]+$"
+  unit_name:
+    type: string
+    description: >
+      Unit name/identifier:
+      Used to distinguish between multiple sequencing runs (or lanes) for the
+      same physical sample, which represent technical replicates rather than
+      additional biological replicates. The identifier is an alphanumeric
+      string, that may additionally contain '_' and '-'.
+    pattern: "^[a-zA-Z_0-9-]+$"
+  fq1:
+    type: string
+    description: >
+      FASTQ file for forward reads:
+      Provide the file path to the FASTQ file containing the sequencing data
+      for read 1 (the forward reads).
+  fq2:
+    type: string
+    description: >
+      FASTQ file for reverse reads:
+      Provide the file path to the FASTQ file containing the sequencing data
+      for read 2 (the reverse reads).
+  sra:
+    type: string
+    description: >
+      SRA accession number:
+      Provide the SRA run accession number for the sequencing unit. It should
+      be in the format "SRR" followed by one or more digits (e.g., SRR123456).
+    pattern: "^SRR[0-9]+$"
+
+required:
+  - sample_name
+  - unit_name

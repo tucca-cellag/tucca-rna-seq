@@ -1,0 +1,33 @@
+# workflow/schemas/samples.schema.yaml
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+
+description: an entry in the sample sheet
+properties:
+  sample_name:
+    type: string
+    description: >
+      Sample name/identifier:
+      A unique identifier for the sample, representing an individual biological
+      replicate. The identifier should be an alphanumeric string and may
+      include underscores ("_") and hyphens ("-").
+    pattern: "^[a-zA-Z_0-9-]+$"
+  replicate_num:
+    type: integer
+    description: >
+      A positive integer indicating the replicate number for the biological
+      sample. This value distinguishes multiple replicates belonging to the
+      same sample.
+    minimum: 1
+  sequencing_batch:
+    type: integer
+    description: >
+      A positive integer representing the sequencing batch or run in which the
+      sample was processed. This information is used to identify and control
+      for potential batch effects.
+    minimum: 1
+
+required:
+  - sample_name
+  - replicate_num
+  - sequencing_batch

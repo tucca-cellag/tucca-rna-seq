@@ -1,5 +1,6 @@
 # config/config.yaml
 
+# ----------------------------------------------------------
 # This is the main configuration file for the 'tucca-rna-seq' workflow
 #
 # For instructions on how to set up the workflow please refer to our
@@ -12,15 +13,23 @@
 
 # The default data/configuration is an example analysis using data from
 # BioProject PRJNA716186 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA716186)
+# ----------------------------------------------------------
 
+
+# ----------------------------------------------------------
+# Sample and Unit Sheet Section
+# ----------------------------------------------------------
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
 samples: config/samples.tsv
-
 # Path to your sequencing UNIT SHEET which keeps track of your technical
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
 units: config/units.tsv
 
+
+# ----------------------------------------------------------
+# Genome Section
+# ----------------------------------------------------------
 genome:
   # GenBank or RefSeq accession number for the genome of the species of
   # interest (or closest related species if no reference genome exists)
@@ -31,26 +40,26 @@ genome:
   assembly_name: "bGalGal1.mat.broiler.GRCg7b"
 
 
+# ----------------------------------------------------------
+# API Key Section:
 # If you are running this workflow too frequently, NCBI's datasets software may
 # throttle your API calls without an API key.
+# ----------------------------------------------------------
 api_keys:
-  ncbi: 
+  ncbi:
+  
 
-# Containers to be used for the environment for each rule (via Singularity)
-# DO NOT CHANGE UNLESS YOU WANT TO CHANGE THE VERSION OF THE SOFTWARE YOU ARE
-# USING. UPGRADING/DOWNGRADING VERSIONS MAY BREAK THIS WORKFLOW. 
-containers:
-  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
-  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
-  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
-  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
-  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
-  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
-  python: "docker://python:latest"
-  ubuntu: "docker://ubuntu:latest"
-  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
-  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
-
+# ----------------------------------------------------------
+# Params Section: Configurable Settings for the Software
+#
+# This section contains all the adjustable parameters for the various
+# software tools used in the workflow. Update these settings to customize
+# the analysis to match your experimental setup.
+#
+# Each sub-section (e.g., fastqc, star, salmon_quant) provides tool-specific
+# options. Modify these as needed to fine-tune the performance and behavior
+# of the pipeline.
+# ----------------------------------------------------------
 params:
   fastqc:
     memory: 1024
@@ -94,3 +103,24 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
+
+# ----------------------------------------------------------
+# Containers Section:
+#
+# Containers to be used for the environment for each rule (via Singularity)
+#
+# DO NOT CHANGE ANYTHING BELOW, UNLESS YOU NEED TO CHANGE THE VERSIONS OF THE
+# SOFTWARE USED BY THE WORKFLOW. PLEASE BE AWARE THAT UPGRADING/DOWNGRADING
+# VERSIONS OF THE SOFTWARE BELOW MAY BREAK THIS WORKFLOW ENTIRELY.
+# ----------------------------------------------------------
+containers:
+  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
+  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
+  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
+  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
+  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
+  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
+  python: "docker://python:latest"
+  ubuntu: "docker://ubuntu:latest"
+  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
+  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
