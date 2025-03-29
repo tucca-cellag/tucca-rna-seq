@@ -13,4 +13,4 @@ jobs:
         id: release
         with:
           release-type: simple
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ORG_REPO_TRS }}
