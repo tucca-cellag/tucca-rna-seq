@@ -44,7 +44,7 @@ jobs:
             snakemake: 8.27.1
             allow_failure: false
           - name: latest
-            snakemake:
+            snakemake: "*"
             allow_failure: false
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
             singularity: 3.8.4
             allow_failure: false
           - name: latest
-            snakemake:
+            snakemake: "*"
             singularity:
             allow_failure: true
     steps:
@@ -143,7 +143,7 @@ jobs:
             singularity: 3.8.4
             allow_failure: false
           - name: latest
-            snakemake:
+            snakemake: "*"
             singularity:
             allow_failure: true
     steps:
@@ -237,7 +237,7 @@ jobs:
             singularity: 3.8.4
             allow_failure: false
           - name: latest
-            snakemake:
+            snakemake: "*"
             singularity:
             allow_failure: true
     steps:
