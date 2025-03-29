@@ -104,12 +104,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
       - name: Install Singularity (specified version)
-        if: ${{ matrix.version.singularity != 'latest' }}
+        if: ${{ matrix.version.name != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: ${{ matrix.version.singularity }}
       - name: Install Singularity (default latest)
-        if: ${{ matrix.version.singularity == 'latest' }}
+        if: ${{ matrix.version.name == 'latest' }}
         uses: singularityhub/install-singularity@main
       - name: Run Snakemake on dummy_all_images to create cache files
         uses: snakemake/snakemake-github-action@v2
@@ -173,12 +173,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
       - name: Install Singularity (specified version)
-        if: ${{ matrix.version.singularity != 'latest' }}
+        if: ${{ matrix.version.name != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: ${{ matrix.version.singularity }}
       - name: Install Singularity (default latest)
-        if: ${{ matrix.version.singularity == 'latest' }}
+        if: ${{ matrix.version.name == 'latest' }}
         uses: singularityhub/install-singularity@main
       - name: Run datasets_download_genome rule
         uses: snakemake/snakemake-github-action@v2
@@ -276,12 +276,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
       - name: Install Singularity (specified version)
-        if: ${{ matrix.version.singularity != 'latest' }}
+        if: ${{ matrix.version.name != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
           singularity-version: ${{ matrix.version.singularity }}
       - name: Install Singularity (default latest)
-        if: ${{ matrix.version.singularity == 'latest' }}
+        if: ${{ matrix.version.name == 'latest' }}
         uses: singularityhub/install-singularity@main
       - name: Run Snakemake workflow
         continue-on-error: ${{ matrix.version.allow_failure }}
