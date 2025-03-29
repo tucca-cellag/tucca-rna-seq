@@ -34,25 +34,49 @@ jobs:
           VALIDATE_PYTHON_PYLINT: true
 
   Linting:
+    name: Linting (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            allow_failure: false
+          - name: latest
+            snakemake:
+            allow_failure: false
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Lint workflow
         uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
         with:
           directory: .
           snakefile: workflow/Snakefile
           args: --lint
-          snakemake-version: 8.27.1
+          snakemake-version: ${{ matrix.version.snakemake }}
 
   Snakemake_Env_Init:
-    name: Build Snakemake workflow cache with Singularity v3.8.4
+    name: Build Snakemake workflow cache (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            singularity: 3.8.4
+            allow_failure: false
+          - name: latest
+            snakemake:
+            singularity:
+            allow_failure: true
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -62,49 +86,66 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
+          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
-            ${{ runner.os }}-singularity-
+            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
           path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
+          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-conda-pkgs-
+            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-snakemake-env-
-      - name: Install Singularity 3.8.4
+            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
+      - name: Install Singularity (specified version)
+        if: ${{ matrix.version.singularity != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: 3.8.4
+          singularity-version: ${{ matrix.version.singularity }}
+      - name: Install Singularity (default latest)
+        if: ${{ matrix.version.singularity == 'latest' }}
+        uses: singularityhub/install-singularity@main
       - name: Run Snakemake on dummy_all_images to create cache files
         uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
         with:
           directory: .
           snakefile: workflow/Snakefile
           args: dummy_all_images --workflow-profile profiles/github-actions
           show-disk-usage-on-error: true
-          snakemake-version: 8.27.1
+          snakemake-version: ${{ matrix.version.snakemake }}
       - name: Upload ./logs/
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: env-init-logs
+          name: env-init-${{ matrix.version.name }}-logs
           path: logs/
 
   Generate_Genome:
-    name: Generate SCerevisiae Genome Artifact
+    name: Generate SCerevisiae Genome Artifact (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
       - Snakemake_Env_Init
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            singularity: 3.8.4
+            allow_failure: false
+          - name: latest
+            snakemake:
+            singularity:
+            allow_failure: true
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -114,29 +155,34 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
+          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
-            ${{ runner.os }}-singularity-
+            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
           path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
+          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-conda-pkgs-
+            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-snakemake-env-
-      - name: Install Singularity 3.8.4
+            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
+      - name: Install Singularity (specified version)
+        if: ${{ matrix.version.singularity != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: 3.8.4
+          singularity-version: ${{ matrix.version.singularity }}
+      - name: Install Singularity (default latest)
+        if: ${{ matrix.version.singularity == 'latest' }}
+        uses: singularityhub/install-singularity@main
       - name: Run datasets_download_genome rule
         uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
         with:
           directory: .
           snakefile: workflow/Snakefile
@@ -145,21 +191,21 @@ jobs:
             --configfile .test/singularity/local_reads/config/config.yaml
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
           show-disk-usage-on-error: true
-          snakemake-version: 8.27.1
+          snakemake-version: ${{ matrix.version.snakemake }}
       - name: Upload Genome Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Sc-genome-artifact
+          name: Sc-genome-artifact-${{ matrix.version.name }}
           path: ncbi_dataset_*.zip
       - name: Upload ./logs/
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gen-scerevisiae-genome-logs
+          name: gen-scerevisiae-genome-${{ matrix.version.name }}-logs
           path: logs/
 
   Run_Workflow:
-    name: Run workflow for ${{ matrix.name }}
+    name: Run workflow for ${{ matrix.scenario.name }} (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
     needs:
       - Linting
@@ -168,7 +214,7 @@ jobs:
       - Generate_Genome
     strategy:
       matrix:
-        include:
+        scenario:
           - name: Local Reads (dryrun)
             log_name: local-run-dryrun
             configfile: .test/singularity/local_reads/config/config.yaml
@@ -185,6 +231,15 @@ jobs:
             log_name: sra-run
             configfile: .test/singularity/sra_reads/config/config.yaml
             extra_args:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            singularity: 3.8.4
+            allow_failure: false
+          - name: latest
+            snakemake:
+            singularity:
+            allow_failure: true
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -193,7 +248,7 @@ jobs:
       - name: Download Genome Artifact
         uses: actions/download-artifact@v4
         with:
-          name: Sc-genome-artifact
+          name: Sc-genome-artifact-${{ matrix.version.name }}
           path: .
       - name: Debug file tree
         run: |
@@ -203,46 +258,49 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ hashFiles('workflow/rules/*.smk') }}
+          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
           restore-keys: |
-            ${{ runner.os }}-singularity-
+            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
       - name: Cache Conda Packages
         uses: actions/cache@v4
         with:
           path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ hashFiles('.snakemake.environment.yaml') }}
+          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-conda-pkgs-
+            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
       - name: Cache snakemake Conda Environment
         uses: actions/cache@v4
         with:
           path: /home/runner/miniconda3/envs/snakemake
           key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-snakemake-env-
-      - name: Install Singularity 3.8.4
+            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
+      - name: Install Singularity (specified version)
+        if: ${{ matrix.version.singularity != 'latest' }}
         uses: singularityhub/install-singularity@main
         with:
-          singularity-version: 3.8.4
-      - name: Run workflow
-        env:
-          BB_NCBI_API_KEY: ${{ secrets.BB_NCBI_API_KEY }}
+          singularity-version: ${{ matrix.version.singularity }}
+      - name: Install Singularity (default latest)
+        if: ${{ matrix.version.singularity == 'latest' }}
+        uses: singularityhub/install-singularity@main
+      - name: Run Snakemake workflow
+        continue-on-error: ${{ matrix.version.allow_failure }}
         uses: snakemake/snakemake-github-action@v2
         with:
           directory: .
           snakefile: workflow/Snakefile
           args: >
             all --workflow-profile profiles/github-actions
-            --configfile ${{ matrix.configfile }}
+            --configfile ${{ matrix.scenario.configfile }}
             --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
-            ${{ matrix.extra_args }}
+            ${{ matrix.scenario.extra_args }}
           show-disk-usage-on-error: true
-          snakemake-version: 8.27.1
+          snakemake-version: ${{ matrix.version.snakemake }}
       - name: Upload ./logs/
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: workflow-${{ matrix.log_name }}-logs
+          name: workflow-${{ matrix.scenario.log_name }}-${{ matrix.version.name }}-logs
           path: logs/
 
       #- name: Test report
