@@ -9,7 +9,7 @@ show-failed-logs: true
 rerun-incomplete: true
 forceall: true
 jobs: 100
-latency-wait: 120
+latency-wait: 120 # Required for unzipping downloaded genomes
 default-resources:
   slurm_partition: "batch"
   slurm_account: "default"

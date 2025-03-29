@@ -5,10 +5,9 @@
 # Profile Settings
 sdm: apptainer
 show-failed-logs: true
-rerun-incomplete: true
-forceall: true
 verbose: true
 jobs: 100
+latency-wait: 120 # Required for unzipping downloaded genomes
 cores: 4
 default-resources:
   mem_mb: 16000

@@ -23,15 +23,12 @@ import glob
 rule salmon_decoys:
     input:
         transcriptome=expand(
-            "results/datasets/ncbi_dataset/data/{genome}/rna.fna",
-            genome=config["ref"]["ncbi_genome_accession"],
+            "results/datasets/ncbi_dataset/data/{genome_asc}/rna.fna",
+            genome_asc=config["genome"]["assembly_accession"],
         )[0],
-        genome=lambda wildcards: glob.glob(
-            (
-                "results/datasets/ncbi_dataset/data/{genome}/{genome}_"
-                + "*"
-                + "_genomic.fna"
-            ).format(genome=config["ref"]["ncbi_genome_accession"])
+        genome="results/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+            genome_asc=config["genome"]["assembly_accession"],
+            genome_name=config["genome"]["assembly_name"],
         ),
     output:
         gentrome="results/salmon/gentrome.fasta.gz",

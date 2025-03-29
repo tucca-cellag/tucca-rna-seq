@@ -18,10 +18,11 @@ versions_table_group_header: "Analysis Pipeline Step"
 software_versions:
   reads_to_counts:
     fastqc: "0.12.1"
-    star: "2.7.11a"
+    star: "2.7.11b"
     qualimap: "2.3"
     salmon: "1.10.3"
-    multiqc: "1.25"
+    multiqc: "1.27.1"
+    ncbi_datasets: "16.41.0"
   counts_to_de:
 report_header_info:
   - Contact Name: "Firstname Lastname"

@@ -1,0 +1,58 @@
+# .github/workflow/linting.yml
+
+name: Linting and Formatting
+
+on:
+  push:
+    branches:
+      - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: Run Super-Linter
+        uses: github/super-linter@v7
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_SNAKEMAKE_SNAKEFMT: true
+          VALIDATE_YAML: true
+          VALIDATE_R: true
+          VALIDATE_PYTHON_PYLINT: true
+
+  Linting:
+    name: Linting (using ${{ matrix.version.name }} versions)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            allow_failure: false
+          - name: latest
+            snakemake: "*"
+            allow_failure: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Lint workflow
+        uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
+        with:
+          directory: .
+          snakefile: workflow/Snakefile
+          args: --lint
+          snakemake-version: ${{ matrix.version.snakemake }}

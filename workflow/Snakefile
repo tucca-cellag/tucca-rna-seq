@@ -34,7 +34,7 @@ include: "rules/star.smk"
 rule all:
     input:
         get_final_output(),
-        "results/last_run_config_snapshot/snapshot_done.txt",
+        "results/last_run_config_snapshot/snapshot_done.done",
     message:
         """
         Workflow completed successfully! All final reports and intermediate
