@@ -32,15 +32,27 @@ jobs:
           VALIDATE_PYTHON_PYLINT: true
 
   Linting:
+    name: Linting (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            allow_failure: false
+          - name: latest
+            snakemake: "*"
+            allow_failure: false
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Lint workflow
         uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
         with:
           directory: .
           snakefile: workflow/Snakefile
-          args: "--lint"
-          snakemake-version: 8.27.1
+          args: --lint
+          snakemake-version: ${{ matrix.version.snakemake }}
