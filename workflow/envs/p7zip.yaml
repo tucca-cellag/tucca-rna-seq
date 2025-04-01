@@ -1,4 +1,4 @@
-name: p7zip.yaml
+name: p7zip
 channels:
   - conda-forge
   - nodefaults
