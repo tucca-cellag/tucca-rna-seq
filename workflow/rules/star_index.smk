@@ -39,8 +39,8 @@ rule star_index:
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12
-    container:
-        config["containers"]["star"]
+    conda:
+        "../envs/star.yaml"
     log:
         "logs/star/star_index.log",
     shell:

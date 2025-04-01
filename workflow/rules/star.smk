@@ -53,8 +53,8 @@ rule star:
         alignIntronMax=config["params"]["star"]["alignIntronMax"],
         extra=config["params"]["star"]["extra"],
     threads: 12
-    container:
-        config["containers"]["star"]
+    conda:
+        "../envs/star.yaml"
     message:
         """
         Running STAR alignment for:

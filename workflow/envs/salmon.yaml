@@ -1,0 +1,9 @@
+name: salmon
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - salmon =1.10.3
+  #- bzip2 =1.0.8
+  #- gzip =1.13

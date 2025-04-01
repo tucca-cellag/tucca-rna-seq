@@ -20,8 +20,8 @@ rule multiqc:
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
         multiqc_config_path=config["params"]["multiqc"]["multiqc_config_path"],
         extra=config["params"]["multiqc"]["extra"],
-    container:
-        config["containers"]["multiqc"]
+    conda:
+        "../envs/multiqc.yaml"
     log:
         "logs/multiqc/multiqc.log",
     message:

@@ -3,7 +3,8 @@
 
 # Profile Settings
 executor: slurm
-sdm: apptainer
+sdm: conda apptainer
+conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
 jobs: 100

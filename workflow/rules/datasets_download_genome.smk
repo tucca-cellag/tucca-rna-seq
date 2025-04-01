@@ -11,8 +11,8 @@ rule datasets_download_genome:
     params:
         genome_asc=config["genome"]["assembly_accession"],
         api_key=config["api_keys"]["ncbi"],
-    container:
-        config["containers"]["ncbi_datasets"]
+    conda:
+        "../envs/ncbi_datasets.yaml"
     log:
         "logs/datasets/datasets_download_genome.log",
     message:
@@ -58,8 +58,8 @@ rule unzip_genome:
                 genome_name=config["genome"]["assembly_name"],
             ),
         ),
-    container:
-        config["containers"]["p7zip"]
+    conda:
+        "../envs/p7zip.yaml"
     log:
         "logs/datasets/unzip_genome.log",
     message:

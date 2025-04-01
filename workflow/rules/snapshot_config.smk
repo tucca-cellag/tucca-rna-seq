@@ -13,8 +13,6 @@ rule snapshot_config:
         ),
     output:
         "results/last_run_config_snapshot/snapshot_done.done",
-    container:
-        config["containers"]["python"]
     log:
         "logs/snapshot_config/snapshot_config.log",
     shell:

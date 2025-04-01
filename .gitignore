@@ -6,11 +6,12 @@
 .snakemake/**
 logs/**
 results/**
-ncbi*
 
 # Development Tools
 dev
 de_analysis
+renv/**
+renv.lock
 
 # History files
 .Rhistory
@@ -34,6 +35,7 @@ de_analysis
 
 # RStudio files
 .Rproj.user/
+.Rprofile
 
 # produced vignettes
 vignettes/*.html

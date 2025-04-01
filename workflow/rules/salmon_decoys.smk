@@ -34,8 +34,8 @@ rule salmon_decoys:
         gentrome="results/salmon/gentrome.fasta.gz",
         decoys="results/salmon/decoys.txt",
     threads: 12
-    container:
-        config["containers"]["salmon"]
+    conda:
+        "../envs/salmon.yaml"
     log:
         "logs/salmon/decoys.log",
     shell:

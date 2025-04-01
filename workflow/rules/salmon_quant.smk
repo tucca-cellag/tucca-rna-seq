@@ -41,8 +41,8 @@ rule salmon_quant:
         bias_correction=config["params"]["salmon_quant"]["bias_correction"],
         extra=config["params"]["salmon_quant"]["extra"],
     threads: 12
-    container:
-        config["containers"]["salmon"]
+    conda:
+        "../envs/salmon.yaml"
     log:
         "logs/salmon/salmon_quant_{sample}_{unit}.log",
     message:

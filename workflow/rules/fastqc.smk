@@ -11,8 +11,8 @@ rule fastqc:
         extra=config["params"]["fastqc"]["extra"],
         memory=config["params"]["fastqc"]["memory"],
     threads: 12
-    container:
-        config["containers"]["fastqc"]
+    conda:
+        "../envs/fastqc.yaml"
     log:
         "logs/fastqc/{sample}_{unit}_{read}.log",
     message:

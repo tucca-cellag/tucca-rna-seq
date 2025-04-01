@@ -15,7 +15,6 @@
 # BioProject PRJNA716186 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA716186)
 # ----------------------------------------------------------
 
-
 # ----------------------------------------------------------
 # Sample and Unit Sheet Section
 # ----------------------------------------------------------
@@ -25,7 +24,6 @@ samples: config/samples.tsv
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
 units: config/units.tsv
-
 
 # ----------------------------------------------------------
 # Genome Section
@@ -39,7 +37,6 @@ genome:
   assembly_accession: GCF_016699485.2 # Gallus gallus
   assembly_name: "bGalGal1.mat.broiler.GRCg7b"
 
-
 # ----------------------------------------------------------
 # API Key Section:
 # If you are running this workflow too frequently, NCBI's datasets software may
@@ -47,7 +44,6 @@ genome:
 # ----------------------------------------------------------
 api_keys:
   ncbi:
-  
 
 # ----------------------------------------------------------
 # Params Section: Configurable Settings for the Software
@@ -103,24 +99,3 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
-
-# ----------------------------------------------------------
-# Containers Section:
-#
-# Containers to be used for the environment for each rule (via Singularity)
-#
-# DO NOT CHANGE ANYTHING BELOW, UNLESS YOU NEED TO CHANGE THE VERSIONS OF THE
-# SOFTWARE USED BY THE WORKFLOW. PLEASE BE AWARE THAT UPGRADING/DOWNGRADING
-# VERSIONS OF THE SOFTWARE BELOW MAY BREAK THIS WORKFLOW ENTIRELY.
-# ----------------------------------------------------------
-containers:
-  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
-  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
-  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
-  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
-  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
-  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
-  python: "docker://python:latest"
-  ubuntu: "docker://ubuntu:latest"
-  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
-  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"
