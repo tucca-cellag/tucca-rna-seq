@@ -4,4 +4,4 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - qualimap =2.3
+  - qualimap =2.2.2a
