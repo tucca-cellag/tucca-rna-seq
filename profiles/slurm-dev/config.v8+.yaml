@@ -3,7 +3,8 @@
 
 # Profile Settings
 executor: slurm
-sdm: conda apptainer
+use-singularity: true
+use-conda: true
 conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
