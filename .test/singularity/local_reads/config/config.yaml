@@ -8,11 +8,25 @@ samples: .test/singularity/local_reads/config/samples.tsv
 # sample)
 units: .test/singularity/local_reads/config/units.tsv
 
+# ----------------------------------------------------------
+# Genome Section
+#
+# This section defines the reference genome parameters.
+# - assembly_db: Select either "ncbi_refseq" or "ensembl".
+#     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
+#     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
+#     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
+#
+# - assembly_accession: The genome’s GenBank or RefSeq accession number.
+#     (See: https://www.ncbi.nlm.nih.gov/datasets/genome/)
+#
+# - assembly_name: The name assigned to the genome assembly.
+#
+# - assembly_species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus").
+# ----------------------------------------------------------
 genome:
-  # GenBank or RefSeq accession number for the genome of the species of
-  # interest (or closest related species if no reference genome exists)
-  # Find the accession number here:
-  #   https://www.ncbi.nlm.nih.gov/datasets/genome/
   # TODO: Workflow is only currently validated to work on RefSeq genomes
+  assembly_db: ncbi_refseq # Options: "ncbi_refseq" or "ensembl"
   assembly_accession: GCF_000146045.2 # Saccharomyces cerevisiae S288C
   assembly_name: R64
+  assembly_species: Saccharomyces_cerevisiae

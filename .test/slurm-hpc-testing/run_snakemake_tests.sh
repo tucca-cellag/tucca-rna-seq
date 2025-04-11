@@ -31,6 +31,12 @@ if ! command -v snakemake &>/dev/null; then
   exit 1
 fi
 
+# Check that snakemake is in the PATH.
+if ! command -v conda &>/dev/null; then
+  echo "Error: Conda is not available. Please load its module (miniforge)."
+  exit 1
+fi
+
 if [ -z "${1}" ]; then
   echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
   exit 1
@@ -47,10 +53,6 @@ lint)
   echo "Running Snakemake lint..."
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
-  ;;
-env-init)
-  echo "Running dummy_all_images (build cache) ..."
-  snakemake dummy_all_images --profile ${PROFILE}
   ;;
 local-reads)
   echo "Running Snakemake workflow on local reads ..."
