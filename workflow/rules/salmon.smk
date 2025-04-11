@@ -40,7 +40,7 @@ rule salmon_decoys:
 
 rule salmon_index:
     input:
-        gentrome="resources/salmon/gentrome.fasta",
+        sequences="resources/salmon/gentrome.fasta",
         decoys="resources/salmon/decoys.txt",
     output:
         multiext(
