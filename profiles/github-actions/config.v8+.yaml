@@ -5,11 +5,12 @@
 # Profile Settings
 use-singularity: true
 use-conda: true
-conda-cleanup-pkgs: cache
+conda-cleanup-pkgs: tarballs
 all-temp: true
 show-failed-logs: true
 verbose: true
 cores: all
+latency-wait: 120
 default-resources:
   mem_mb: 16000
 
