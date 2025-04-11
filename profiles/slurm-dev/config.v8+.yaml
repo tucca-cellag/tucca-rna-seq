@@ -13,7 +13,7 @@ all-temp: true
 retries: 3
 rerun-incomplete: true
 jobs: 100 # Slurm jobscript size limit
-latency-wait: 120 # Required for unzipping downloaded genomes
+latency-wait: 120
 default-resources:
   slurm_partition: "batch"
   slurm_account: "default"
