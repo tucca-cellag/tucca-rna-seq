@@ -29,7 +29,7 @@ rule salmon_decoys:
             genome_name=config["genome"]["assembly_name"],
         ),
     output:
-        gentrome="resources/salmon/gentrome.fasta.gz",
+        gentrome="resources/salmon/gentrome.fasta",
         decoys="resources/salmon/decoys.txt",
     threads: 2
     log:
@@ -40,7 +40,7 @@ rule salmon_decoys:
 
 rule salmon_index:
     input:
-        gentrome="resources/salmon/gentrome.fasta.gz",
+        gentrome="resources/salmon/gentrome.fasta",
         decoys="resources/salmon/decoys.txt",
     output:
         multiext(
