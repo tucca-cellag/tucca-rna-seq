@@ -8,9 +8,11 @@ use-conda: true
 conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
-rerun-incomplete: true
 forceall: true
-jobs: 100
+all-temp: true
+retries: 3
+rerun-incomplete: true
+jobs: 100 # Slurm jobscript size limit
 latency-wait: 120 # Required for unzipping downloaded genomes
 default-resources:
   slurm_partition: "batch"
