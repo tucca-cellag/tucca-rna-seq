@@ -1,6 +1,5 @@
 # workflow/rules/common.smk
 
-import glob
 import os
 from pathlib import Path
 import pandas as pd
@@ -211,7 +210,7 @@ def get_qualimap_paths(row: pd.Series) -> List[str]:
 def get_salmon_paths(row: pd.Series) -> List[str]:
     sample: str = row.sample_name
     unit: str = row.unit_name
-    return [f"results/salmon/{sample}_{unit}.salmon/quant.sf"]
+    return [f"results/salmon/{sample}_{unit}/quant.sf"]
 
 
 # Main function that aggregates all expected outputs. Called by rule all.
