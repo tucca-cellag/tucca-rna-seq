@@ -74,8 +74,8 @@ rule salmon_quant:
     input:
         # If you have multiple fastq files for a single sample
         # (e.g. technical replicates) use a list for r1 and r2.
-        r1=get_paired_reads()[0],
-        r2=get_paired_reads()[1],
+        r1=get_paired_reads(wildcards)[0],
+        r2=get_paired_reads(wildcards)[1],
         index=multiext(
             "results/salmon/transcriptome_index/",
             "complete_ref_lens.bin",
