@@ -1,15 +1,13 @@
 # workflow/rules/star_index.smk
 
-import glob
-
 
 rule star_index:
     input:
-        genome_fna="results/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+        genome_fna="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
             genome_asc=config["genome"]["assembly_accession"],
             genome_name=config["genome"]["assembly_name"],
         ),
-        genome_gtf="results/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+        genome_gtf="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
             genome_asc=config["genome"]["assembly_accession"],
         ),
     output:

@@ -3,8 +3,8 @@
 
 rule qualimap_rnaseq:
     input:
-        bam="results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-        genome_gtf="results/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+        bam="resources/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
+        genome_gtf="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
             genome_asc=config["genome"]["assembly_accession"]
         ),
     output:
