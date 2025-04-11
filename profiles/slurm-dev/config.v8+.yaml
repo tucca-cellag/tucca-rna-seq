@@ -12,7 +12,7 @@ forceall: true
 all-temp: true
 retries: 3
 rerun-incomplete: true
-shared-fs-usage: persistence software-deployment sources source-cache
+shared-fs-usage: none
 jobs: 100 # Slurm jobscript size limit
 latency-wait: 120 # Required for unzipping downloaded genomes
 default-resources:
