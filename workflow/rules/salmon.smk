@@ -96,7 +96,6 @@ rule salmon_quant:
         ),
     output:
         quant="results/salmon/{sample}_{unit}/quant.sf",
-        quant_gene="results/salmon/{sample}_{unit}/quant.genes.sf",
         lib="results/salmon/{sample}_{unit}/lib_format_counts.json",
         aux_info=directory("results/salmon/{sample}_{unit}/aux_info"),
         cmd_info="results/salmon/{sample}_{unit}/cmd_info.json",
