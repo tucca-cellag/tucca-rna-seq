@@ -48,8 +48,19 @@ properties:
               enum: [""]
               description: "Please leave release as an empty string as it is not required for RefSeq assemblies"
             accession:
-              pattern: "^GCF_[0-9]+.[0-9]$"
-              description: "RefSeq assembly accessions are of the pattern ^GCF_[0-9]+.[0-9]$"
+              pattern: "^GCF_[0-9]+.[0-9]+$"
+              description: "RefSeq assembly accessions are of the pattern "
+      - if:
+          properties:
+            source:
+              pattern: "^(Ensembl|GENCODE)$"
+        then:
+          properties:
+            accession:
+              pattern: "^GCA_[0-9]+.[0-9]+$"
+              description: "Ensembl and GENCODE assembly accessions are of the pattern ^GCA_[0-9]+.[0-9]+$"
+          required:
+            - release
 
   api_keys:
     type: object
