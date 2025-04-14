@@ -19,27 +19,31 @@
 # Hard-coded API key—replace this placeholder with your actual NCBI API key.
 API_KEY="YOUR_NCBI_API_KEY"
 
+# Check that the first positional parameter is set.
+if [ -z "${1}" ]; then
+  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
+  exit 1
+fi
+
+echo "Purging all loaded modules for a clean environment ..."
+module purge
+
 # Check that singularity is in the PATH.
 if ! command -v singularity &>/dev/null; then
-  echo "Error: Singularity is not available. Please load its module."
-  exit 1
+  echo "Singularity's module is not loaded. Now loading singularity/3.8.4 ..."
+  module load singularity/3.8.4
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v snakemake &>/dev/null; then
-  echo "Error: Snakemake is not available. Please load its module."
-  exit 1
+  echo "Singularity's module is not loaded. Now loading snakemake/8.27.1 ..."
+  module load snakemake/8.27.1
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v conda &>/dev/null; then
-  echo "Error: Conda is not available. Please load its module (miniforge)."
-  exit 1
-fi
-
-if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
-  exit 1
+  echo "No Conda module is loaded. Now loading miniforge/24.11.2-py312 ..."
+  module load miniforge/24.11.2-py312
 fi
 
 # The first positional parameter is the task.
