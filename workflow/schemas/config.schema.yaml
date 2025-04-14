@@ -23,7 +23,7 @@ properties:
         type: string
       species:
         type: string
-        pattern: "^[A-Z][a-z]+_[a-z]+_(?:_[a-z]+)?$"
+        pattern: "^[A-Z][a-z]+_[a-z]+(?:_[a-z]+)?$"
       custom_files:
         type: object
         properties:
