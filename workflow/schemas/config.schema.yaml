@@ -14,7 +14,7 @@ properties:
       source:
         type: string
         description: "source must be one of RefSeq, LocalEnsembl, LocalGENCODE"
-        pattern: "^RefSeq|LocalEnsembl|LocalGENCODE$"
+        pattern: "^(RefSeq|LocalEnsembl|LocalGENCODE)$"
       accession:
         type: string
       name:
@@ -23,6 +23,7 @@ properties:
         type: string
       species:
         type: string
+        pattern: "^[A-Z][a-z]+[a-z]+(?:[a-z]+)?$"
       custom_files:
         type: object
         properties:
@@ -32,6 +33,23 @@ properties:
             type: string
           custom_transcriptome_fasta:
             type: string
+    required:
+      - source
+      - name
+      - species
+    allOf:
+      - if:
+        properties:
+          source:
+            const: "RefSeq"
+        then:
+          allOf:
+            - properties:
+                release:
+                  enum: [""]
+            - properties:
+                accession:
+                  pattern: "^GCF"
 
   api_keys:
     type: object
@@ -116,3 +134,10 @@ properties:
         properties:
           vdb_config_ra_path:
             type: string
+
+required:
+  - samples
+  - units
+  - ref_assembly
+  - api_keys
+  - params
