@@ -1,44 +1,68 @@
 # workflow/rules/genome_download.smk
 
-if config["genome"]["assembly_db"] == "ensembl":
+if config["ref_assembly"]["source"] in ("LocalEnsembl", "LocalGENCODE"):
+
+    rule get_genome:
+        output:
+            "resources/ensembl/{species}.{genome_name}.dna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+        params:
+            species=config["resources"]["ref"]["species"],
+            datatype="dna",
+            build=config["resources"]["ref"]["build"],
+            release=config["resources"]["ref"]["release"],
+        log:
+            "logs/ensembl/get_genome.log",
+        wrapper:
+            "v5.10.0/bio/reference/ensembl-sequence"
 
     rule get_transcriptome:
         output:
-            "resources/ensembl/transcriptome.cdna.fasta",
+            "resources/ensembl/{species}.{genome_name}.cdna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         params:
             species=config["resources"]["ref"]["species"],
             datatype="cdna",
             build=config["resources"]["ref"]["build"],
             release=config["resources"]["ref"]["release"],
         log:
-            "logs/ensembl/get-transcriptome/cdna.log",
+            "logs/ensembl/get_transcriptome_cdna.log",
         wrapper:
             "v5.10.0/bio/reference/ensembl-sequence"
 
     rule get_annotation:
         output:
-            "resources/ensembl/genome.gtf",
+            "resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         params:
             species=config["resources"]["ref"]["species"],
             release=config["resources"]["ref"]["release"],
             build=config["resources"]["ref"]["build"],
             fmt="gtf",
         log:
-            "logs/ensembl/get-annotation.log",
+            "logs/ensembl/get_annotation.log",
         wrapper:
             "v5.10.0/bio/reference/ensembl-annotation"
 
+elif config["ref_assembly"]["source"] in ("RefSeq"):
 
-if config["genome"]["assembly_db"] == "ncbi_refseq":
+    # TODO: Add more warnings for datasets_download_genome and make sure inputs
+    # are properly sanitized
 
     # https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/data-packages/genome/
     rule datasets_download_genome:
         output:
             "ncbi_dataset_{genome_asc}.zip".format(
-                genome_asc=config["genome"]["assembly_accession"]
+                genome_asc=config["ref_assembly"]["accession"]
             ),
         params:
-            genome_asc=config["genome"]["assembly_accession"],
+            genome_asc=config["ref_assembly"]["accession"],
             api_key=config["api_keys"]["ncbi"],
         conda:
             "../envs/ncbi_datasets.yaml"
@@ -46,7 +70,7 @@ if config["genome"]["assembly_db"] == "ncbi_refseq":
             "logs/datasets/datasets_download_genome.log",
         message:
             "Downloading genome for NCBI genome accession: {genome_asc}".format(
-                genome_asc=config["genome"]["assembly_accession"]
+                genome_asc=config["ref_assembly"]["accession"]
             )
         shell:
             """
@@ -59,7 +83,7 @@ if config["genome"]["assembly_db"] == "ncbi_refseq":
     rule unzip_genome:
         input:
             "ncbi_dataset_{genome_asc}.zip".format(
-                genome_asc=config["genome"]["assembly_accession"]
+                genome_asc=config["ref_assembly"]["accession"]
             ),
         output:
             multiext(
@@ -73,14 +97,14 @@ if config["genome"]["assembly_db"] == "ncbi_refseq":
             ),
             multiext(
                 "resources/datasets/ncbi_dataset/data/{genome_asc}/".format(
-                    genome_asc=config["genome"]["assembly_accession"]
+                    genome_asc=config["ref_assembly"]["accession"]
                 ),
                 "genomic.gtf",
                 "rna.fna",
                 "sequence_report.jsonl",
                 "{genome_asc}_{genome_name}_genomic.fna".format(
-                    genome_asc=config["genome"]["assembly_accession"],
-                    genome_name=config["genome"]["assembly_name"],
+                    genome_asc=config["ref_assembly"]["accession"],
+                    genome_name=config["ref_assembly"]["name"],
                 ),
             ),
         conda:
@@ -89,7 +113,7 @@ if config["genome"]["assembly_db"] == "ncbi_refseq":
             "logs/datasets/unzip_genome.log",
         message:
             "Unzipping genome for NCBI genome accession: {genome_asc}".format(
-                genome_asc=config["genome"]["assembly_accession"]
+                genome_asc=config["ref_assembly"]["accession"]
             )
         shell:
             """
@@ -98,3 +122,8 @@ if config["genome"]["assembly_db"] == "ncbi_refseq":
             echo "Directory structure in resources/datasets:" && \
             ls -laR resources/datasets) &> {log}
             """
+
+else:
+    raise ValueError(
+        "Invalid assembly_source. assembly_source must be one of RefSeq, LocalEnsembl, or LocalGENCODE"
+    )
