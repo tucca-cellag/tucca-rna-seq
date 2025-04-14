@@ -19,11 +19,11 @@
 # Sample and Unit Sheet Section
 # ----------------------------------------------------------
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: config/samples.tsv
+samples: "config/samples.tsv"
 # Path to your sequencing UNIT SHEET which keeps track of your technical
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
-units: config/units.tsv
+units: "config/units.tsv"
 
 # ----------------------------------------------------------
 # Genome Section
@@ -40,19 +40,22 @@ units: config/units.tsv
 #
 # - assembly_name: The name assigned to the genome assembly.
 #
+# - assembly_release: The release of the Ensembl or GENCODE assembly (not required for RefSeq assemblies)
+#
 # - assembly_species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus").
+#
 # ----------------------------------------------------------
 ref_assembly:
   # TODO: Workflow is only currently validated to work on RefSeq genomes
-  source: RefSeq # case-sensitive input
+  source: "RefSeq"
   # TODO: Add branching logic to workflow depending on assembly_source
-  accession: GCF_016699485.2 # Genome accession number
+  accession: "GCF_016699485.2"
   # TODO: Warn if trying to use Ensembl accession with assembly_source="RefSeq"
   # This is an issue because you cannot download transcriptome.cdna.fasta from
   # ncbi datasets. Also, gtf name will be formatted improperly for pathing
-  name: bGalGal1.mat.broiler.GRCg7b # Genome assembly name
-  release: # Not required for NCBI RefSeq annotations
-  species: Gallus_gallus # Species (format: Genus_species)
+  name: "bGalGal1.mat.broiler.GRCg7b"
+  release: ""
+  species: "Gallus_gallus" # Species (format: Genus_species)
   # TODO: Add logic for custom files
   custom_files:
     custom_genome_fasta: ""
@@ -65,7 +68,7 @@ ref_assembly:
 # throttle your API calls without an API key.
 # ----------------------------------------------------------
 api_keys:
-  ncbi:
+  ncbi: ""
 
 # ----------------------------------------------------------
 # Differential Expression Section:
@@ -99,9 +102,9 @@ params:
     # Note that this Snakemake workflow is currently only built to work when
     # the output files from STAR are BAM files that are sorted by coordinate.
     outSAMtype: "BAM SortedByCoordinate" # Changing will break the workflow
-    outSAMunmapped: Within
-    outSAMattributes: Standard
-    readFilesCommand: zcat
+    outSAMunmapped: "Within"
+    outSAMattributes: "Standard"
+    readFilesCommand: "zcat"
     outFilterMultimapNmax: 1
     outFilterScoreMinOverLread: 0
     outFilterMatchNminOverLread: 0
@@ -109,7 +112,7 @@ params:
     alignIntronMax: 2500
     extra: ""
   qualimap_rnaseq:
-    counting_alg: proportional
+    counting_alg: "proportional"
     sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"
   salmon_index:
@@ -117,7 +120,7 @@ params:
   salmon_quant:
     # --lib_type A: Auto detect type of sequencing lib from which the reads
     # came from (recommended)
-    libtype: A
+    libtype: "A"
     extra: "--seqBias --posBias --writeUnmappedNames"
   multiqc:
     report_name: "multiqc_report"
