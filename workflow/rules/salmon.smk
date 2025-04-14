@@ -20,13 +20,26 @@
 
 rule salmon_decoys:
     input:
-        transcriptome=expand(
-            "resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna",
+        transcriptome=branch(
+            using_refseq_assembly,
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna".format(,
             genome_asc=config["ref_assembly"]["accession"],
-        )[0],
-        genome="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
-            genome_asc=config["ref_assembly"]["accession"],
-            genome_name=config["ref_assembly"]["name"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.cdna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+        ),
+        genome=branch(
+            using_refseq_assembly,
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+                genome_asc=config["ref_assembly"]["accession"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.dna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
     output:
         gentrome="resources/salmon/gentrome.fasta",
