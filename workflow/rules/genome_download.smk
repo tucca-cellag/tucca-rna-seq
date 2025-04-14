@@ -50,7 +50,8 @@ if config["ref_assembly"]["source"] in ("LocalEnsembl", "LocalGENCODE"):
         wrapper:
             "v5.10.0/bio/reference/ensembl-annotation"
 
-elif config["ref_assembly"]["source"] in ("RefSeq"):
+
+if config["ref_assembly"]["source"] in ("RefSeq"):
 
     # TODO: Add more warnings for datasets_download_genome and make sure inputs
     # are properly sanitized
@@ -122,8 +123,3 @@ elif config["ref_assembly"]["source"] in ("RefSeq"):
             echo "Directory structure in resources/datasets:" && \
             ls -laR resources/datasets) &> {log}
             """
-
-else:
-    raise ValueError(
-        "Invalid assembly_source. assembly_source must be one of RefSeq, LocalEnsembl, or LocalGENCODE"
-    )
