@@ -55,7 +55,7 @@ ref_assembly:
   # ncbi datasets. Also, gtf name will be formatted improperly for pathing
   name: "bGalGal1.mat.broiler.GRCg7b"
   release: ""
-  species: "Gallus_gallus" # Species (format: Genus_species)
+  species: "Gallus_gallus"
   # TODO: Add logic for custom files
   custom_files:
     custom_genome_fasta: ""
