@@ -25,24 +25,24 @@ if [ -z "${1}" ]; then
   exit 1
 fi
 
-echo "Purging all loaded modules for a clean environment ..."
+printf "Purging all loaded modules for a clean environment ..."
 module purge
 
 # Check that singularity is in the PATH.
 if ! command -v singularity &>/dev/null; then
-  echo "Singularity's module is not loaded. Now loading singularity/3.8.4 ..."
+  printf "Singularity's module is not loaded.\nNow loading singularity/3.8.4 ..."
   module load singularity/3.8.4
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v snakemake &>/dev/null; then
-  echo "Singularity's module is not loaded. Now loading snakemake/8.27.1 ..."
+  printf "Singularity's module is not loaded.\nNow loading snakemake/8.27.1 ..."
   module load snakemake/8.27.1
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v conda &>/dev/null; then
-  echo "No Conda module is loaded. Now loading miniforge/24.11.2-py312 ..."
+  printf "No Conda module is loaded.\nNow loading miniforge/24.11.2-py312 ..."
   module load miniforge/24.11.2-py312
 fi
 
@@ -54,25 +54,25 @@ PROFILE="profiles/slurm-dev"
 
 case $TASK in
 lint)
-  echo "Running Snakemake lint..."
+  printf "Running Snakemake lint..."
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
   ;;
 local-reads)
-  echo "Running Snakemake workflow on local reads ..."
+  printf "Running Snakemake workflow on local reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/local_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 sra-reads)
-  echo "Running Snakemake workflow on SRA reads ..."
+  printf "Running Snakemake workflow on SRA reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/sra_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 *)
-  echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|local-reads|sra-reads}"
+  printf "Invalid task provided: $TASK"
+  printf "Usage: $0 {lint|local-reads|sra-reads}"
   exit 1
   ;;
 esac
