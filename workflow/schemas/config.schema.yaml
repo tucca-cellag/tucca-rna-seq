@@ -14,7 +14,7 @@ properties:
       source:
         type: string
         description: "source must be one of RefSeq, LocalEnsembl, LocalGENCODE"
-        pattern: "^$"
+        pattern: "^RefSeq|LocalEnsembl|LocalGENCODE$"
       accession:
         type: string
       name:
