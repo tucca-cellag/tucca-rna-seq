@@ -37,6 +37,17 @@ properties:
       - source
       - name
       - species
+    allOf:
+      - if:
+        properties:
+          source:
+            const: "RefSeq"
+        then:
+          properties:
+            release:
+              enum: [""]
+            accession:
+              pattern: "^GCF"
 
   api_keys:
     type: object
