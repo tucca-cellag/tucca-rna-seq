@@ -29,7 +29,7 @@ units: config/units.tsv
 # Genome Section
 #
 # This section defines the reference genome parameters.
-# - assembly_source: Specify either "RefSeq", "LocalEnsembl", "LocalGENCODE"
+# - assembly_source: Specify either "RefSeq", "LocalEnsembl", or "LocalGENCODE"
 #     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
 #     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
 #     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
@@ -55,9 +55,9 @@ ref_assembly:
   species: Gallus_gallus # Species (format: Genus_species)
   # TODO: Add logic for custom files
   custom_files:
-    custom_genome_fasta:
-    custom_genome_gtf:
-    custom_transcriptome_fasta:
+    custom_genome_fasta: ""
+    custom_genome_gtf: ""
+    custom_transcriptome_fasta: ""
 
 # ----------------------------------------------------------
 # API Key Section:
