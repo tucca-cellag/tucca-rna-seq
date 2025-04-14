@@ -168,6 +168,13 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
         return [str(u.fq1), str(u.fq2)]
 
 
+def using_refseq_assembly():
+    return config["ref_assembly"]["source"] == "RefSeq"
+
+
+#### get_final_output() helpers and definition ####
+
+
 # Helper function for FastQC output paths.
 def get_fastqc_paths(row: pd.Series) -> List[str]:
     sample: str = row.sample_name
