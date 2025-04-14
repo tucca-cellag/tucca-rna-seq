@@ -21,7 +21,7 @@ API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that the first positional parameter is set.
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
+  echo "Usage: $0 {lint|local-reads|sra-reads}"
   exit 1
 fi
 
