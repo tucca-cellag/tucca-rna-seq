@@ -13,8 +13,8 @@ properties:
     properties:
       source:
         type: string
-        description: "source must be one of RefSeq, LocalEnsembl, LocalGENCODE"
-        pattern: "^(RefSeq|LocalEnsembl|LocalGENCODE)$"
+        description: "source must be one of RefSeq, Ensembl, GENCODE"
+        pattern: "^(RefSeq|Ensembl|GENCODE)$"
       accession:
         type: string
       name:
@@ -46,8 +46,10 @@ properties:
           properties:
             release:
               enum: [""]
+              description: "Please leave release as an empty string as it is not required for RefSeq assemblies"
             accession:
               pattern: "^GCF_[0-9]+.[0-9]$"
+              description: "RefSeq assembly accessions are of the pattern ^GCF_[0-9]+.[0-9]$"
 
   api_keys:
     type: object
