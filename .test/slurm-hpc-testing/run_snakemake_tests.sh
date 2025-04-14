@@ -25,24 +25,24 @@ if [ -z "${1}" ]; then
   exit 1
 fi
 
-printf "Purging all loaded modules for a clean environment ..."
+echo "Purging all loaded modules for a clean environment ..."
 module purge
 
 # Check that singularity is in the PATH.
 if ! command -v singularity &>/dev/null; then
-  printf "Singularity's module is not loaded.\nNow loading singularity/3.8.4 ..."
+  echo -e "Singularity's module is not loaded.\nNow loading singularity/3.8.4 ..."
   module load singularity/3.8.4
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v snakemake &>/dev/null; then
-  printf "Singularity's module is not loaded.\nNow loading snakemake/8.27.1 ..."
+  echo -e "Singularity's module is not loaded.\nNow loading snakemake/8.27.1 ..."
   module load snakemake/8.27.1
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v conda &>/dev/null; then
-  printf "No Conda module is loaded.\nNow loading miniforge/24.11.2-py312 ..."
+  echo -e "No Conda module is loaded.\nNow loading miniforge/24.11.2-py312 ..."
   module load miniforge/24.11.2-py312
 fi
 
@@ -54,25 +54,25 @@ PROFILE="profiles/slurm-dev"
 
 case $TASK in
 lint)
-  printf "Running Snakemake lint..."
+  echo "Running Snakemake lint..."
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
   ;;
 local-reads)
-  printf "Running Snakemake workflow on local reads ..."
+  echo "Running Snakemake workflow on local reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/local_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 sra-reads)
-  printf "Running Snakemake workflow on SRA reads ..."
+  echo "Running Snakemake workflow on SRA reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/sra_reads/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 *)
-  printf "Invalid task provided: $TASK"
-  printf "Usage: $0 {lint|local-reads|sra-reads}"
+  echo "Invalid task provided: $TASK"
+  echo "Usage: $0 {lint|local-reads|sra-reads}"
   exit 1
   ;;
 esac
