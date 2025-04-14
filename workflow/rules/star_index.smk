@@ -4,16 +4,16 @@
 rule star_index:
     input:
         genome_fna="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
-            genome_asc=config["genome"]["assembly_accession"],
-            genome_name=config["genome"]["assembly_name"],
+            genome_asc=config["ref_assembly"]["accession"],
+            genome_name=config["ref_assembly"]["name"],
         ),
         genome_gtf="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
-            genome_asc=config["genome"]["assembly_accession"],
+            genome_asc=config["ref_assembly"]["accession"],
         ),
     output:
         multiext(
             "results/star/{genome_asc}_index/".format(
-                genome_asc=config["genome"]["assembly_accession"],
+                genome_asc=config["ref_assembly"]["accession"],
             ),
             "chrLength.txt",
             "chrName.txt",
@@ -33,7 +33,7 @@ rule star_index:
             "transcriptInfo.tab",
         ),
     params:
-        genome_asc=config["genome"]["assembly_accession"],
+        genome_asc=config["ref_assembly"]["accession"],
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12

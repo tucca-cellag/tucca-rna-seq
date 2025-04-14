@@ -6,7 +6,7 @@ rule star:
         reads=get_paired_reads,
         star_index=multiext(
             "results/star/{genome_asc}_index/".format(
-                genome_asc=config["genome"]["assembly_accession"]
+                genome_asc=config["ref_assembly"]["accession"]
             ),
             "chrLength.txt",
             "chrName.txt",

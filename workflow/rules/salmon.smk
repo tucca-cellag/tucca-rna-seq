@@ -22,11 +22,11 @@ rule salmon_decoys:
     input:
         transcriptome=expand(
             "resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna",
-            genome_asc=config["genome"]["assembly_accession"],
+            genome_asc=config["ref_assembly"]["accession"],
         )[0],
         genome="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
-            genome_asc=config["genome"]["assembly_accession"],
-            genome_name=config["genome"]["assembly_name"],
+            genome_asc=config["ref_assembly"]["accession"],
+            genome_name=config["ref_assembly"]["name"],
         ),
     output:
         gentrome="resources/salmon/gentrome.fasta",

@@ -29,10 +29,11 @@ units: config/units.tsv
 # Genome Section
 #
 # This section defines the reference genome parameters.
-# - assembly_db: Select either "ncbi_refseq" or "ensembl".
+# - assembly_source: Specify either "RefSeq", "LocalEnsembl", "LocalGENCODE"
 #     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
 #     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
 #     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
+#     • GENCODE info: https://www.gencodegenes.org/pages/gencode.html
 #
 # - assembly_accession: The genome’s GenBank or RefSeq accession number.
 #     (See: https://www.ncbi.nlm.nih.gov/datasets/genome/)
@@ -41,12 +42,22 @@ units: config/units.tsv
 #
 # - assembly_species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus").
 # ----------------------------------------------------------
-genome:
+ref_assembly:
   # TODO: Workflow is only currently validated to work on RefSeq genomes
-  assembly_db: ncbi_refseq # Options: "ncbi_refseq" or "ensembl"
-  assembly_accession: GCF_016699485.2 # Genome accession number
-  assembly_name: bGalGal1.mat.broiler.GRCg7b # Genome assembly name
-  assembly_species: Gallus_gallus # Species (format: Genus_species)
+  source: RefSeq # case-sensitive input
+  # TODO: Add branching logic to workflow depending on assembly_source
+  accession: GCF_016699485.2 # Genome accession number
+  # TODO: Warn if trying to use Ensembl accession with assembly_source="RefSeq"
+  # This is an issue because you cannot download transcriptome.cdna.fasta from
+  # ncbi datasets. Also, gtf name will be formatted improperly for pathing
+  name: bGalGal1.mat.broiler.GRCg7b # Genome assembly name
+  release: # Not required for NCBI RefSeq annotations
+  species: Gallus_gallus # Species (format: Genus_species)
+  # TODO: Add logic for custom files
+  custom_files:
+    custom_genome_fasta:
+    custom_genome_gtf:
+    custom_transcriptome_fasta:
 
 # ----------------------------------------------------------
 # API Key Section:
@@ -102,7 +113,7 @@ params:
     sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"
   salmon_index:
-    extra: ""
+    extra: "-k 31"
   salmon_quant:
     # --lib_type A: Auto detect type of sequencing lib from which the reads
     # came from (recommended)
