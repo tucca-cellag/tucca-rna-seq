@@ -46,7 +46,7 @@ properties:
           allOf:
             - properties:
                 release:
-                  enum: [""]
+                  pattern: "^$"
             - properties:
                 accession:
                   pattern: "^GCF"
