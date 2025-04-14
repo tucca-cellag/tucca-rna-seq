@@ -39,9 +39,9 @@ properties:
       - species
     allOf:
       - if:
-        properties:
-          source:
-            const: "RefSeq"
+          properties:
+            source:
+              const: "RefSeq"
         then:
           properties:
             release:
