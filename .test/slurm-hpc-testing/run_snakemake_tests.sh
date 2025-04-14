@@ -5,7 +5,7 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   ./run_snakemake_tests.sh {lint|env-init|local-reads|sra-reads}
+#   ./run_snakemake_tests.sh {lint|local-reads|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -14,7 +14,7 @@
 # singularity and snakemake modules are loaded.
 #
 # Example:
-#   ./run_snakemake_tests.sh sc-genome
+#   ./run_snakemake_tests.sh local-reads
 
 # Hard-coded API key—replace this placeholder with your actual NCBI API key.
 API_KEY="YOUR_NCBI_API_KEY"
@@ -68,7 +68,7 @@ sra-reads)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
+  echo "Usage: $0 {lint|local-reads|sra-reads}"
   exit 1
   ;;
 esac
