@@ -22,8 +22,8 @@ rule salmon_decoys:
     input:
         transcriptome=branch(
             using_refseq_assembly,
-            then="resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna".format(,
-            genome_asc=config["ref_assembly"]["accession"],
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna".format(
+                genome_asc=config["ref_assembly"]["accession"],
             ),
             otherwise="resources/ensembl/{species}.{genome_name}.cdna.fa".format(
                 species=config["ref_assembly"]["species"],
