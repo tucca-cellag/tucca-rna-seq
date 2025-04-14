@@ -47,7 +47,7 @@ properties:
             release:
               enum: [""]
             accession:
-              pattern: "^GCF"
+              pattern: "^GCF_+$"
 
   api_keys:
     type: object
