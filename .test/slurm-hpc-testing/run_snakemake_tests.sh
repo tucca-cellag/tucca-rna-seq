@@ -59,18 +59,33 @@ lint)
   snakemake --lint --profile ${PROFILE}
   ;;
 local-reads-refseq)
+  echo "Dry-run on local reads using a RefSeq assembly..."
+  snakemake all -np --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_refseq/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  echo "The dry-run was successful!!"
   echo "Running Snakemake workflow on local reads using a RefSeq assembly..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/local_reads_refseq/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 local-reads-ensembl)
+  echo "Dry-run on local reads using an Ensembl assembly ..."
+  snakemake all -np --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_ensembl/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  echo "The dry-run was successful!!"
   echo "Running Snakemake workflow on local reads using an Ensembl assembly ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/local_reads_ensembl/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 sra-reads)
+  echo "Dry-run on SRA reads ..."
+  snakemake all -np --profile ${PROFILE} \
+    --configfile .test/singularity/sra_reads/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  echo "The dry-run was successful!!"
   echo "Running Snakemake workflow on SRA reads ..."
   snakemake all --profile ${PROFILE} \
     --configfile .test/singularity/sra_reads/config/config.yaml \
