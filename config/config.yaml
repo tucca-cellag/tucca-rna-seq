@@ -28,30 +28,28 @@ units: "config/units.tsv"
 # ----------------------------------------------------------
 # Genome Section
 #
-# This section defines the reference genome parameters.
-# - assembly_source: Specify either "RefSeq", "Ensembl", or "GENCODE"
+# This section defines the reference genome parameters
+#
+# - source: Specify either "RefSeq", "Ensembl", or "GENCODE"
 #     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
 #     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
 #     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
 #     • GENCODE info: https://www.gencodegenes.org/pages/gencode.html
 #
-# - assembly_accession: The genome’s GenBank or RefSeq accession number.
+# - accession: The genome’s GenBank or RefSeq accession number
 #     (See: https://www.ncbi.nlm.nih.gov/datasets/genome/)
 #
-# - assembly_name: The name assigned to the genome assembly.
+# - name: The name assigned to the genome assembly (build)
 #
-# - assembly_release: The release of the Ensembl or GENCODE assembly (not required for RefSeq assemblies)
+# - release: The release of the Ensembl or GENCODE assembly (not required for RefSeq assemblies)
 #
-# - assembly_species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus").
+# - species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus")
 #
 # ----------------------------------------------------------
 ref_assembly:
   source: "RefSeq"
-  # TODO: Add branching logic to workflow depending on assembly_source
+  # TODO: Add branching logic to workflow depending on source
   accession: "GCF_016699485.2"
-  # TODO: Warn if trying to use Ensembl accession with assembly_source="RefSeq"
-  # This is an issue because you cannot download transcriptome.cdna.fasta from
-  # ncbi datasets. Also, gtf name will be formatted improperly for pathing
   name: "bGalGal1.mat.broiler.GRCg7b"
   release: ""
   species: "Gallus_gallus"
