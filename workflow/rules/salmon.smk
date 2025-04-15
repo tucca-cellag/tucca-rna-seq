@@ -123,7 +123,7 @@ rule salmon_quant:
     message:
         """
         Running Salmon Quant for:
-            sample = {wildcards.sample},
+            sample = {wildcards.sample}
             unit = {wildcards.unit}
         Running Salmon Quant with the inputs:
             {input.r1}
