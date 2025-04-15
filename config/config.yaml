@@ -29,7 +29,7 @@ units: "config/units.tsv"
 # Genome Section
 #
 # This section defines the reference genome parameters.
-# - assembly_source: Specify either "RefSeq", "LocalEnsembl", or "LocalGENCODE"
+# - assembly_source: Specify either "RefSeq", "Ensembl", or "GENCODE"
 #     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
 #     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
 #     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
@@ -46,7 +46,6 @@ units: "config/units.tsv"
 #
 # ----------------------------------------------------------
 ref_assembly:
-  # TODO: Workflow is only currently validated to work on RefSeq genomes
   source: "RefSeq"
   # TODO: Add branching logic to workflow depending on assembly_source
   accession: "GCF_016699485.2"
