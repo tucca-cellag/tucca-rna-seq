@@ -15,30 +15,49 @@
 # BioProject PRJNA716186 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA716186)
 # ----------------------------------------------------------
 
-
 # ----------------------------------------------------------
 # Sample and Unit Sheet Section
 # ----------------------------------------------------------
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: config/samples.tsv
+samples: "config/samples.tsv"
 # Path to your sequencing UNIT SHEET which keeps track of your technical
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
-units: config/units.tsv
-
+units: "config/units.tsv"
 
 # ----------------------------------------------------------
 # Genome Section
+#
+# This section defines the reference genome parameters
+#
+# - source: Specify either "RefSeq", "Ensembl", or "GENCODE"
+#     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
+#     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
+#     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
+#     • GENCODE info: https://www.gencodegenes.org/pages/gencode.html
+#
+# - accession: The genome’s GenBank or RefSeq accession number
+#     (See: https://www.ncbi.nlm.nih.gov/datasets/genome/)
+#
+# - name: The name assigned to the genome assembly (build)
+#
+# - release: The release of the Ensembl or GENCODE assembly (not required for RefSeq assemblies)
+#
+# - species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus")
+#
 # ----------------------------------------------------------
-genome:
-  # GenBank or RefSeq accession number for the genome of the species of
-  # interest (or closest related species if no reference genome exists)
-  # Find the accession number here:
-  #   https://www.ncbi.nlm.nih.gov/datasets/genome/
-  # TODO: Workflow is only currently validated to work on RefSeq genomes
-  assembly_accession: GCF_016699485.2 # Gallus gallus
-  assembly_name: "bGalGal1.mat.broiler.GRCg7b"
-
+ref_assembly:
+  source: "RefSeq"
+  # TODO: Add branching logic to workflow depending on source
+  accession: "GCF_016699485.2"
+  name: "bGalGal1.mat.broiler.GRCg7b"
+  release: ""
+  species: "Gallus_gallus"
+  # TODO: Add logic for custom files
+  custom_files:
+    custom_genome_fasta: ""
+    custom_genome_gtf: ""
+    custom_transcriptome_fasta: ""
 
 # ----------------------------------------------------------
 # API Key Section:
@@ -46,8 +65,17 @@ genome:
 # throttle your API calls without an API key.
 # ----------------------------------------------------------
 api_keys:
-  ncbi:
-  
+  ncbi: ""
+
+# ----------------------------------------------------------
+# Differential Expression Section:
+# ----------------------------------------------------------
+diffexp:
+
+# ----------------------------------------------------------
+# Differential Expression Section:
+# ----------------------------------------------------------
+enrichment:
 
 # ----------------------------------------------------------
 # Params Section: Configurable Settings for the Software
@@ -64,9 +92,6 @@ params:
   fastqc:
     memory: 1024
     extra: ""
-  salmon_index:
-    kmer_len: 31
-    extra: ""
   star_index:
     sjdbOverhang: 149
     extra: ""
@@ -74,9 +99,9 @@ params:
     # Note that this Snakemake workflow is currently only built to work when
     # the output files from STAR are BAM files that are sorted by coordinate.
     outSAMtype: "BAM SortedByCoordinate" # Changing will break the workflow
-    outSAMunmapped: Within
-    outSAMattributes: Standard
-    readFilesCommand: zcat
+    outSAMunmapped: "Within"
+    outSAMattributes: "Standard"
+    readFilesCommand: "zcat"
     outFilterMultimapNmax: 1
     outFilterScoreMinOverLread: 0
     outFilterMatchNminOverLread: 0
@@ -84,17 +109,16 @@ params:
     alignIntronMax: 2500
     extra: ""
   qualimap_rnaseq:
-    counting_alg: proportional
+    counting_alg: "proportional"
     sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"
+  salmon_index:
+    extra: "-k 31"
   salmon_quant:
-    lib_type: A
     # --lib_type A: Auto detect type of sequencing lib from which the reads
     # came from (recommended)
-    mapping_strategy: "--validateMappings"
-    # --validateMappings: Default mapping strategy for Salmon v1.0.0 and forward
-    bias_correction: "--seqBias --posBias"
-    extra: "--writeUnmappedNames"
+    libtype: "A"
+    extra: "--seqBias --posBias --writeUnmappedNames"
   multiqc:
     report_name: "multiqc_report"
     overwrite_existing: "-f"
@@ -103,24 +127,3 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
-
-# ----------------------------------------------------------
-# Containers Section:
-#
-# Containers to be used for the environment for each rule (via Singularity)
-#
-# DO NOT CHANGE ANYTHING BELOW, UNLESS YOU NEED TO CHANGE THE VERSIONS OF THE
-# SOFTWARE USED BY THE WORKFLOW. PLEASE BE AWARE THAT UPGRADING/DOWNGRADING
-# VERSIONS OF THE SOFTWARE BELOW MAY BREAK THIS WORKFLOW ENTIRELY.
-# ----------------------------------------------------------
-containers:
-  fastqc: "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0"
-  p7zip: "docker://quay.io/biocontainers/p7zip:16.02"
-  ncbi_datasets: "docker://staphb/ncbi-datasets:16.41.0"
-  multiqc: "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0"
-  qualimap: "docker://quay.io/biocontainers/qualimap:2.3--hdfd78af_0"
-  salmon: "docker://quay.io/biocontainers/salmon:1.10.3--h45fbf2d_4"
-  python: "docker://python:latest"
-  ubuntu: "docker://ubuntu:latest"
-  sra_tools: "docker://quay.io/biocontainers/sra-tools:3.2.0--h4304569_0"
-  star: "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5"

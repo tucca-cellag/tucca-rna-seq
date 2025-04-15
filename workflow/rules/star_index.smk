@@ -1,21 +1,33 @@
 # workflow/rules/star_index.smk
 
-import glob
-
 
 rule star_index:
     input:
-        genome_fna="results/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
-            genome_asc=config["genome"]["assembly_accession"],
-            genome_name=config["genome"]["assembly_name"],
+        genome_fna=branch(
+            config["ref_assembly"]["source"] == "RefSeq",
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+                genome_asc=config["ref_assembly"]["accession"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.dna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
-        genome_gtf="results/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
-            genome_asc=config["genome"]["assembly_accession"],
+        genome_gtf=branch(
+            config["ref_assembly"]["source"] == "RefSeq",
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
     output:
         multiext(
             "results/star/{genome_asc}_index/".format(
-                genome_asc=config["genome"]["assembly_accession"],
+                genome_asc=config["ref_assembly"]["accession"],
             ),
             "chrLength.txt",
             "chrName.txt",
@@ -35,12 +47,12 @@ rule star_index:
             "transcriptInfo.tab",
         ),
     params:
-        genome_asc=config["genome"]["assembly_accession"],
+        genome_asc=config["ref_assembly"]["accession"],
         sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
         extra=config["params"]["star_index"]["extra"],
     threads: 12
-    container:
-        config["containers"]["star"]
+    conda:
+        "../envs/star.yaml"
     log:
         "logs/star/star_index.log",
     shell:

@@ -4,8 +4,15 @@
 rule qualimap_rnaseq:
     input:
         bam="results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-        genome_gtf="results/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
-            genome_asc=config["genome"]["assembly_accession"]
+        genome_gtf=branch(
+            config["ref_assembly"]["source"] == "RefSeq",
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
     output:
         multiext(
@@ -20,8 +27,8 @@ rule qualimap_rnaseq:
         counting_alg=config["params"]["qualimap_rnaseq"]["counting_alg"],
         sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
         extra=config["params"]["qualimap_rnaseq"]["extra"],
-    container:
-        config["containers"]["qualimap"]
+    conda:
+        "../envs/qualimap.yaml"
     log:
         "logs/qualimap/qualimap_rnaseq_{sample}_{unit}.log",
     message:

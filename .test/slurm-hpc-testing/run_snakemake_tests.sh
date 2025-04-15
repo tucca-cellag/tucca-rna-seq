@@ -5,7 +5,7 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   ./run_snakemake_tests.sh {lint|env-init|local-reads|sra-reads}
+#   sh ./run_snakemake_tests.sh {int|local-reads-refseq|local-reads-ensembl|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -14,26 +14,36 @@
 # singularity and snakemake modules are loaded.
 #
 # Example:
-#   ./run_snakemake_tests.sh sc-genome
+#   sh ./run_snakemake_tests.sh lint
 
 # Hard-coded API key—replace this placeholder with your actual NCBI API key.
 API_KEY="YOUR_NCBI_API_KEY"
 
+# Check that the first positional parameter is set.
+if [ -z "${1}" ]; then
+  echo "Usage: $0 {int|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  exit 1
+fi
+
+echo "Purging all loaded modules for a clean environment ..."
+module purge
+
 # Check that singularity is in the PATH.
 if ! command -v singularity &>/dev/null; then
-  echo "Error: Singularity is not available. Please load its module."
-  exit 1
+  echo -e "Singularity's module is not loaded.\nNow loading singularity/3.8.4 ..."
+  module load singularity/3.8.4
 fi
 
 # Check that snakemake is in the PATH.
 if ! command -v snakemake &>/dev/null; then
-  echo "Error: Snakemake is not available. Please load its module."
-  exit 1
+  echo -e "Singularity's module is not loaded.\nNow loading snakemake/8.27.1 ..."
+  module load snakemake/8.27.1
 fi
 
-if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
-  exit 1
+# Check that snakemake is in the PATH.
+if ! command -v conda &>/dev/null; then
+  echo -e "No Conda module is loaded.\nNow loading miniforge/24.11.2-py312 ..."
+  module load miniforge/24.11.2-py312
 fi
 
 # The first positional parameter is the task.
@@ -48,14 +58,16 @@ lint)
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
   ;;
-env-init)
-  echo "Running dummy_all_images (build cache) ..."
-  snakemake dummy_all_images --profile ${PROFILE}
-  ;;
-local-reads)
-  echo "Running Snakemake workflow on local reads ..."
+local-reads-refseq)
+  echo "Running Snakemake workflow on local reads using a RefSeq assembly..."
   snakemake all --profile ${PROFILE} \
-    --configfile .test/singularity/local_reads/config/config.yaml \
+    --configfile .test/singularity/local_reads_refseq/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  ;;
+local-reads-ensembl)
+  echo "Running Snakemake workflow on local reads using an Ensembl assembly ..."
+  snakemake all --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_ensembl/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 sra-reads)
@@ -66,7 +78,7 @@ sra-reads)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|env-init|local-reads|sra-reads}"
+  echo "Usage: $0 {lint|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
   ;;
 esac

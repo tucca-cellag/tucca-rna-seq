@@ -1,1 +1,154 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
+
+description: snakemake configuration file
+
+properties:
+  samples:
+    type: string
+  units:
+    type: string
+
+  ref_assembly:
+    type: object
+    properties:
+      source:
+        type: string
+        description: "source must be one of RefSeq, Ensembl, GENCODE"
+        pattern: "^(RefSeq|Ensembl|GENCODE)$"
+      accession:
+        type: string
+      name:
+        type: string
+      release:
+        type: string
+      species:
+        type: string
+        pattern: "^[A-Z][a-z]+_[a-z]+(?:_[a-z]+)?$"
+      custom_files:
+        type: object
+        properties:
+          custom_genome_fasta:
+            type: string
+          custom_genome_gtf:
+            type: string
+          custom_transcriptome_fasta:
+            type: string
+    required:
+      - source
+      - name
+      - species
+    allOf:
+      - if:
+          properties:
+            source:
+              const: "RefSeq"
+        then:
+          properties:
+            release:
+              enum: [""]
+              description: "Please leave release as an empty string as it is not required for RefSeq assemblies"
+            accession:
+              pattern: "^GCF_[0-9]+.[0-9]+$"
+              description: "RefSeq assembly accessions are of the pattern "
+      - if:
+          properties:
+            source:
+              pattern: "^(Ensembl|GENCODE)$"
+        then:
+          properties:
+            accession:
+              pattern: "^GCA_[0-9]+.[0-9]+$"
+              description: "Ensembl and GENCODE assembly accessions are of the pattern ^GCA_[0-9]+.[0-9]+$"
+          required:
+            - release
+
+  api_keys:
+    type: object
+    properties:
+      ncbi:
+        type: string
+
+  params:
+    type: object
+    properties:
+      fastqc:
+        type: object
+        properties:
+          memory:
+            type: integer
+          extra:
+            type: string
+      star_index:
+        type: object
+        properties:
+          sjdbOverhang:
+            type: integer
+          extra:
+            type: string
+      star:
+        type: object
+        properties:
+          outSAMtype:
+            type: string
+          outSAMunmapped:
+            type: string
+          outSAMattributes:
+            type: string
+          readFilesCommand:
+            type: string
+          outFilterMultimapNmax:
+            type: integer
+          outFilterScoreMinOverLread:
+            type: integer
+          outFilterMatchNminOverLread:
+            type: integer
+          alignIntronMin:
+            type: integer
+          alignIntronMax:
+            type: integer
+          extra:
+            type: string
+      qualimap_rnaseq:
+        type: object
+        properties:
+          counting_alg:
+            type: string
+          sequencing_protocol:
+            type: string
+          extra:
+            type: string
+      salmon_index:
+        type: object
+        properties:
+          extra:
+            type: string
+      salmon_quant:
+        type: object
+        properties:
+          libtype:
+            type: string
+          extra:
+            type: string
+      multiqc:
+        type: object
+        properties:
+          report_name:
+            type: string
+          overwrite_existing:
+            type: string
+          multiqc_config_path:
+            type: string
+          extra:
+            type: string
+      sra_tools:
+        type: object
+        properties:
+          vdb_config_ra_path:
+            type: string
+
+required:
+  - samples
+  - units
+  - ref_assembly
+  - api_keys
+  - params

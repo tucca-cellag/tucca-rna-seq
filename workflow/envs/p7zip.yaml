@@ -1,0 +1,6 @@
+name: p7zip
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - p7zip =16.02

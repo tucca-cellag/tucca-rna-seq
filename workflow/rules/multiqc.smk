@@ -8,11 +8,9 @@ rule multiqc:
         "results/multiqc/{report_name}.html".format(
             report_name=config["params"]["multiqc"]["report_name"]
         ),
-        temp(
-            directory(
-                "results/multiqc/{report_name}_data".format(
-                    report_name=config["params"]["multiqc"]["report_name"]
-                )
+        directory(
+            "results/multiqc/{report_name}_data".format(
+                report_name=config["params"]["multiqc"]["report_name"]
             )
         ),
     params:
@@ -20,8 +18,8 @@ rule multiqc:
         overwrite_existing=config["params"]["multiqc"]["overwrite_existing"],
         multiqc_config_path=config["params"]["multiqc"]["multiqc_config_path"],
         extra=config["params"]["multiqc"]["extra"],
-    container:
-        config["containers"]["multiqc"]
+    conda:
+        "../envs/multiqc.yaml"
     log:
         "logs/multiqc/multiqc.log",
     message:

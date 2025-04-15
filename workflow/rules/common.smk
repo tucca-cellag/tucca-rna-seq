@@ -1,6 +1,5 @@
 # workflow/rules/common.smk
 
-import glob
 import os
 from pathlib import Path
 import pandas as pd
@@ -23,7 +22,7 @@ class Wildcard(Protocol):
 SRA_READS_DIR = Path("")
 
 
-# TODO: validate(config, schema="../schemas/config.schema.yaml")
+validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
@@ -169,6 +168,13 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
         return [str(u.fq1), str(u.fq2)]
 
 
+def using_refseq_assembly():
+    return config["ref_assembly"]["source"] == "RefSeq"
+
+
+#### get_final_output() helpers and definition ####
+
+
 # Helper function for FastQC output paths.
 def get_fastqc_paths(row: pd.Series) -> List[str]:
     sample: str = row.sample_name
@@ -211,7 +217,7 @@ def get_qualimap_paths(row: pd.Series) -> List[str]:
 def get_salmon_paths(row: pd.Series) -> List[str]:
     sample: str = row.sample_name
     unit: str = row.unit_name
-    return [f"results/salmon/{sample}_{unit}.salmon/quant.sf"]
+    return [f"results/salmon/{sample}_{unit}/quant.sf"]
 
 
 # Main function that aggregates all expected outputs. Called by rule all.

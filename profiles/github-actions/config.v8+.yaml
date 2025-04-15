@@ -1,14 +1,16 @@
 # profiles/github-actions/config.v8+.yaml
-# Configured for exclusive use with GitHub Actions testing workflow 
+# Configured for exclusive use with GitHub Actions testing workflow
 # See .github/workflows/main.yml
 
 # Profile Settings
-sdm: apptainer
+use-singularity: true
+use-conda: true
+conda-cleanup-pkgs: tarballs
+all-temp: true
 show-failed-logs: true
 verbose: true
-jobs: 100
-latency-wait: 120 # Required for unzipping downloaded genomes
-cores: 4
+cores: all
+latency-wait: 120
 default-resources:
   mem_mb: 16000
 

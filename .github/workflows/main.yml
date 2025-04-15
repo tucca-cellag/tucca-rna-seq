@@ -8,6 +8,8 @@ on:
   pull_request:
     branches-ignore: []
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -78,6 +80,21 @@ jobs:
             singularity:
             allow_failure: true
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -117,7 +134,9 @@ jobs:
         with:
           directory: .
           snakefile: workflow/Snakefile
-          args: dummy_all_images --workflow-profile profiles/github-actions
+          args: >
+            all --workflow-profile profiles/github-actions
+            --conda-create-envs-only
           show-disk-usage-on-error: true
           snakemake-version: ${{ matrix.version.snakemake }}
       - name: Upload ./logs/
@@ -147,6 +166,21 @@ jobs:
             singularity:
             allow_failure: true
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -241,6 +275,21 @@ jobs:
             singularity:
             allow_failure: true
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:

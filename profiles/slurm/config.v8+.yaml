@@ -3,11 +3,13 @@
 
 # Profile Settings
 executor: slurm
-sdm: apptainer
+use-singularity: true
+use-conda: true
+conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
-jobs: 100
-latency-wait: 120 # Required for unzipping downloaded genomes
+jobs: 100 # Slurm jobscript size limit
+latency-wait: 120
 default-resources:
   slurm_partition: "batch"
   slurm_account: "default"
