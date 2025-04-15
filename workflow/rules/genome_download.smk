@@ -9,10 +9,10 @@ if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
                 genome_name=config["ref_assembly"]["name"],
             ),
         params:
-            species=config["resources"]["ref"]["species"],
+            species=config["ref_assembly"]["species"],
             datatype="dna",
-            build=config["resources"]["ref"]["build"],
-            release=config["resources"]["ref"]["release"],
+            build=config["ref_assembly"]["name"],
+            release=config["ref_assembly"]["release"],
         log:
             "logs/ensembl/get_genome.log",
         wrapper:
@@ -25,10 +25,10 @@ if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
                 genome_name=config["ref_assembly"]["name"],
             ),
         params:
-            species=config["resources"]["ref"]["species"],
+            species=config["ref_assembly"]["species"],
             datatype="cdna",
-            build=config["resources"]["ref"]["build"],
-            release=config["resources"]["ref"]["release"],
+            build=config["ref_assembly"]["name"],
+            release=config["ref_assembly"]["release"],
         log:
             "logs/ensembl/get_transcriptome_cdna.log",
         wrapper:
@@ -41,9 +41,9 @@ if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
                 genome_name=config["ref_assembly"]["name"],
             ),
         params:
-            species=config["resources"]["ref"]["species"],
-            release=config["resources"]["ref"]["release"],
-            build=config["resources"]["ref"]["build"],
+            species=config["ref_assembly"]["species"],
+            release=config["ref_assembly"]["release"],
+            build=config["ref_assembly"]["name"],
             fmt="gtf",
         log:
             "logs/ensembl/get_annotation.log",
