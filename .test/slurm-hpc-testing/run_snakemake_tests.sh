@@ -5,7 +5,7 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   ./run_snakemake_tests.sh {lint|local-reads|sra-reads}
+#   sh ./run_snakemake_tests.sh {int|local-reads-refseq|local-reads-ensembl|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -14,14 +14,14 @@
 # singularity and snakemake modules are loaded.
 #
 # Example:
-#   ./run_snakemake_tests.sh local-reads
+#   sh ./run_snakemake_tests.sh lint
 
 # Hard-coded API key—replace this placeholder with your actual NCBI API key.
 API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that the first positional parameter is set.
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|local-reads|sra-reads}"
+  echo "Usage: $0 {int|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
 fi
 
@@ -58,10 +58,16 @@ lint)
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
   ;;
-local-reads)
-  echo "Running Snakemake workflow on local reads ..."
+local-reads-refseq)
+  echo "Running Snakemake workflow on local reads using a RefSeq assembly..."
   snakemake all --profile ${PROFILE} \
-    --configfile .test/singularity/local_reads/config/config.yaml \
+    --configfile .test/singularity/local_reads_refseq/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  ;;
+local-reads-ensembl)
+  echo "Running Snakemake workflow on local reads using an Ensembl assembly ..."
+  snakemake all --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_ensembl/config/config.yaml \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 sra-reads)
@@ -72,7 +78,7 @@ sra-reads)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|local-reads|sra-reads}"
+  echo "Usage: $0 {lint|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
   ;;
 esac
