@@ -1,6 +1,6 @@
 # workflow/rules/genome_download.smk
 
-if config["ref_assembly"]["source"] in ("LocalEnsembl", "LocalGENCODE"):
+if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
 
     rule get_genome:
         output:
