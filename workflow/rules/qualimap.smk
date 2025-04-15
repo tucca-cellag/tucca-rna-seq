@@ -4,8 +4,15 @@
 rule qualimap_rnaseq:
     input:
         bam="results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-        genome_gtf="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
-            genome_asc=config["ref_assembly"]["accession"]
+        genome_gtf=branch(
+            using_refseq_assembly,
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
     output:
         multiext(
