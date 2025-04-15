@@ -1,12 +1,12 @@
 # .test/singularity/local_reads/config/config.yaml
 
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: ".test/singularity/local_reads/config/samples.tsv"
+samples: ".test/singularity/local_reads_ensembl/config/samples.tsv"
 
 # Path to your sequencing UNIT SHEET which keeps track of your technical
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
-units: ".test/singularity/local_reads/config/units.tsv"
+units: ".test/singularity/local_reads_ensembl/config/units.tsv"
 
 # ----------------------------------------------------------
 # Genome Section
