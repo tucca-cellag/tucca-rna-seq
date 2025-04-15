@@ -47,13 +47,13 @@ rule make_linked_txome:
             otherwise="Local{source}".format(
                 source=config["ref_assembly"]["source"],
             ),
-        )
+        ),
         organism=config["ref_assembly"]["species"],
         release=config["ref_assembly"]["release"],
         genome=config["ref_assembly"]["name"],
     conda:
         "../envs/tximeta.yaml"
     log:
-        "log/tximeta/make_linked_txome.log"
+        "log/tximeta/make_linked_txome.log",
     script:
         "workflow/scripts/make_linked_txome.R"
