@@ -48,7 +48,6 @@ units: "config/units.tsv"
 # ----------------------------------------------------------
 ref_assembly:
   source: "RefSeq"
-  # TODO: Add branching logic to workflow depending on source
   accession: "GCF_016699485.2"
   name: "bGalGal1.mat.broiler.GRCg7b"
   release: ""
