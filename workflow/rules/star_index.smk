@@ -3,12 +3,26 @@
 
 rule star_index:
     input:
-        genome_fna="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
-            genome_asc=config["ref_assembly"]["accession"],
-            genome_name=config["ref_assembly"]["name"],
+        genome_fna=branch(
+            using_refseq_assembly,
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
+                genome_asc=config["ref_assembly"]["accession"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.dna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
-        genome_gtf="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
-            genome_asc=config["ref_assembly"]["accession"],
+        genome_gtf=branch(
+            using_refseq_assembly,
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
         ),
     output:
         multiext(
