@@ -4,7 +4,7 @@
 rule star_index:
     input:
         genome_fna=branch(
-            using_refseq_assembly,
+            config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
                 genome_asc=config["ref_assembly"]["accession"],
                 genome_name=config["ref_assembly"]["name"],
@@ -15,7 +15,7 @@ rule star_index:
             ),
         ),
         genome_gtf=branch(
-            using_refseq_assembly,
+            config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
                 genome_asc=config["ref_assembly"]["accession"],
             ),

@@ -21,7 +21,7 @@
 rule salmon_decoys:
     input:
         transcriptome=branch(
-            using_refseq_assembly,
+            config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna".format(
                 genome_asc=config["ref_assembly"]["accession"],
             ),
@@ -31,7 +31,7 @@ rule salmon_decoys:
             ),
         ),
         genome=branch(
-            using_refseq_assembly,
+            config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
                 genome_asc=config["ref_assembly"]["accession"],
                 genome_name=config["ref_assembly"]["name"],

@@ -5,7 +5,7 @@ rule qualimap_rnaseq:
     input:
         bam="results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
         genome_gtf=branch(
-            using_refseq_assembly,
+            config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
                 genome_asc=config["ref_assembly"]["accession"],
             ),
