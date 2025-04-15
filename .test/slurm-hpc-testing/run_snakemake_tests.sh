@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # .test/slurm-hpc-testing/run_snakemake_tests.sh
 #
 # This script mimics the jobs in .github/workflows/test.yml by invoking
