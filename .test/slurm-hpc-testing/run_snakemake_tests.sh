@@ -5,7 +5,7 @@
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   sh ./run_snakemake_tests.sh {int|local-reads-refseq|local-reads-ensembl|sra-reads}
+#   sh ./run_snakemake_tests.sh {int|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -21,7 +21,7 @@ API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that the first positional parameter is set.
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {int|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  echo "Usage: $0 {int|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
 fi
 
@@ -48,6 +48,7 @@ fi
 
 # The first positional parameter is the task.
 TASK=$1
+TARGET_RULE=$2
 
 # Global settings for the Snakemake call.
 PROFILE="profiles/slurm-dev"
@@ -57,6 +58,17 @@ lint)
   echo "Running Snakemake lint..."
   # The --lint flag will check for problems in your Snakefile.
   snakemake --lint --profile ${PROFILE}
+  ;;
+target-rule)
+  echo "Dry-run on local reads using a RefSeq assembly..."
+  snakemake ${TARGET_RULE} -np --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_refseq/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+  echo "The dry-run was successful!!"
+  echo "Running Snakemake workflow on local reads using a RefSeq assembly..."
+  snakemake ${TARGET_RULE} --profile ${PROFILE} \
+    --configfile .test/singularity/local_reads_refseq/config/config.yaml \
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
   ;;
 local-reads-refseq)
   echo "Dry-run on local reads using a RefSeq assembly..."
@@ -93,7 +105,7 @@ sra-reads)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  echo "Usage: $0 {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
   ;;
 esac
