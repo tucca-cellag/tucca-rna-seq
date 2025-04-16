@@ -27,7 +27,7 @@ validate(config, schema="../schemas/config.schema.yaml")
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
 samples = samples.set_index("sample_name", drop=False).sort_index()
-
+print(samples)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_csv(
@@ -36,7 +36,7 @@ units = pd.read_csv(
 units["sample_name"] = units["sample_name"].str.strip()
 units["unit_name"] = units["unit_name"].str.strip()
 units = units.set_index(["sample_name", "unit_name"], drop=False).sort_index()
-
+print(units)
 validate(units, schema="../schemas/units.schema.yaml")
 
 # Check that each (sample, unit) combination is unique.
