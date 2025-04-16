@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
   library(tximeta)
 })
 
-print(snakemake@inputs[["quants_path"]])
+print(snakemake@inputs[["quants_paths"]])
 
 files <- file.path(list.files("results/salmon", full = TRUE), "quant.sf")
 all(file.exists(files))
