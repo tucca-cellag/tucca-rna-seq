@@ -12,7 +12,15 @@ rule snapshot_config:
             "units.tsv",
         ),
     output:
-        "results/last_run_config_snapshot/snapshot_done.done",
+        multiext(
+            "results/last_run_config_snapshot/",
+            "config.yaml",
+            "multiqc_config.yaml",
+            "README.md",
+            "samples.tsv",
+            "units.tsv",
+            "snapshot_done.done",
+        ),
     log:
         "logs/snapshot_config/snapshot_config.log",
     shell:
