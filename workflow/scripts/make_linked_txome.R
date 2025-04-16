@@ -1,10 +1,14 @@
 log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
 sink(log, type = "message")
+date()
+suppressPackageStartupMessages({
+  library(devtools)
+})
+devtools::session_info()
 
 suppressPackageStartupMessages({
   library(tximeta)
-  library(devtools)
 })
 
 print(snakemake@output[[1]])
@@ -19,8 +23,6 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
-tximeta::setTximetaBFC("resources/tximeta")
-
 tximeta::makeLinkedTxome(
   indexDir = dirname(snakemake@input[["indexDir"]]),
   source = source,
@@ -32,6 +34,3 @@ tximeta::makeLinkedTxome(
   write = TRUE,
   jsonFile = snakemake@output[[1]]
 )
-
-date()
-devtools::session_info()
