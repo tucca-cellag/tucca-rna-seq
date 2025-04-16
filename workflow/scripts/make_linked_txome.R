@@ -21,11 +21,13 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
-print(dirname(snakemake@input[["indexDir"]]))
-print(snakemake@output[[1]])
+# indexDir input returns a list of files, select the first file's dirname
+index_dir <- dirname(snakemake@input[["indexDir"]])[1]
+
+print(index_dir)
 
 tximeta::makeLinkedTxome(
-  indexDir = dirname(snakemake@input[["indexDir"]]),
+  indexDir = index_dir,
   source = source,
   organism = organism_reformat,
   release = snakemake@params[["release"]],
