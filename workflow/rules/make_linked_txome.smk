@@ -54,6 +54,6 @@ rule make_linked_txome:
     conda:
         "../envs/tximeta.yaml"
     log:
-        "log/tximeta/make_linked_txome.log",
+        "logs/tximeta/make_linked_txome.log",
     script:
         "workflow/scripts/make_linked_txome.R"
