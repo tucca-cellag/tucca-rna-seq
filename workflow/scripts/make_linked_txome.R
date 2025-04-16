@@ -7,8 +7,8 @@ suppressPackageStartupMessages({
   library(devtools)
 })
 
-ss <- strsplit(organism, "_")[[1]]
-organism <- paste(paste(ss[1], ss[2]))
+org_split <- strsplit(organism, "_")[[1]]
+organism <- paste(paste(org_split[1], org_split[2]))
 
 makeLinkedTxome(
   indexDir = dirname(indexDir),
