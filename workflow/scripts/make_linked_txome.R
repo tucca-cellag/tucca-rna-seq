@@ -7,13 +7,13 @@ suppressPackageStartupMessages({
   library(devtools)
 })
 
-org_split <- strsplit(organism, "_")[[1]]
-organism <- paste(paste(org_split[1], org_split[2]))
+organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
+organism_no_underscore <- paste(paste(organism_split[1], organism_split[2]))
 
 makeLinkedTxome(
   indexDir = dirname(snakemake@input[["indexDir"]]),
   source = snakemake@params[["source"]],
-  organism = snakemake@params[["organism"]],
+  organism = organism_no_underscore,
   release = snakemake@params[["release"]],
   genome = snakemake@params[["genome"]],
   fasta = snakemake@input[["fasta"]],
