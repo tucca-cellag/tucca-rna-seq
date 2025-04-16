@@ -1,6 +1,6 @@
 rule tximeta:
     input:
-        quants_paths=lambda wildcards: expand(
+        quants_paths=lambda Wildcards: expand(
             "results/salmon/{sample}_{unit}/{sample}_{unit}_quant.sf"
         ),
         indexDir="",
