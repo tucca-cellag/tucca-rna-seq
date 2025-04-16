@@ -108,7 +108,7 @@ rule salmon_quant:
             "versionInfo.json",
         ),
     output:
-        quant="results/salmon/{sample}_{unit}/{sample}_{unit}_quant.sf",
+        quant="results/salmon/{sample}_{unit}/quant.sf",
         lib="results/salmon/{sample}_{unit}/lib_format_counts.json",
         aux_info=directory("results/salmon/{sample}_{unit}/aux_info"),
         cmd_info="results/salmon/{sample}_{unit}/cmd_info.json",
