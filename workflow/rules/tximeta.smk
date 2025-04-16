@@ -1,12 +1,6 @@
 rule tximeta:
     input:
-        indexDir="",
-        source="",
-        organism="",
-        release="",
-        genome="",
-        fasta="",
-        gtf="",
+        linkedTxome="results/salmon/transcriptome_index.json",
     output:
         se="se.RDS",
     params:
