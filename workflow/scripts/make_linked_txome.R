@@ -1,4 +1,4 @@
-log <- file(snakemake@log[[1]], open = "wt")
+log <- file(snakemake@log, open = "wt")
 sink(log, type = c("output", "message"))
 
 suppressPackageStartupMessages({
