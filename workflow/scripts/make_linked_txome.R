@@ -1,6 +1,5 @@
 log <- file(snakemake@log[[1]], open = "wt")
-sink(log)
-sink(log, type = "message")
+sink(log, type = c("output", "message"))
 
 suppressPackageStartupMessages({
   library(tximeta)
