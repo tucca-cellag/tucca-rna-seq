@@ -11,8 +11,6 @@ suppressPackageStartupMessages({
   library(tximeta)
 })
 
-print(snakemake@output[[1]])
-
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
 organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
 
@@ -22,6 +20,9 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
 } else {
   source <- snakemake@params[["source"]]
 }
+
+print(dirname(snakemake@input[["indexDir"]]))
+print(snakemake@output[[1]])
 
 tximeta::makeLinkedTxome(
   indexDir = dirname(snakemake@input[["indexDir"]]),
