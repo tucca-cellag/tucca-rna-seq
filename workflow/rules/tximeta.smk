@@ -1,6 +1,12 @@
 rule tximeta:
     input:
-        salmonDir="results/salmon/*/*_quant.sf",
+        expand(
+            os.path.join(
+                "results/salmon", "{sample}_{unit}", "{sample}_{unit}_quant.sf"
+            ),
+            sample=samples.sample_name.values.tolist(),
+            unit=units.unit_name.values.tolist(),
+        ),
         linkedTxome="results/salmon/transcriptome_index.json",
     output:
         se="se.RDS",
