@@ -8,12 +8,19 @@ suppressPackageStartupMessages({
 })
 
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
-organism_no_underscore <- paste(paste(organism_split[1], organism_split[2]))
+organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
+
+# Check the value of snakemake@params[["source"]]
+if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
+  source <- paste0("Local", snakemake@params[["source"]])
+} else {
+  source <- snakemake@params[["source"]]
+}
 
 makeLinkedTxome(
   indexDir = dirname(snakemake@input[["indexDir"]]),
-  source = snakemake@params[["source"]],
-  organism = organism_no_underscore,
+  source = source,
+  organism = organism_reformat,
   release = snakemake@params[["release"]],
   genome = snakemake@params[["genome"]],
   fasta = snakemake@input[["fasta"]],
