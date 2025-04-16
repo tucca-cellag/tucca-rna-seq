@@ -19,7 +19,9 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
-makeLinkedTxome(
+tximeta::setTximetaBFC("resources/tximeta")
+
+tximeta::makeLinkedTxome(
   indexDir = dirname(snakemake@input[["indexDir"]]),
   source = source,
   organism = organism_reformat,
@@ -32,4 +34,4 @@ makeLinkedTxome(
 )
 
 date()
-session_info()
+devtools::session_info()
