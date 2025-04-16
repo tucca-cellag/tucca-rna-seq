@@ -1,9 +1,7 @@
 rule tximeta:
     input:
         expand(
-            os.path.join(
-                "results/salmon", "{sample}_{unit}", "{sample}_{unit}_quant.sf"
-            ),
+            "results/salmon/{sample}_{unit}/quant.sf",
             sample=samples.sample_name.values.tolist(),
             unit=units.unit_name.values.tolist(),
         ),
