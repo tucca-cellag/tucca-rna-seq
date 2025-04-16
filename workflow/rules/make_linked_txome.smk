@@ -56,4 +56,4 @@ rule make_linked_txome:
     log:
         "logs/tximeta/make_linked_txome.log",
     script:
-        "(workflow/scripts/make_linked_txome.R) &> {log}"
+        "../scripts/make_linked_txome.R"
