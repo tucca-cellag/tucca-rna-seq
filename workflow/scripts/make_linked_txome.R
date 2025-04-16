@@ -11,7 +11,7 @@ org_split <- strsplit(organism, "_")[[1]]
 organism <- paste(paste(org_split[1], org_split[2]))
 
 makeLinkedTxome(
-  indexDir = dirname(indexDir),
+  indexDir = dirname(snakemake@input[["indexDir"]]),
   source = snakemake@params[["source"]],
   organism = snakemake@params[["organism"]],
   release = snakemake@params[["release"]],
