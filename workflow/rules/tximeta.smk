@@ -2,8 +2,8 @@ rule tximeta:
     input:
         quants_paths=lambda wildcards: expand(
             "results/salmon/{sample}_{unit}/{sample}_{unit}_quant.sf",
-            sample=wildcards.samples,
-            unit=wildcards.units,
+            sample=samples,
+            unit=units,
         ),
         indexDir="",
         source="",
