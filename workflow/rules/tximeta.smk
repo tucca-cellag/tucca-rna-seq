@@ -1,6 +1,6 @@
 rule tximeta:
     input:
-        expand("results/salmon/{sample}_{unit}/{sample}_{unit}_quant.sf"),
+        quants_path=get_salmon_paths,
         indexDir="",
         source="",
         organism="",
