@@ -7,6 +7,8 @@ suppressPackageStartupMessages({
   library(devtools)
 })
 
+print(snakemake@output[[1]])
+
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
 organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
 
