@@ -26,7 +26,7 @@ makeLinkedTxome(
   fasta = snakemake@input[["fasta"]],
   gtf = snakemake@input[["gtf"]],
   write = TRUE,
-  jsonFile = snakemake@output
+  jsonFile = snakemake@output[[1]]
 )
 
 date()
