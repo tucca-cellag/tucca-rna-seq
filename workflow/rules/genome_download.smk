@@ -87,10 +87,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
                 genome_asc=config["ref_assembly"]["accession"]
             ),
         output:
-            multiext(
-                "resources/datasets/",
-                "README.md",
-            ),
+            multiext("resources/datasets/", "README.md", "md5sum.txt"),
             multiext(
                 "resources/datasets/ncbi_dataset/data/",
                 "assembly_data_report.jsonl",
