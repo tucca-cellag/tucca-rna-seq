@@ -126,3 +126,5 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
+  tximeta:
+    extra: ""
