@@ -9,7 +9,7 @@ rule tximeta:
         ),
         linkedTxome="results/salmon/transcriptome_index.json",
     output:
-        se="se.RDS",
+        se="resources/tximeta/se.RDS",
     params:
         extra=config["params"]["tximeta"]["extra"],
     conda:
