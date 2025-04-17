@@ -8,27 +8,21 @@ rule tximeta:
             "results/salmon/{sample_unit}/lib_format_counts.json",
             sample_unit=units.sample_unit.values.tolist(),
         ),
-        aux_info=directory(
-            expand(
-                "results/salmon/{sample_unit}/aux_info",
-                sample_unit=units.sample_unit.values.tolist(),
-            )
+        aux_info=expand(
+            "results/salmon/{sample_unit}/aux_info/",
+            sample_unit=units.sample_unit.values.tolist(),
         ),
         cmd_info=expand(
             "results/salmon/{sample_unit}/cmd_info.json",
             sample_unit=units.sample_unit.values.tolist(),
         ),
-        libparams=directory(
-            expand(
-                "results/salmon/{sample_unit}/libParams",
-                sample_unit=units.sample_unit.values.tolist(),
-            )
+        libparams=expand(
+            "results/salmon/{sample_unit}/libParams/",
+            sample_unit=units.sample_unit.values.tolist(),
         ),
-        logs=directory(
-            expand(
-                "results/salmon/{sample_unit}/logs",
-                sample_unit=units.sample_unit.values.tolist(),
-            )
+        logs=expand(
+            "results/salmon/{sample_unit}/logs/",
+            sample_unit=units.sample_unit.values.tolist(),
         ),
         linkedTxome="results/salmon/transcriptome_index.json",
     output:
