@@ -19,7 +19,7 @@ rule snapshot_config:
             "README.md",
             "samples.tsv",
             "units.tsv",
-            "snapshot_done.done",
+            "snapshot_taken.done",
         ),
     log:
         "logs/snapshot_config/snapshot_config.log",

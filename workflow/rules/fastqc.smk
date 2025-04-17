@@ -5,8 +5,8 @@ rule fastqc:
     input:
         get_fq_files,
     output:
-        htmls="results/fastqc/{sample}_{unit}_{read}.html",
-        zips="results/fastqc/{sample}_{unit}_{read}_fastqc.zip",
+        htmls="results/fastqc/{sample_unit}_{read}.html",
+        zips="results/fastqc/{sample_unit}_{read}_fastqc.zip",
     params:
         extra=config["params"]["fastqc"]["extra"],
         memory=config["params"]["fastqc"]["memory"],
@@ -14,12 +14,11 @@ rule fastqc:
     conda:
         "../envs/fastqc.yaml"
     log:
-        "logs/fastqc/{sample}_{unit}_{read}.log",
+        "logs/fastqc/{sample_unit}_{read}.log",
     message:
         """
         Generating FastQC report for:
-            sample = {wildcards.sample},
-            unit = {wildcards.unit}
+            sample_unit = {wildcards.sample_unit}
             read = {wildcards.read}
         """
     shell:

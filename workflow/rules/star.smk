@@ -27,16 +27,16 @@ rule star:
         ),
     output:
         multiext(
-            "results/star/{sample}_{unit}_",
+            "results/star/{sample_unit}_",
             "Aligned.sortedByCoord.out.bam",
             "Log.final.out",
             "Log.out",
             "Log.progress.out",
             "SJ.out.tab",
         ),
-        temp(directory("results/star/{sample}_{unit}__STARtmp")),
+        temp(directory("results/star/{sample_unit}__STARtmp")),
     log:
-        "logs/star/star_{sample}_{unit}.log",
+        "logs/star/star_{sample_unit}.log",
     params:
         star_index_dir=lambda wildcards, input: os.path.dirname(input.star_index[0]),
         outSAMtype=config["params"]["star"]["outSAMtype"],
@@ -59,16 +59,14 @@ rule star:
     message:
         """
         Running STAR alignment for:
-            sample = {wildcards.sample},
-            unit = {wildcards.unit}
+            sample_unit = {wildcards.sample_unit},
         Running STAR with the inputs:
             {input.reads[0]}
             {input.reads[1]}
         """
     shell:
         """
-        (echo "Running STAR alignment for sample={wildcards.sample}, \
-        unit={wildcards.unit}"
+        (echo "Running STAR alignment for sample_unit={wildcards.wildcards.sample_unit"
         echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
 
         # Dynamically set readFilesCommand: use the provided command if gz,
@@ -84,7 +82,7 @@ rule star:
         --genomeDir {params.star_index_dir} \
         --readFilesIn {input.reads[0]} {input.reads[1]} \
         --readFilesCommand $readFilesCmd \
-        --outFileNamePrefix results/star/{wildcards.sample}_{wildcards.unit}_ \
+        --outFileNamePrefix results/star/{wildcards.sample_unit}_ \
         --outSAMtype {params.outSAMtype} \
         --outSAMunmapped {params.outSAMunmapped} \
         --outSAMattributes {params.outSAMattributes} \

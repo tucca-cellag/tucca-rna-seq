@@ -34,14 +34,13 @@ units = pd.read_csv(
 )
 units["sample_name"] = units["sample_name"].str.strip()
 units["unit_name"] = units["unit_name"].str.strip()
-units = units.set_index(["sample_name", "unit_name"], drop=False).sort_index()
+units["sample_unit"] = units["sample_name"] + "_" + units["unit_name"]
+units = units.set_index(["sample_unit"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 
 # Check that each (sample, unit) combination is unique.
 if not units.index.is_unique:
-    raise ValueError(
-        "Each (sample, unit) combination must be unique in the units file."
-    )
+    raise ValueError("Each (sample, unit) combination must be unique in units.tsv")
 
 ####### wildcard constraints #######
 
@@ -53,14 +52,13 @@ wildcard_constraints:
     # in the 'samples' DataFrame.
     # This ensures that the 'sample' wildcard can only take values from the
     # specified sample names.
-    # Escape each sample name to avoid regex meta-character issues.
-    sample="|".join(re.escape(s) for s in samples.index.unique()),
+    #sample="|".join(re.escape(s) for s in samples.index.unique()),
     # Constrain the 'unit' wildcard to match any of the unit names listed in the
     # 'units' DataFrame.
     # This ensures that the 'unit' wildcard can only take values from the
     # specified unit names.
-    # Escape each unit name similarly to each sample name.
-    unit="|".join(re.escape(u) for u in units["unit_name"].unique()),
+    # Escape each unit name to avoid regex meta-character issues.
+    sample_unit="|".join(re.escape(u) for u in units.index.unique()),
     # Constrain the 'read' wildcard to match either "R1" or "R2".
     # This ensures that the 'read' wildcard can only take the values "R1" or
     # "R2", representing the read direction in paired-end sequencing.
@@ -68,61 +66,6 @@ wildcard_constraints:
 
 
 ####### helper functions #######
-
-
-def get_sra_filepath(accession: str, read: str) -> Path:
-    """
-    Generate the file path for an SRA read given its accession and read
-    direction.
-
-    Parameters:
-        accession (str): The SRA accession number.
-        read (str): The read direction (e.g., "R1" or "R2").
-
-    Returns:
-        Path: The path to the SRA fastq file.
-    """
-    # Use read number (assumes read is like "R1" or "R2")
-    read_num = read[1]
-    return f"data/sra_reads/{accession}_{read_num}.fastq"
-
-
-def is_sra_read(u: pd.Series) -> bool:
-    """
-    Determine if a unit record indicates an SRA-based read.
-
-    Conditions:
-        - u.sra is a non-empty string (after stripping whitespace)
-        - u.fq1 and u.fq2 are NaN
-
-    Parameters:
-        u (pd.Series): A unit row with keys "sra", "fq1" and "fq2".
-
-    Returns:
-        bool: True if the record represents an SRA read, False otherwise.
-    """
-    return str(u.sra).strip() != "" and pd.isna(u.fq1) and pd.isna(u.fq2)
-
-
-def get_unit_record(wildcards: Wildcard) -> pd.Series:
-    # Clean the wildcard values.
-    sample = wildcards.sample.strip()
-    unit = wildcards.unit.strip()
-    try:
-        record = units.loc[(sample, unit)]
-    except KeyError:
-        print(
-            f"Warning: Combination of sample '{sample}' and unit '{unit}' not found in `units.tsv`. Skipping..."
-        )
-        pass
-
-    # If the lookup returns a DataFrame instead of a Series then more than one
-    # match was found.
-    if isinstance(record, pd.DataFrame):
-        raise ValueError(
-            f"Multiple entries found for sample '{sample}' and unit '{unit}'. Ensure that the metadata has one unique entry per sample and unit."
-        )
-    return record
 
 
 def get_fq_files(wildcards: Wildcard) -> str:
@@ -146,6 +89,59 @@ def get_fq_files(wildcards: Wildcard) -> str:
             return str(u.fq2)
         else:
             raise ValueError(f"Invalid read direction: {wildcards.read}")
+
+
+def get_unit_record(wildcards: Wildcard) -> pd.Series:
+    # Clean the wildcard values.
+    sample_unit = wildcards.sample_unit.strip()
+    try:
+        record = units.loc[(sample_unit)]
+    except KeyError:
+        raise ValueError(
+            f"Combination of sample_name and unit_name ({sample_unit}) not found in units.tsv"
+        )
+
+    # If the lookup returns a DataFrame instead of a Series then more than one
+    # match was found.
+    if isinstance(record, pd.DataFrame):
+        raise ValueError(
+            f"Multiple entries found for this combination of sample_name and unit_name ({sample_unit}). Ensure that the metadata has one unique entry per sample-unit pair."
+        )
+    return record
+
+
+def is_sra_read(u: pd.Series) -> bool:
+    """
+    Determine if a unit record indicates an SRA-based read.
+
+    Conditions:
+        - u.sra is a non-empty string (after stripping whitespace)
+        - u.fq1 and u.fq2 are NaN
+
+    Parameters:
+        u (pd.Series): A unit row with keys "sra", "fq1" and "fq2".
+
+    Returns:
+        bool: True if the record represents an SRA read, False otherwise.
+    """
+    return str(u.sra).strip() != "" and pd.isna(u.fq1) and pd.isna(u.fq2)
+
+
+def get_sra_filepath(accession: str, read: str) -> Path:
+    """
+    Generate the file path for an SRA read given its accession and read
+    direction.
+
+    Parameters:
+        accession (str): The SRA accession number.
+        read (str): The read direction (e.g., "R1" or "R2").
+
+    Returns:
+        Path: The path to the SRA fastq file.
+    """
+    # Use read number (assumes read is like "R1" or "R2")
+    read_num = read[1]
+    return f"data/sra_reads/{accession}_{read_num}.fastq"
 
 
 def get_paired_reads(wildcards: Wildcard) -> List[str]:
@@ -172,47 +168,43 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
 
 # Helper function for FastQC output paths.
 def get_fastqc_paths(row: pd.Series) -> List[str]:
-    sample: str = row.sample_name
-    unit: str = row.unit_name
+    sample_unit: str = row.sample_unit
     paths: List[str] = [
-        f"results/fastqc/{sample}_{unit}_R1.html",
-        f"results/fastqc/{sample}_{unit}_R2.html",
-        f"results/fastqc/{sample}_{unit}_R1_fastqc.zip",
-        f"results/fastqc/{sample}_{unit}_R2_fastqc.zip",
+        f"results/fastqc/{sample_unit}_R1.html",
+        f"results/fastqc/{sample_unit}_R2.html",
+        f"results/fastqc/{sample_unit}_R1_fastqc.zip",
+        f"results/fastqc/{sample_unit}_R2_fastqc.zip",
     ]
     return paths
 
 
 # Helper function for STAR output paths.
 def get_star_paths(row: pd.Series) -> List[str]:
-    sample: str = row.sample_name
-    unit: str = row.unit_name
+    sample_unit: str = row.sample_unit
     paths: List[str] = [
-        f"results/star/{sample}_{unit}_Aligned.sortedByCoord.out.bam",
-        f"results/star/{sample}_{unit}_Log.final.out",
-        f"results/star/{sample}_{unit}_Log.out",
-        f"results/star/{sample}_{unit}_Log.progress.out",
-        f"results/star/{sample}_{unit}_SJ.out.tab",
+        f"results/star/{sample_unit}_Aligned.sortedByCoord.out.bam",
+        f"results/star/{sample_unit}_Log.final.out",
+        f"results/star/{sample_unit}_Log.out",
+        f"results/star/{sample_unit}_Log.progress.out",
+        f"results/star/{sample_unit}_SJ.out.tab",
     ]
     return paths
 
 
 # Helper function for Qualimap output paths.
 def get_qualimap_paths(row: pd.Series) -> List[str]:
-    sample: str = row.sample_name
-    unit: str = row.unit_name
+    sample_unit: str = row.sample_unit
     paths: List[str] = [
-        f"results/qualimap/{sample}_{unit}.qualimap/qualimapReport.html",
-        f"results/qualimap/{sample}_{unit}.qualimap/rnaseq_qc_results.txt",
+        f"results/qualimap/{sample_unit}.qualimap/qualimapReport.html",
+        f"results/qualimap/{sample_unit}.qualimap/rnaseq_qc_results.txt",
     ]
     return paths
 
 
 # Helper function for Salmon output paths.
 def get_salmon_paths(row: pd.Series) -> List[str]:
-    sample: str = row.sample_name
-    unit: str = row.unit_name
-    return [f"results/salmon/{sample}_{unit}/quant.sf"]
+    sample_unit: str = row.sample_unit
+    return [f"results/salmon/{sample_unit}/quant.sf"]
 
 
 # Main function that aggregates all expected outputs. Called by rule all.
