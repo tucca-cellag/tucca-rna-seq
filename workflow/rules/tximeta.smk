@@ -1,7 +1,27 @@
 rule tximeta:
     input:
-        files=expand(
+        quant=expand(
             "results/salmon/{sample_unit}/quant.sf",
+            sample_unit=units.sample_unit.values.tolist(),
+        ),
+        lib=expand(
+            "results/salmon/{sample_unit}/lib_format_counts.json",
+            sample_unit=units.sample_unit.values.tolist(),
+        ),
+        aux_info=expand(
+            directory("results/salmon/{sample_unit}/aux_info"),
+            sample_unit=units.sample_unit.values.tolist(),
+        ),
+        cmd_info=expand(
+            "results/salmon/{sample_unit}/cmd_info.json",
+            sample_unit=units.sample_unit.values.tolist(),
+        ),
+        libparams=expand(
+            directory("results/salmon/{sample_unit}/libParams"),
+            sample_unit=units.sample_unit.values.tolist(),
+        ),
+        logs=expand(
+            directory("results/salmon/{sample_unit}/logs"),
             sample_unit=units.sample_unit.values.tolist(),
         ),
         linkedTxome="results/salmon/transcriptome_index.json",

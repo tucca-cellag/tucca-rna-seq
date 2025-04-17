@@ -15,9 +15,9 @@ suppressPackageStartupMessages({
 tximeta::loadLinkedTxome(snakemake@input[["linkedTxome"]])
 
 # Create coldata
-files <- snakemake@input[["files"]]
+files <- snakemake@input[["quant"]]
 files
-names <- basename(sub(basename(files), "", files))
+names <- basename(dirname(files))
 names
 coldata <- data.frame(files, names)
 coldata
