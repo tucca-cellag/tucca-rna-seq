@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 
 files <- snakemake@input[["files"]]
 files
-names <- basename(sub("[/\\]+$", "", files))
+names <- basename(sub(basename(files), "", files))
 names
 coldata <- data.frame(files, names)
 coldata
