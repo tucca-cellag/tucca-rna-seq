@@ -66,7 +66,7 @@ rule star:
         """
     shell:
         """
-        (echo "Running STAR alignment for sample_unit={wildcards.sample_unit"
+        (echo "Running STAR alignment for sample_unit={wildcards.sample_unit}"
         echo "Running STAR with the inputs: {input.reads[0]} {input.reads[1]}"
 
         # Dynamically set readFilesCommand: use the provided command if gz,
