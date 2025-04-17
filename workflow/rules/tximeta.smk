@@ -2,7 +2,6 @@ rule tximeta:
     input:
         files=expand(
             "results/salmon/{sample_unit}/quant.sf",
-            zip,
             sample_unit=units.sample_unit.values.tolist(),
         ),
         linkedTxome="results/salmon/transcriptome_index.json",
