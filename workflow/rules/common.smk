@@ -111,9 +111,10 @@ def get_unit_record(wildcards: Wildcard) -> pd.Series:
     try:
         record = units.loc[(sample, unit)]
     except KeyError:
-        raise ValueError(
-            f"Combination of sample '{sample}' and unit '{unit}' not found in the metadata. Please check your samples and units files."
+        print(
+            f"Warning: Combination of sample '{sample}' and unit '{unit}' not found in `units.tsv`. Skipping..."
         )
+        pass
 
     # If the lookup returns a DataFrame instead of a Series then more than one
     # match was found.
