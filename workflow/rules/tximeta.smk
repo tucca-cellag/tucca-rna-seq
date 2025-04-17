@@ -2,6 +2,7 @@ rule tximeta:
     input:
         files=expand(
             "results/salmon/{sample}_{unit}/quant.sf",
+            zip,
             sample=samples.sample_name.values.tolist(),
             unit=units.unit_name.values.tolist(),
         ),
