@@ -22,7 +22,7 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
 }
 
 # indexDir input returns a list of files, select the first file's dirname
-index_dir <- dirname(snakemake@input[["indexDir"]])[1]
+index_dir <- dirname(snakemake@input[["index_dir"]])[1]
 
 setTximetaBFC(snakemake@params[["tximeta_cache"]])
 
