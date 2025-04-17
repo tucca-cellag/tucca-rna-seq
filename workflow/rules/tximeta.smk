@@ -6,7 +6,8 @@ rule tximeta:
         ),
         linkedTxome="results/salmon/transcriptome_index.json",
     output:
-        se="resources/tximeta/se.RDS",
+        se="resources/tximeta/tximeta_se.RDS",
+        gse="resources/tximeta/tximeta_gse.RDS",
     params:
         extra=config["params"]["tximeta"]["extra"],
     conda:
