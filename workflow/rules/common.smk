@@ -168,10 +168,10 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
 def get_fastqc_paths(row: pd.Series) -> List[str]:
     sample_unit: str = row.sample_unit
     paths: List[str] = [
-        f"results/fastqc/{sample_unit}_R1.html",
-        f"results/fastqc/{sample_unit}_R2.html",
-        f"results/fastqc/{sample_unit}_R1_fastqc.zip",
-        f"results/fastqc/{sample_unit}_R2_fastqc.zip",
+        f"results/fastqc/{sample_unit}_R1/{sample_unit}_R1.html",
+        f"results/fastqc/{sample_unit}_R2/{sample_unit}_R2.html",
+        f"results/fastqc/{sample_unit}_R1/{sample_unit}_R1_fastqc.zip",
+        f"results/fastqc/{sample_unit}_R2/{sample_unit}_R2_fastqc.zip",
     ]
     return paths
 
