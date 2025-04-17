@@ -1,6 +1,6 @@
 rule make_linked_txome:
     input:
-        indexDir=multiext(
+        index_dir=multiext(
             "results/salmon/transcriptome_index/",
             "complete_ref_lens.bin",
             "ctable.bin",
@@ -51,6 +51,7 @@ rule make_linked_txome:
         organism=config["ref_assembly"]["species"],
         release=config["ref_assembly"]["release"],
         genome=config["ref_assembly"]["name"],
+        tximeta_cache="resources/tximeta",
     conda:
         "../envs/tximeta.yaml"
     log:
