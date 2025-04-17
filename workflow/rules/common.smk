@@ -19,8 +19,6 @@ class Wildcard(Protocol):
 
 ####### load config and sample sheets #######
 
-SRA_READS_DIR = Path("")
-
 
 validate(config, schema="../schemas/config.schema.yaml")
 
