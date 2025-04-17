@@ -11,12 +11,14 @@ suppressPackageStartupMessages({
   library(tximeta)
 })
 
+snakemake@input[["files"]]
 files <- list.files(
   "results/salmon",
   full = TRUE,
   recursive = TRUE,
   pattern = "^+quant.sf$"
 )
+print("")
 files
 
 saveRDS(files, file = snakemake@output[[1]])

@@ -1,6 +1,6 @@
 rule tximeta:
     input:
-        expand(
+        files=expand(
             "results/salmon/{sample}_{unit}/quant.sf",
             sample=samples.sample_name.values.tolist(),
             unit=units.unit_name.values.tolist(),
