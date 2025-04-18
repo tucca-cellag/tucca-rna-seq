@@ -9,7 +9,6 @@ conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
 forceall: true
-all-temp: true
 retries: 3
 rerun-incomplete: true
 jobs: 100 # Slurm jobscript size limit
