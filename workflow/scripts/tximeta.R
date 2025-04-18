@@ -26,16 +26,7 @@ coldata
 extra <- snakemake@params[["extra"]]
 
 # Create summarized experiment using tximeta
-# Evaluate the following
-se <- base::eval(
-  # ... parsed expression
-  base::parse(
-    # ... of tximeta and its arguments
-    text = base::paste0(
-      "tximeta::tximeta(", coldata, extra, ");"
-    )
-  )
-)
+se <- tximeta(coldata)
 
 ## Summarize to gene level
 gse <- summarizeToGene(
