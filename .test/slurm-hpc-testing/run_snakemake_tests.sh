@@ -51,6 +51,7 @@ fi
 TASK=$1
 TARGET_RULE=$2
 SOURCE=$3
+EXTRA_ARG=$4
 
 # Global settings for the Snakemake call.
 PROFILE="profiles/slurm-dev"
@@ -65,12 +66,12 @@ target-rule)
   echo "Dry-run on local reads using a ${SOURCE} assembly..."
   snakemake ${TARGET_RULE} -np --profile ${PROFILE} \
     --configfile .test/singularity/local_reads_${SOURCE}/config/config.yaml \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" ${EXTRA_ARG}
   echo "The dry-run was successful!!"
   echo "Running Snakemake workflow on local reads using a ${SOURCE} assembly..."
   snakemake ${TARGET_RULE} --profile ${PROFILE} \
     --configfile .test/singularity/local_reads_${SOURCE}/config/config.yaml \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}"
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" ${EXTRA_ARG}
   ;;
 local-reads-refseq)
   echo "Dry-run on local reads using a RefSeq assembly..."
