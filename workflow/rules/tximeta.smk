@@ -25,6 +25,26 @@ rule tximeta:
             sample_unit=units.sample_unit.values.tolist(),
         ),
         linkedTxome="results/salmon/transcriptome_index.json",
+        fasta=branch(
+            config["ref_assembly"]["source"] == "RefSeq",
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/rna.fna".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.cdna.fa".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+        ),
+        gtf=branch(
+            config["ref_assembly"]["source"] == "RefSeq",
+            then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
+                genome_asc=config["ref_assembly"]["accession"],
+            ),
+            otherwise="resources/ensembl/{species}.{genome_name}.gtf".format(
+                species=config["ref_assembly"]["species"],
+                genome_name=config["ref_assembly"]["name"],
+            ),
+        ),
     output:
         se="resources/tximeta/tximeta_se.RDS",
         gse="resources/tximeta/tximeta_gse.RDS",
