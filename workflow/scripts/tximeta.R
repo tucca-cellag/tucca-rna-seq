@@ -9,6 +9,7 @@ devtools::session_info()
 
 suppressPackageStartupMessages({
   library(tximeta)
+  library(tidyverse)
 })
 
 # Load linkedTxome
