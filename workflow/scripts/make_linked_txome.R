@@ -23,7 +23,7 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   # workflow/scripts/tximeta.R will need to be refactored to work with EnsDb
   # objects
   # See: https://github.com/thelovelab/tximeta/blob/devel/R/tximeta.R
-  # Specifically getTxDb() definition where either EnsDb() or loadDb() is called
+  # Specifically getTxDb() call and definition
 } else {
   source <- snakemake@params[["source"]]
 }

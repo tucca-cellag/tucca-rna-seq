@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 # added instead of forcing "LocalEnsembl" and "LocalGENCODE" the logic in
 # this script will need to be refactored to work with EnsDb objects
 # See: https://github.com/thelovelab/tximeta/blob/devel/R/tximeta.R
-# Specifically getTxDb() definition where either EnsDb() or loadDb() is called
+# Specifically getTxDb() call and definition
 tximeta::loadLinkedTxome(snakemake@input[["linkedTxome"]])
 
 # Create coldata
