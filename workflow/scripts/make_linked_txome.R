@@ -14,20 +14,22 @@ suppressPackageStartupMessages({
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
 organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
 
-# Check the value of snakemake@params[["source"]]
 if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
+  # Enforce creation of a TxDb object for Ensembl and GENCODE when
+  # is called makeLinkedTxome
   source <- paste0("Local", snakemake@params[["source"]])
+  # TODO: If support for makeLinkedTxome(source = c("Ensembl", "GENCODE")) is
+  # added instead of forcing "LocalEnsembl" and "LocalGENCODE" the logic in
+  # tximeta.R will need to be refactored
 } else {
   source <- snakemake@params[["source"]]
 }
 
-# indexDir input returns a list of files, select the first file's dirname
-index_dir <- dirname(snakemake@input[["index_dir"]])[1]
-
 setTximetaBFC(snakemake@params[["tximeta_cache"]])
 
 tximeta::makeLinkedTxome(
-  indexDir = index_dir,
+  # index_dir is a list of files, select the first file's dirname
+  indexDir = dirname(snakemake@input[["index_dir"]])[1],
   source = source,
   organism = organism_reformat,
   release = snakemake@params[["release"]],
@@ -35,5 +37,5 @@ tximeta::makeLinkedTxome(
   fasta = snakemake@input[["fasta"]],
   gtf = snakemake@input[["gtf"]],
   write = TRUE,
-  jsonFile = snakemake@output[[1]]
+  jsonFile = snakemake@output[["jsonFile"]]
 )

@@ -39,7 +39,7 @@ rule make_linked_txome:
             ),
         ),
     output:
-        "results/salmon/transcriptome_index.json",
+        jsonFile="results/salmon/transcriptome_index.json",
     params:
         source=branch(
             config["ref_assembly"]["source"] == "RefSeq",
