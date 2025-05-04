@@ -6,7 +6,7 @@ set -e
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   sh ./run_snakemake_tests.sh {int|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}
+#   sh ./run_snakemake_tests.sh {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -22,7 +22,7 @@ API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that the first positional parameter is set.
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {int|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  echo "Usage: $0 {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
 fi
 
