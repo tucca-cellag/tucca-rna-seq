@@ -57,9 +57,9 @@ oneOf:
   - if:
       properties:
         fq1:
-          pattern: "^+$"
+          pattern: "^*$"
         fq2:
-          pattern: "^+$"
+          pattern: "^*$"
     then:
       properties:
         sra:
