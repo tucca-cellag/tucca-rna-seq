@@ -6,7 +6,7 @@ set -e
 # Snakemake with the targets and configuration the workflow uses.
 #
 # Usage:
-#   sh ./run_snakemake_tests.sh {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}
+#   sh ./run_snakemake_tests.sh {lint|conda-create-envs-only|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}
 #
 # IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
 #
@@ -22,7 +22,7 @@ API_KEY="YOUR_NCBI_API_KEY"
 
 # Check that the first positional parameter is set.
 if [ -z "${1}" ]; then
-  echo "Usage: $0 {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  echo "Usage: $0 {lint|conda-create-envs-only|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
 fi
 
@@ -58,9 +58,12 @@ PROFILE="profiles/slurm-dev"
 
 case $TASK in
 lint)
-  echo "Running Snakemake lint..."
-  # The --lint flag will check for problems in your Snakefile.
+  echo "Linting the Snakemake workflow..."
   snakemake --lint --workflow-profile ${PROFILE}
+  ;;
+conda-create-envs-only)
+  echo "Running snakemake --conda-create-envs-only"
+  snakemake --conda-create-envs-only --workflow-profile ${PROFILE}
   ;;
 target-rule)
   echo "Dry-run on local reads using a ${SOURCE} assembly..."
@@ -108,7 +111,7 @@ sra-reads)
   ;;
 *)
   echo "Invalid task provided: $TASK"
-  echo "Usage: $0 {lint|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
+  echo "Usage: $0 {lint|conda-create-envs-only|target-rule|local-reads-refseq|local-reads-ensembl|sra-reads}"
   exit 1
   ;;
 esac
