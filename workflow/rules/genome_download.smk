@@ -116,7 +116,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
         shell:
             """
             (mkdir -p resources/datasets && \
-            7z x {input} -oresources/datasets && \
+            7z x {input} -oresources/datasets -y && \
             echo "Directory structure in resources/datasets:" && \
             ls -laR resources/datasets) &> {log}
             """
