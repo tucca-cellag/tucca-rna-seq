@@ -2,6 +2,7 @@
 # Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
+__use_yte__: true
 executor: slurm
 use-singularity: true
 use-conda: true
@@ -19,7 +20,7 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  slurm_extra: '"--mail-type={config[email][mail_type]} --mail-user={config[email][user]}"'
+  slurm_extra: '"--mail-type=?config[email][mail_type] --mail-user=?config[email][user]"'
 
 set-resources:
   star_index:
