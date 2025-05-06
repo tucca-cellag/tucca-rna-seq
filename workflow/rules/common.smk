@@ -20,7 +20,7 @@ class Wildcard(Protocol):
 ####### load config and sample sheets #######
 
 
-validate(config, schema=f"../schemas/config.schema.yaml")
+validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
