@@ -20,6 +20,7 @@ class Wildcard(Protocol):
 ####### load config and sample sheets #######
 
 
+# TODO: Determine why the following line triggers a linting error
 validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
