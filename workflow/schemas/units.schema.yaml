@@ -42,25 +42,25 @@ properties:
 required:
   - sample_name
   - unit_name
-# TODO: Make sure this logic is row-wise not sheet-wise
-#allOf:
-#  - if:
-#      properties:
-#        sra:
-#          pattern: "^SRR[0-9]+$"
-#    then:
-#      properties:
-#        fq1:
-#          enum: [""]
-#        fq2:
-#          enum: [""]
-#  - if:
-#      properties:
-#        fq1:
-#          pattern: "^+$"
-#        fq2:
-#          pattern: "^+$"
-#    then:
-#      properties:
-#        sra:
-#          enum: [""]
+# TODO: Make sure the following logic is row-wise not sheet-wise
+oneOf:
+  - if:
+      properties:
+        sra:
+          pattern: "^SRR[0-9]+$"
+    then:
+      properties:
+        fq1:
+          enum: [""]
+        fq2:
+          enum: [""]
+  - if:
+      properties:
+        fq1:
+          pattern: "^+$"
+        fq2:
+          pattern: "^+$"
+    then:
+      properties:
+        sra:
+          enum: [""]
