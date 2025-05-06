@@ -16,8 +16,7 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  # TODO Set email to be configurable in config/config.yaml
-  slurm_extra: '"--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"'
+  slurm_extra: '"--mail-type={config[email][mail_type]} --mail-user={config[email][user]}"'
 
 set-resources:
   star_index:
