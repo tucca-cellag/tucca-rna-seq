@@ -60,7 +60,7 @@ case $TASK in
 lint)
   echo "Running Snakemake lint..."
   # The --lint flag will check for problems in your Snakefile.
-  snakemake --lint --profile ${PROFILE}
+  snakemake --lint --workflow-profile ${PROFILE}
   ;;
 target-rule)
   echo "Dry-run on local reads using a ${SOURCE} assembly..."
