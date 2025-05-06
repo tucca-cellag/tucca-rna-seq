@@ -46,21 +46,21 @@ required:
 oneOf:
   - if:
       properties:
+        fq1:
+          enum: [""]
+        fq2:
+          enum: [""]
+    then:
+      properties:
         sra:
           pattern: "^SRR[0-9]+$"
-    then:
-      properties:
-        fq1:
-          enum: [""]
-        fq2:
-          enum: [""]
   - if:
-      properties:
-        fq1:
-          pattern: "^*$"
-        fq2:
-          pattern: "^*$"
-    then:
       properties:
         sra:
           enum: [""]
+    then:
+      properties:
+        fq1:
+          pattern: "^*$"
+        fq2:
+          pattern: "^*$"
