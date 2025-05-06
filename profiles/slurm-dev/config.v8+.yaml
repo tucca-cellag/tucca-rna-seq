@@ -1,4 +1,4 @@
-# profiles/slurm-dev.config.v8+.yaml
+# profiles/slurm-dev/config.v8+.yaml
 # Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
