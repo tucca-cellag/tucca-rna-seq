@@ -42,25 +42,24 @@ properties:
 required:
   - sample_name
   - unit_name
-
-oneOf:
-  - if:
-      properties:
-        fq1:
-          enum: [""]
-        fq2:
-          enum: [""]
-    then:
-      properties:
-        sra:
-          pattern: "^SRR[0-9]+$"
-  - if:
-      properties:
-        sra:
-          enum: [""]
-    then:
-      properties:
-        fq1:
-          pattern: "^*$"
-        fq2:
-          pattern: "^*$"
+# oneOf:
+#   - if:
+#       properties:
+#         fq1:
+#           enum: [""]
+#         fq2:
+#           enum: [""]
+#     then:
+#       properties:
+#         sra:
+#           pattern: "^SRR[0-9]+$"
+#   - if:
+#       properties:
+#         sra:
+#           enum: [""]
+#     then:
+#       properties:
+#         fq1:
+#           pattern: "^*$"
+#         fq2:
+#           pattern: "^*$"
