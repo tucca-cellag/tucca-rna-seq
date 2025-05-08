@@ -21,7 +21,7 @@ class Wildcard(Protocol):
 
 
 # TODO: Determine why the following line triggers a linting error
-validate(config, schema="../schemas/config.schema.yaml")
+validate(config, schema=workflow.source_path("schemas/config.schema.yaml"))
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
