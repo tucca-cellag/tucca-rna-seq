@@ -16,7 +16,7 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  slurm_extra: '"--mail-type={config[email][mail_type]} --mail-user={config[email][user]}"'
+  slurm_extra: '"--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"'
 
 set-resources:
   star_index:
