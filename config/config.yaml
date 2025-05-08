@@ -16,20 +16,6 @@
 # ----------------------------------------------------------
 
 # ----------------------------------------------------------
-# Email configuration for use ONLY with --workflow-profile profiles/slurm or
-# profiles/slurm-dev when running the workflow on the Tufts HPC Cluster.
-# TODO: change profiles/slurm to profiles/tufts for clarity
-#
-# If you are NOT running the workflow on the Tufts HPC Cluster, you will not
-# need to set this, unless you set up an alternative profile for another
-# deployment method (a different HPC Cluster, GitHub Actions, Kubernetes, etc.)
-# that utilizes these configurations
-# ----------------------------------------------------------
-email:
-  mail_type: "ALL"
-  user: "benjamin.bromberg@tufts.edu"
-
-# ----------------------------------------------------------
 # Genome Section
 #
 # This section defines the reference genome parameters
