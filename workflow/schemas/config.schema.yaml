@@ -23,7 +23,7 @@ properties:
         type: string
       species:
         type: string
-        pattern: "^[A-Z][a-z]+_[a-z]+(?:_[a-z]+)?$"
+        pattern: "^[A-Z][a-z]*_[a-z]*(?:_[a-z]*)?$"
       custom_files:
         type: object
         properties:
@@ -48,7 +48,7 @@ properties:
               enum: [""]
               description: "Please leave release as an empty string as it is not required for RefSeq assemblies"
             accession:
-              pattern: "^GCF_[0-9]+.[0-9]+$"
+              pattern: "^GCF_[0-9]*.[0-9]*$"
               description: "RefSeq assembly accessions are of the pattern "
       - if:
           properties:
@@ -57,8 +57,8 @@ properties:
         then:
           properties:
             accession:
-              pattern: "^GCA_[0-9]+.[0-9]+$"
-              description: "Ensembl and GENCODE assembly accessions are of the pattern ^GCA_[0-9]+.[0-9]+$"
+              pattern: "^GCA_[0-9]*.[0-9]*$"
+              description: "Ensembl and GENCODE assembly accessions are of the pattern ^GCA_[0-9]*.[0-9]*$"
           required:
             - release
 
