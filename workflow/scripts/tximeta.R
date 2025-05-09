@@ -33,7 +33,7 @@ extra <- snakemake@params[["extra"]]
 if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- TRUE
 } else {
-  skipSeqinfo <- TRUE
+  skipSeqinfo <- FALSE
 }
 
 # Create summarized experiment using tximeta
