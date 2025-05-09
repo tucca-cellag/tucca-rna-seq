@@ -30,6 +30,7 @@ files
 coldata <- data.frame(files, names)
 coldata
 
+sample_names <- snakemake@params[["sample_names"]]
 extra <- snakemake@params[["extra"]]
 
 if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
