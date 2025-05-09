@@ -50,6 +50,7 @@ rule tximeta:
         gse="resources/tximeta/tximeta_gse.RDS",
         image="resources/tximeta/.RData",
     params:
+        sample_names=samples.index.unique().tolist(),
         extra=config["params"]["tximeta"]["extra"],
     conda:
         "../envs/tximeta.yaml"
