@@ -48,6 +48,7 @@ rule tximeta:
     output:
         se="resources/tximeta/tximeta_se.RDS",
         gse="resources/tximeta/tximeta_gse.RDS",
+        image="resources/tximeta/.RData",
     params:
         extra=config["params"]["tximeta"]["extra"],
     conda:

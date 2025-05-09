@@ -25,6 +25,8 @@ files <- snakemake@input[["quant"]]
 files
 names <- basename(dirname(files))
 names
+names(files) <- names
+files
 coldata <- data.frame(files, names)
 coldata
 
@@ -59,3 +61,5 @@ class(db)
 
 saveRDS(se, file = snakemake@output[["se"]])
 saveRDS(gse, file = snakemake@output[["gse"]])
+
+save.image(file = snakemake@output[["image"]])
