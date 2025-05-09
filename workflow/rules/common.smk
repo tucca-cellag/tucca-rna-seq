@@ -13,7 +13,7 @@ import re
 # them to have attributes: sample, unit, and read.
 class Wildcard(Protocol):
     sample: str
-    unit: str
+    sample_unit: str
     read: str
 
 
@@ -21,7 +21,7 @@ class Wildcard(Protocol):
 
 
 # TODO: Determine why the following line triggers a linting error
-validate(config, schema=workflow.source_path("../schemas/config.schema.yaml"))
+validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
 samples["sample_name"] = samples["sample_name"].str.strip()
@@ -50,17 +50,17 @@ wildcard_constraints:
     # Constrain the 'sample' wildcard to match any of the sample names listed
     # in the 'samples' DataFrame.
     # This ensures that the 'sample' wildcard can only take values from the
-    # specified sample names.
-    #sample="|".join(re.escape(s) for s in samples.index.unique()),
-    # Constrain the 'unit' wildcard to match any of the unit names listed in the
-    # 'units' DataFrame.
-    # This ensures that the 'unit' wildcard can only take values from the
-    # specified unit names.
-    # Escape each unit name to avoid regex meta-character issues.
+    # specified sample names provided in `samples.tsv`.
+    sample="|".join(re.escape(s) for s in samples.index.unique()),
+    # Constrain the 'sample_unit' wildcard to match any of the sample_unit
+    # names listed in the 'units' DataFrame.
+    # This ensures that the 'sample_unit' wildcard can only take values
+    # from the specified sample-unit combinations provided in `units.tsv`
     sample_unit="|".join(re.escape(u) for u in units.index.unique()),
-    # Constrain the 'read' wildcard to match either "R1" or "R2".
-    # This ensures that the 'read' wildcard can only take the values "R1" or
-    # "R2", representing the read direction in paired-end sequencing.
+    # Constrain the 'read' wildcard to "R1" or "R2"
+    # The 'read' wildcard is only able to take these values as they represent
+    # the two possible read directions in paired-end sequencing (forward and
+    # reverse, respectively).
     read="R1|R2",
 
 
