@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 # added instead of forcing "LocalEnsembl" and "LocalGENCODE" the logic in
 # this script will need to be refactored to work with EnsDb objects
 # See: https://github.com/thelovelab/tximeta/blob/devel/R/tximeta.R
-# Specifically getTxDb() call and definition
+# specifically getTxDb() call and definition
 tximeta::loadLinkedTxome(snakemake@input[["linkedTxome"]])
 
 # Create coldata
@@ -30,8 +30,20 @@ coldata
 
 extra <- snakemake@params[["extra"]]
 
+if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
+  skipSeqinfo <- TRUE
+} else {
+  skipSeqinfo <- TRUE
+}
+
 # Create summarized experiment using tximeta
-se <- tximeta(coldata)
+se <- tximeta(coldata,
+  skipSeqinfo = skipSeqinfo
+  # TODO: skipSeqinfo = FALSE triggers gtf2RefSeq() which errors out due to
+  # an incorrectly formatted assembly_report.txt. Might be impossible to fix
+  # without using a different download service for the RefSeq data or tximeta
+  # is outdated in how it deals with RefSeq inputs wrt skipSeqinfo
+)
 
 ## Summarize to gene level
 gse <- summarizeToGene(
