@@ -20,18 +20,19 @@ suppressPackageStartupMessages({
 # specifically getTxDb() call and definition
 tximeta::loadLinkedTxome(snakemake@input[["linkedTxome"]])
 
-# Create coldata
-files <- snakemake@input[["quant"]]
-files
-names <- basename(dirname(files))
-names
-names(files) <- names
-files
-coldata <- data.frame(files, names)
+# load required metadata dependencies
+sample_names <- snakemake@params[["sample_names"]]
+samples <- read.delim(snakemake@config$samples)
+units <- read.delim(snakemake@config$units)
+
+# create coldata
+coldata <- left_join(samples, units, by = "sample_name") %>%
+  mutate(names = paste(sample_name, unit_name, sep = "_")) %>%
+  mutate(files = paste0("results/salmon/", names, "/quant.sf")) %>%
+  select(names, sample_name, unit_name, everything(), -sra, -fq1, -fq2)
+rownames(coldata) <- coldata$names
 coldata
 
-sample_names <- snakemake@params[["sample_names"]]
-extra <- snakemake@params[["extra"]]
 
 if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- TRUE
@@ -39,13 +40,16 @@ if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- FALSE
 }
 
+extra <- snakemake@params[["tximeta_extra"]]
+
 # Create summarized experiment using tximeta
 se <- tximeta(coldata,
-  skipSeqinfo = skipSeqinfo
+  skipSeqinfo = skipSeqinfo,
   # TODO: skipSeqinfo = FALSE triggers gtf2RefSeq() which errors out due to
   # an incorrectly formatted assembly_report.txt. Might be impossible to fix
   # without using a different download service for the RefSeq data or tximeta
   # is outdated in how it deals with RefSeq inputs wrt skipSeqinfo
+  extra
 )
 
 ## Summarize to gene level
