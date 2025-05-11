@@ -1,4 +1,4 @@
-sample_name	treatment	treatment	replicate_num	sequencing_batch
+sample_name	treatment1	treatment2	replicate_num	sequencing_batch
 etoh60_1	treated	untreated	1	1
 etoh60_2	treated	untreated	2	1
 etoh60_3	treated	untreated	3	1
