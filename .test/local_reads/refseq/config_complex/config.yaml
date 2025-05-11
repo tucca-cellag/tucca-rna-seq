@@ -1,12 +1,12 @@
-# .test/singularity/local_reads/config/config.yaml
+# .test/local_reads/refseq/config_complex/config.yaml
 
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: ".test/singularity/local_reads_ensembl/config/samples.tsv"
+samples: ".test/local_reads/refseq/config_complex/samples.tsv"
 
 # Path to your sequencing UNIT SHEET which keeps track of your technical
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
-units: ".test/singularity/local_reads_ensembl/config/units.tsv"
+units: ".test/local_reads/refseq/config_complex/units.tsv"
 
 # ----------------------------------------------------------
 # Genome Section
@@ -29,8 +29,7 @@ units: ".test/singularity/local_reads_ensembl/config/units.tsv"
 #
 # ----------------------------------------------------------
 ref_assembly:
-  source: "Ensembl"
-  accession: "GCA_000146045.2"
-  name: "R64-1-1"
-  release: "113"
+  source: "RefSeq"
+  accession: "GCF_000146045.2"
+  name: "R64"
   species: "Saccharomyces_cerevisiae"

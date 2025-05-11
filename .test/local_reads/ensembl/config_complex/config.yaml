@@ -1,0 +1,36 @@
+# .test/local_reads/ensembl/config_complex/config.yaml
+
+# Path to your SAMPLE SHEET which keeps track of your biological replicates
+samples: ".test/local_reads/ensembl/config_complex/samples.tsv"
+
+# Path to your sequencing UNIT SHEET which keeps track of your technical
+# replicates (e.g. sequencer lanes or resequencing of the same biological
+# sample)
+units: ".test/local_reads/ensembl/config_complex/units.tsv"
+
+# ----------------------------------------------------------
+# Genome Section
+#
+# This section defines the reference genome parameters.
+# - assembly_source: Specify either "RefSeq", "LocalEnsembl", or "LocalGENCODE"
+#     • RefSeq info: https://www.ncbi.nlm.nih.gov/refseq/about/
+#     • Ensembl info: https://ensembl.org/info/genome/genebuild/assembly.html
+#     • Comparison: https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_the_difference_between_1
+#     • GENCODE info: https://www.gencodegenes.org/pages/gencode.html
+#
+# - assembly_accession: The genome’s GenBank or RefSeq accession number.
+#     (See: https://www.ncbi.nlm.nih.gov/datasets/genome/)
+#
+# - assembly_name: The name assigned to the genome assembly.
+#
+# - assembly_release: The release of the Ensembl or GENCODE assembly (not required for RefSeq assemblies)
+#
+# - assembly_species: Scientific name in the format "Genus_species" (e.g., "Gallus_gallus").
+#
+# ----------------------------------------------------------
+ref_assembly:
+  source: "Ensembl"
+  accession: "GCA_000146045.2"
+  name: "R64-1-1"
+  release: "113"
+  species: "Saccharomyces_cerevisiae"

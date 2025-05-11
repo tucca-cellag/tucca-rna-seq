@@ -1,0 +1,4 @@
+sample_name	unit_name	sra	fq1	fq2
+A_Sc	lane1		.test/data/ngs-test-data/reads/a.scerevisiae.1.fq	.test/data/ngs-test-data/reads/a.scerevisiae.2.fq
+A_Sc	lane2		.test/data/ngs-test-data/reads/a.scerevisiae.1.fq	.test/data/ngs-test-data/reads/a.scerevisiae.2.fq
+B_Sc	lane1		.test/data/ngs-test-data/reads/b.scerevisiae.1.fq	.test/data/ngs-test-data/reads/b.scerevisiae.2.fq
