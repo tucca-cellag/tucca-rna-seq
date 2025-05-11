@@ -146,12 +146,12 @@ test)
 
   echo "Dry-run for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config..."
   if snakemake ${SMK_TARGET} -np --workflow-profile ${PROFILE} \
-    --configfile ".test/singularity/local_reads_${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
+    --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
     echo "The dry-run for target '${SMK_TARGET}' on '${SOURCE}' assembly with '${CONFIG_SUBDIR}' was successful."
     echo "Running Snakemake workflow for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config..."
     snakemake ${SMK_TARGET} --workflow-profile ${PROFILE} \
-      --configfile ".test/singularity/local_reads_${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
+      --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
       --config api_keys="{\"ncbi\": \"${API_KEY}\"}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
   else
     DRY_RUN_EXIT_CODE=$?
