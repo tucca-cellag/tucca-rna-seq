@@ -33,7 +33,6 @@ coldata <- left_join(samples, units, by = "sample_name") %>%
 rownames(coldata) <- coldata$names
 coldata
 
-
 if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- TRUE
 } else {
