@@ -55,6 +55,27 @@ api_keys:
 # Differential Expression Section:
 # ----------------------------------------------------------
 diffexp:
+  deseq2:
+    deseqdataset:
+      formula: "" # Ensure factors are column names in config/samples.tsv
+      factor: ""
+      reference_level: ""
+      tested_level: ""
+      min_counts: 10
+      extra: ""
+      threads: 1
+    wald:
+      deseq_extra: ""
+      shrink_extra: "type = 'apeglm'"
+      results_extra: ""
+      contrast: ["treatment1", "treated", "untreated"]
+      treatment2_vs_untreated: ["treatment2", "treated", "untreated"]
+      threads: 1
+
+  # For min_counts
+  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
+  # Alternatively rely on results()
+  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
 
 # ----------------------------------------------------------
 # Differential Expression Section:
