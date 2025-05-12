@@ -68,7 +68,7 @@ diffexp:
       deseq_extra: ""
       shrink_extra: "type = 'apeglm'"
       results_extra: ""
-      contrast: ["treatment1", "treated", "untreated"]
+      contrast: ""
       treatment2_vs_untreated: ["treatment2", "treated", "untreated"]
       threads: 1
 
