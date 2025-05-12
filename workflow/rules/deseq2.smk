@@ -26,7 +26,7 @@ rule deseq2_wald:
     output:
         wald_rds="resources/deseq2/wald.RDS",
         wald_tsv="resources/deseq2/dge.tsv",
-        deseq2_result_dir=directory("results/deseq2")
+        deseq2_result_dir=directory("results/deseq2"),
         normalized_counts_table="resources/deseq2/counts.tsv",
         normalized_counts_rds="resources/deseq2/counts.RDS",
     params:
