@@ -20,7 +20,7 @@ rule DESeqDataSet_from_ranged_se:
 
 
 # Rule 2: Run DESeq2 Wald test for each specified contrast using the snakemake-wrapper
-rule deseq2_wald_per_contrast:
+rule deseq2_wald:
     input:
         dds="resources/deseq2/dds.RDS",  # Output from deseqdataset_from_se rule
     output:
