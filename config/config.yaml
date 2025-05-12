@@ -57,7 +57,7 @@ api_keys:
 diffexp:
   deseq2:
     deseqdataset:
-      formula: "" # Ensure factors are column names in config/samples.tsv
+      formula: "~ treatment1" # Ensure factors are column names in config/samples.tsv
       factor: ""
       reference_level: ""
       tested_level: ""
