@@ -58,9 +58,9 @@ diffexp:
   deseq2:
     deseqdataset:
       formula: "~ treatment1" # Ensure factors are column names in config/samples.tsv
-      factor: ""
-      reference_level: ""
-      tested_level: ""
+      factor: "treatment1"
+      reference_level: "treated"
+      tested_level: "untreated"
       min_counts: 10
       extra: ""
       threads: 1
