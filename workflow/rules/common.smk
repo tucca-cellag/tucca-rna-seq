@@ -55,7 +55,11 @@ units = pd.read_csv(
 units["sample_name"] = units["sample_name"].str.strip()
 units["unit_name"] = units["unit_name"].str.strip()
 # Create a combined sample_unit index for units
-units["sample_unit"] = f"{units['sample_name']}_{units['unit_name']}"
+# BUG: Avoiding simple row-wise concatenation using the + operator due to a
+# strange linting issue (arose at commit 1b5f2c3)
+units["sample_unit"] = (
+    units["sample_name"].astype(str).str.cat(units["unit_name"].astype(str), sep="_")
+)
 units = units.set_index(["sample_unit"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 
