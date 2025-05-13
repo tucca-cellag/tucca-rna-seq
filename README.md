@@ -1,5 +1,5 @@
 <div align="left">
-  <img width="30%" align="left" src=images/tucca-rna-seq-logo-white.png>
+  <img width="25%" align="left" src=images/tucca-rna-seq-logo-white.png>
 </div>
 
 **`tucca-cellag/tucca-rna-seq`** is the
@@ -43,9 +43,8 @@ we're missing (in the workflow or in our documentatio) please
 
 <div align="center">
   <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow-no-logo.png" width="700">
+  <p>Created in [https://BioRender.com](https://BioRender.com)</p>
 </div>
-
-Created in [https://BioRender.com](https://BioRender.com)
 
 ## How do I get help?
 
