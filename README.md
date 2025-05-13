@@ -43,7 +43,7 @@ we're missing (in the workflow or in our documentatio) please
 
 <div align="center">
   <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow-no-logo.png" width="700">
-  <p>Created in [https://BioRender.com](https://BioRender.com)</p>
+  <p>Created in <a href="https://BioRender.com">https://BioRender.com</a></p>
 </div>
 
 ## How do I get help?
