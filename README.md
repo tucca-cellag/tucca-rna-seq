@@ -4,18 +4,18 @@
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049)](https://snakemake.github.io)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
-[![run with singularity](https://img.shields.io/badge/run%20with-singularity_≥3.8.4-1d355c?labelColor=000000)](https://sylabs.io/docs/)
-[![run with apptainer](https://img.shields.io/badge/run%20with-apptainer-1d355c?labelColor=000000)](https://apptainer.org/)
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity_≥3.8.4-1d355c)](https://sylabs.io/docs/)
+[![run with apptainer](https://img.shields.io/badge/run%20with-apptainer-1d355c)](https://apptainer.org/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/tucca-cellag/tucca-rna-seq/actions)
 [![GitHub actions status](https://github.com/tucca-cellag/tucca-rna-seq/workflows/Tests/badge.svg?branch=main)](https://github.com/tucca-cellag/tucca-rna-seq/actions?query=branch%3Amain+workflow%3ATests)
-[![GitHub license](https://img.shields.io/github/license/tucca-cellag/tucca-rna-seq?color=orange&labelColor=000000)](https://github.com/tucca-cellag/tucca-rna-seq/blob/main/LICENSE)
-[![Docusaurus](https://img.shields.io/badge/tucca--cellag.github.io-3EB049?logo=docusaurus&label=Docusaurus&labelColor=000000)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
-[![Issues](https://img.shields.io/github/issues/tucca-cellag/tucca-rna-seq?style=flat&label=issues&labelColor=000000&color=3EB049)](https://github.com/tucca-cellag/tucca-rna-seq/issues)
-[![Open Issues](https://img.shields.io/badge/GitHub-Open%20Issue-blue?logo=github&labelColor=000000)](https://github.com/tucca-cellag/tucca-rna-seq/issues/new)
-[![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about&labelColor=000000)](https://cellularagriculture.tufts.edu/)
-[![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&labelColor=000000&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
-[![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&labelColor=000000&logo=x)](https://twitter.com/tuftscellag)
-[![Connect on LindedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&labelColor=000000&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
+[![GitHub license](https://img.shields.io/github/license/tucca-cellag/tucca-rna-seq?color=orange)](https://github.com/tucca-cellag/tucca-rna-seq/blob/main/LICENSE)
+[![Docusaurus](https://img.shields.io/badge/tucca--cellag.github.io-3EB049?logo=docusaurus&label=Docusaurus)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+[![Issues](https://img.shields.io/github/issues/tucca-cellag/tucca-rna-seq?style=flat&label=issues&color=3EB049)](https://github.com/tucca-cellag/tucca-rna-seq/issues)
+[![Open Issues](https://img.shields.io/badge/GitHub-Open%20Issue-blue?logo=github)](https://github.com/tucca-cellag/tucca-rna-seq/issues/new)
+[![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about)](https://cellularagriculture.tufts.edu/)
+[![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
+[![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
+[![Connect on LindedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
 This workflow is the
 [Tufts University Center for Cellular Agriculture's (TUCCA)][1] RNA-Seq
