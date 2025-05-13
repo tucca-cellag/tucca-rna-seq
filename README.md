@@ -2,7 +2,7 @@
 
 ## `THIS WORKFLOW IS STILL UNDER CONSTRUCTION!`
 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049?labelColor=000000)](https://snakemake.github.io)
+[![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049)](https://snakemake.github.io)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity_≥3.8.4-1d355c?labelColor=000000)](https://sylabs.io/docs/)
 [![run with apptainer](https://img.shields.io/badge/run%20with-apptainer-1d355c?labelColor=000000)](https://apptainer.org/)
