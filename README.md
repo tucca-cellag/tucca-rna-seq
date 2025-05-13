@@ -1,6 +1,10 @@
-|||
-|:-|:-|
-|<div style="background-color: white; display: inline-block; padding: 10px; vertical-align: top;"> <img style="width: 100%; display: block;" src="images/tucca-rna-seq-logo.png" alt="Logo"> </div> | **`tucca-cellag/tucca-rna-seq`** is the [Tufts University Center for Cellular Agriculture's (TUCCA)][1] RNA-Seq workflow specifically designed for cellular agriculture projects. This workflow was developed using the [Snakemake][1.5] workflow management system. `tucca-rna-seq` is a standardized usage Snakemake workflow that follows the [best practices][2.5] laid out in the Snakemake documentation (as of Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3]. |
+<div style="text-align: left;">
+  <div style="background-color: white; display: inline-block; padding: 10px; vertical-align: top;">
+    <img style="width: 20%; display: block;" src="images/tucca-rna-seq-logo.png" alt="Description of image">
+  </div>
+</div>
+
+**`tucca-cellag/tucca-rna-seq`** is the [Tufts University Center for Cellular Agriculture's (TUCCA)][1] RNA-Seq workflow specifically designed for cellular agriculture projects. This workflow was developed using the [Snakemake][1.5] workflow management system. `tucca-rna-seq` is a standardized usage Snakemake workflow that follows the [best practices][2.5] laid out in the Snakemake documentation (as of Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049)](https://snakemake.github.io)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
