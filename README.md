@@ -1,47 +1,44 @@
 # Snakemake workflow: `tucca-rna-seq`
 
-# `THIS REPO IS STILL UNDER CONSTRUCTION AND DOES NOT REPRESENT A COMPLETED PIPELINE`
+## `THIS WORKFLOW IS STILL UNDER CONSTRUCTION!`
 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-brightgreen.svg)](https://snakemake.github.io)
-[![Singularity](https://img.shields.io/badge/singularity-≥3.8.4-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub license](https://img.shields.io/github/license/tucca-cellag/tucca-rna-seq?color=orange)](https://github.com/tucca-cellag/tucca-rna-seq/blob/main/LICENSE)
-[![tucca-rna-seq docs](https://img.shields.io/badge/documentation-tucca--rna--seq_docs-blue)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+[![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049?labelColor=000000)](https://snakemake.github.io)
+[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity_≥3.8.4-1d355c?labelColor=000000)](https://sylabs.io/docs/)
+[![run with apptainer](https://img.shields.io/badge/run%20with-apptainer-1d355c?labelColor=000000)](https://apptainer.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/tucca-cellag/tucca-rna-seq/actions)
 [![GitHub actions status](https://github.com/tucca-cellag/tucca-rna-seq/workflows/Tests/badge.svg?branch=main)](https://github.com/tucca-cellag/tucca-rna-seq/actions?query=branch%3Amain+workflow%3ATests)
+[![GitHub license](https://img.shields.io/github/license/tucca-cellag/tucca-rna-seq?color=orange&labelColor=000000)](https://github.com/tucca-cellag/tucca-rna-seq/blob/main/LICENSE)
+[![Docusaurus](https://img.shields.io/badge/tucca--cellag.github.io-3EB049?logo=docusaurus&label=Docusaurus&labelColor=000000)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+[![Issues](https://img.shields.io/github/issues/tucca-cellag/tucca-rna-seq?style=flat&label=issues&labelColor=000000&color=3EB049)](https://github.com/tucca-cellag/tucca-rna-seq/issues)
+[![Open Issues](https://img.shields.io/badge/GitHub-Open%20Issue-blue?logo=github&labelColor=000000)](https://github.com/tucca-cellag/tucca-rna-seq/issues/new)
+[![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about&labelColor=000000)](https://cellularagriculture.tufts.edu/)
+[![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&labelColor=000000&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
+[![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&labelColor=000000&logo=x)](https://twitter.com/tuftscellag)
+[![Connect on LindedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&labelColor=000000&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
 This workflow is the
-[Tufts University Center for Cellular Agriculture's (TUCCA)](https://cellularagriculture.tufts.edu/) RNA-Seq Snakemake
-Workflow for Cellular Agriculture Projects.
+[Tufts University Center for Cellular Agriculture's (TUCCA)][1] RNA-Seq
+Snakemake Workflow for Cellular Agriculture Projects.
 
-The usage of this workflow is described in our documentation at [TUCCA's Bioinformatics Docs for tucca-rna-seq](https://tucca-cellag.github.io/tucca-rna-seq/introduction).
+The usage of this workflow is described in our documentation at
+[tucca-cellag.github.io][2].
 
-This workflow is a standardized usage Snakemake workflow and can be found in
-the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html).
+This workflow is a standardized usage Snakemake workflow that follows the
+[best practices][2.5] laid out in the Snakemake documentation (as of v9.3).
+This workflow can also be found in the [Snakemake Workflow Catalog][3].
 
 If you use this workflow in a paper, don't forget to give credits to the authors
 by citing the URL of this (original) repository and its DOI (above if
 available).
 
-## What is Cellular Agriculture? 🧬🌱
+## Introduction
 
-**Cellular Agriculture** is a cutting-edge field that harnesses biotechnology
-to produce agricultural products directly from cells. Unlike traditional
-farming, which relies on raising and harvesting whole organisms, cellular
-agriculture focuses on cultivating animal cells in controlled environments to
-create sustainable alternatives for meat, dairy, and other animal-derived
-products.
-
-### **Why Cellular Agriculture Matters**
-
-- **Sustainability 🌍:** Reduces the environmental impact associated with
-  conventional agriculture, including lower greenhouse gas emissions, reduced
-  land and water usage, and minimized waste production.
-- **Ethical Considerations 🐮❤️:** Offers humane alternatives by eliminating the
-  need for animal slaughter, addressing animal welfare concerns.
-- **Food Security 🍽️:** Enhances the ability to produce food in areas with
-  limited agricultural resources, contributing to global food security.
-- **Innovation and Research 🔬:** Drives advancements in biotechnology,
-  genetics, and bioinformatics, fostering interdisciplinary collaboration and
-  novel scientific discoveries.
+<h1>
+  <picture>
+    <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow.png" width="900">
+  </picture>
+</h1>
 
 ## About the Workflow
 
@@ -102,15 +99,39 @@ By integrating these powerful tools into a cohesive workflow,
 data analysis needs, allowing you to focus on deriving meaningful biological
 insights 🧠 without getting bogged down by technical complexities ⚙️.
 
-## Connect With Us
+## How do I get help?
 
-We're here to help! If you have questions, feedback, or need assistance, feel
-free to reach out through our social channels:
+We're here to help! Please check out our detailed documentation at
+[tucca-cellag.github.io][2] and check out [previous issues opened][4] by other
+users. If you have additional believe you've found a bug, or there is a feature
+that we're missing, lease feel free to [open an issue][5]. You can always reach
+out to us through our social channels.
 
-- [Tufts University Center for Cellular Agriculture](https://cellularagriculture.tufts.edu/)
-- [TUCCA on LinkedIn](https://www.linkedin.com/company/tufts-cell-ag/)
-- [TUCCA on X](https://twitter.com/tuftscellag)
-- [TUCCA on YouTube](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
+## What is Cellular Agriculture? 🧬🌱
 
-Alternatively, visit our [GitHub Repository](https://github.com/tucca-cellag)
-to explore more of TUCCA's computational projects.
+**Cellular Agriculture** is a cutting-edge field that harnesses biotechnology
+to produce agricultural products directly from cells. Unlike traditional
+farming, which relies on raising and harvesting whole organisms, cellular
+agriculture focuses on cultivating animal cells in controlled environments to
+create sustainable alternatives for meat, dairy, and other animal-derived
+products.
+
+### **Why Cellular Agriculture Matters**
+
+- **Sustainability 🌍:** Reduces the environmental impact associated with
+  conventional agriculture, including lower greenhouse gas emissions, reduced
+  land and water usage, and minimized waste production.
+- **Ethical Considerations 🐮❤️:** Offers humane alternatives by eliminating the
+  need for animal slaughter, addressing animal welfare concerns.
+- **Food Security 🍽️:** Enhances the ability to produce food in areas with
+  limited agricultural resources, contributing to global food security.
+- **Innovation and Research 🔬:** Drives advancements in biotechnology,
+  genetics, and bioinformatics, fostering interdisciplinary collaboration and
+  novel scientific discoveries.
+
+[1]: https://cellularagriculture.tufts.edu/
+[2]: https://tucca-cellag.github.io/tucca-rna-seq/introduction
+[2.5]: https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html
+[3]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html
+[4]: https://github.com/tucca-cellag/tucca-rna-seq/issues
+[5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new
