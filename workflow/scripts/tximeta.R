@@ -31,7 +31,47 @@ coldata <- left_join(samples, units, by = "sample_name") %>%
   mutate(files = paste0("results/salmon/", names, "/quant.sf")) %>%
   select(names, sample_name, unit_name, everything(), -sra, -fq1, -fq2)
 rownames(coldata) <- coldata$names
-coldata
+
+factor_specs_list <- snakemake@params[["factors"]]
+
+# Factorize columns and set reference levels
+if (!is.null(factor_specs_list) && length(factor_specs_list) > 0) {
+  for (i in seq_along(factor_specs_list)) {
+    # Get the factor and ref level
+    factor <- factor_specs_list[[i]]
+    factor_name <- factor$name
+    ref_level <- factor$reference_level
+
+    # TODO: These if-else blocks can probably be dealt w/ in the config schema
+    if (factor_name %in% colnames(coldata)) {
+      coldata[[factor_name]] <- as.factor(coldata[[factor_name]])
+
+      if (ref_level %in% levels(coldata[[factor_name]])) {
+        coldata[[factor_name]] <- relevel(
+          coldata[[factor_name]],
+          ref = ref_level
+        )
+        message(paste0(
+          "Column '", factor_name, "' converted to factor with",
+          "reference level '", ref_level, "'."
+        ))
+      } else {
+        warning(paste0(
+          "Reference level '", ref_level, "' not found in column '",
+          factor_name, "'. Using default reference level for this factor."
+        ))
+      }
+    } else {
+      warning(paste0(
+        "Column '", factor_name, "' specified for factorization (in",
+        "specification #", i, ") not found in coldata."
+      ))
+    }
+  }
+}
+
+print("Final coldata structure after factorization:")
+str(coldata)
 
 if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- TRUE

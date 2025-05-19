@@ -51,7 +51,8 @@ rule tximeta:
         image="resources/tximeta/.RData",
     params:
         sample_names=samples.index.unique().tolist(),
-        extra=config["params"]["tximeta"]["extra"],
+        factors=config["diffexp"]["tximeta"]["factors"],
+        extra=config["diffexp"]["tximeta"]["extra"],
     conda:
         "../envs/tximeta.yaml"
     log:

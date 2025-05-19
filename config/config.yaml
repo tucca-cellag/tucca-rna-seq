@@ -55,22 +55,31 @@ api_keys:
 # Differential Expression Section:
 # ----------------------------------------------------------
 diffexp:
+  tximeta:
+    factors:
+      - name: "treatment1"
+        reference_level: "untreated"
+      - name: "treatment2"
+        reference_level: "untreated"
+    extra: ""
   deseq2:
-    deseqdataset:
-      formula: "~ treatment1" # Ensure factors are column names in config/samples.tsv
-      factor: "treatment1"
-      reference_level: "treated"
-      tested_level: "untreated"
-      min_counts: 10
-      extra: ""
-      threads: 1
-    wald:
-      deseq_extra: ""
-      shrink_extra: "type = 'apeglm'"
-      results_extra: ""
-      contrast: ""
-      treatment2_vs_untreated: ["treatment2", "treated", "untreated"]
-      threads: 1
+    analyses:
+      - name: "treatment1+treatment2"
+        deseqdataset:
+          formula: "~ treatment1 + treatment2"
+          min_counts: 10
+          extra: ""
+          threads: 1
+        wald:
+          deseq_extra: ""
+          shrink_extra: "type = 'apeglm'"
+          results_extra: "alpha = 0.005"
+          threads: 1
+        contrasts:
+          - name: "treatment1_treated_vs_untreated"
+            elements: ["treatment1", "treated", "untreated"]
+          - name: "treatment2_treated_vs_untreated"
+            elements: ["treatment2", "treated", "untreated"]
 
   # For min_counts
   # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
@@ -142,5 +151,3 @@ params:
     extra: ""
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
-  tximeta:
-    extra: ""
