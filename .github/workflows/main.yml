@@ -58,7 +58,7 @@ jobs:
         with:
           directory: .
           snakefile: workflow/Snakefile
-          args: --lint
+          args: --lint --verbose
           snakemake-version: ${{ matrix.version.snakemake }}
 
   Snakemake_Env_Init:
@@ -77,7 +77,7 @@ jobs:
             allow_failure: false
           - name: latest
             snakemake: "*"
-            singularity:
+            singularity: # Let singularityhub/install-singularity@main pick latest
             allow_failure: true
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -146,98 +146,6 @@ jobs:
           name: env-init-${{ matrix.version.name }}-logs
           path: logs/
 
-  Generate_Genome:
-    name: Generate SCerevisiae Genome Artifact (using ${{ matrix.version.name }} versions)
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-      - Snakemake_Env_Init
-    strategy:
-      fail-fast: true
-      matrix:
-        version:
-          - name: stable
-            snakemake: 8.27.1
-            singularity: 3.8.4
-            allow_failure: false
-          - name: latest
-            snakemake: "*"
-            singularity:
-            allow_failure: true
-    steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Cache Singularity Images
-        uses: actions/cache@v4
-        with:
-          path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
-          restore-keys: |
-            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
-      - name: Cache Conda Packages
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
-      - name: Cache snakemake Conda Environment
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/miniconda3/envs/snakemake
-          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
-      - name: Install Singularity (specified version)
-        if: ${{ matrix.version.name != 'latest' }}
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: ${{ matrix.version.singularity }}
-      - name: Install Singularity (default latest)
-        if: ${{ matrix.version.name == 'latest' }}
-        uses: singularityhub/install-singularity@main
-      - name: Run datasets_download_genome rule
-        uses: snakemake/snakemake-github-action@v2
-        continue-on-error: ${{ matrix.version.allow_failure }}
-        with:
-          directory: .
-          snakefile: workflow/Snakefile
-          args: >
-            datasets_download_genome --workflow-profile profiles/github-actions
-            --configfile .test/singularity/local_reads/config/config.yaml
-            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
-          show-disk-usage-on-error: true
-          snakemake-version: ${{ matrix.version.snakemake }}
-      - name: Upload Genome Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Sc-genome-artifact-${{ matrix.version.name }}
-          path: ncbi_dataset_*.zip
-      - name: Upload ./logs/
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gen-scerevisiae-genome-${{ matrix.version.name }}-logs
-          path: logs/
-
   Run_Workflow:
     name: Run workflow for ${{ matrix.scenario.name }} (using ${{ matrix.version.name }} versions)
     runs-on: ubuntu-latest
@@ -245,26 +153,36 @@ jobs:
       - Linting
       - Formatting
       - Snakemake_Env_Init
-      - Generate_Genome
     strategy:
       matrix:
         scenario:
-          - name: Local Reads (dryrun)
-            log_name: local-run-dryrun
-            configfile: .test/singularity/local_reads/config/config.yaml
-            extra_args: --dryrun --printshellcmds
-          - name: Local Reads
-            log_name: local-run
-            configfile: .test/singularity/local_reads/config/config.yaml
-            extra_args:
+          # SRA Reads Scenarios (remain unchanged)
           - name: SRA Reads (dryrun)
-            log_name: sra-run-dryrun
-            configfile: .test/singularity/sra_reads/config/config.yaml
+            rules: all
+            configfile: .test/sra_reads/config/config.yaml
             extra_args: --dryrun --printshellcmds
           - name: SRA Reads
-            log_name: sra-run
-            configfile: .test/singularity/sra_reads/config/config.yaml
-            extra_args:
+            rules: all
+            configfile: .test/sra_reads/config/config.yaml
+            extra_args: ""
+          # Local Reads - Ensembl (COMPLEX ONLY)
+          - name: Local Reads (ensembl, complex, dryrun)
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: --dryrun --printshellcmds
+          - name: Local Reads (ensembl, complex)
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+          # Local Reads - RefSeq (COMPLEX ONLY)
+          - name: Local Reads (refseq, complex, dryrun)
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+            extra_args: --dryrun --printshellcmds
+          - name: Local Reads (refseq, complex)
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+            extra_args: ""
         version:
           - name: stable
             snakemake: 8.27.1
@@ -272,7 +190,7 @@ jobs:
             allow_failure: false
           - name: latest
             snakemake: "*"
-            singularity:
+            singularity: # Let singularityhub/install-singularity@main pick latest
             allow_failure: true
     steps:
       - name: Free Disk Space (Ubuntu)
