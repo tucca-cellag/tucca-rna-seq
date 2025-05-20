@@ -5,5 +5,5 @@ channels:
 dependencies:
   - r-base =4.4
   - r-devtools =2.4
-  - r-tidyverse = 2.0
+  - r-tidyverse =2.0
   - bioconductor-tximeta =1.24
