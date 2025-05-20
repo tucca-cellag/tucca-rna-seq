@@ -221,6 +221,28 @@ def get_analysis_config_by_name(wildcards_analysis_name):
     )
 
 
+def get_dds_threads(wildcards: Wildcard):
+    """Returns the thread count for DESeqDataSet rule."""
+    return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["threads"]
+
+
+def get_dds_formula(wildcards: Wildcard):
+    """Returns the formula for DESeqDataSet rule."""
+    return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["formula"]
+
+
+def get_dds_min_counts(wildcards: Wildcard):
+    """Returns the minimum counts for DESeqDataSet rule."""
+    return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"][
+        "min_counts"
+    ]
+
+
+def get_dds_extra(wildcards: Wildcard):
+    """Returns extra parameters for DESeqDataSet rule."""
+    return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["extra"]
+
+
 # Set global variables for deseq2_wald_per_analysis
 DESEQ_ANALYSES_NAMES = [analysis["name"] for analysis in DESEQ_ANALYSES_LIST]
 
@@ -273,6 +295,45 @@ def get_contrast_job_details(wildcards_analysis_name, wildcards_contrast_name):
         f"Details for contrast '{wildcards_contrast_name}' in analysis "
         f"'{wildcards_analysis_name}' not found in CONTRAST_JOBS."
     )
+
+
+def get_wald_threads(wildcards: Wildcard):
+    """Returns the thread count for DESeq2 Wald test rule."""
+    config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "config_index"
+    ]
+    return get_analysis_config_by_index(config_idx)["wald"]["threads"]
+
+
+def get_wald_deseq_extra(wildcards: Wildcard):
+    """Returns DESeq extra parameters for DESeq2 Wald test rule."""
+    config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "config_index"
+    ]
+    return get_analysis_config_by_index(config_idx)["wald"]["deseq_extra"]
+
+
+def get_wald_shrink_extra(wildcards: Wildcard):
+    """Returns shrink extra parameters for DESeq2 Wald test rule."""
+    config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "config_index"
+    ]
+    return get_analysis_config_by_index(config_idx)["wald"]["shrink_extra"]
+
+
+def get_wald_results_extra(wildcards: Wildcard):
+    """Returns results extra parameters for DESeq2 Wald test rule."""
+    config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "config_index"
+    ]
+    return get_analysis_config_by_index(config_idx)["wald"]["results_extra"]
+
+
+def get_wald_contrast_elements(wildcards: Wildcard):
+    """Returns contrast elements for DESeq2 Wald test rule."""
+    return get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "elements"
+    ]
 
 
 ################################################################################

@@ -7,19 +7,11 @@ rule DESeqDataSet_from_ranged_se_per_analysis:
         dds="resources/deseq2/{analysis_name}/dds.RDS",
     log:
         "logs/deseq2/{analysis_name}/DESeqDataSet_se.log",
-    threads: lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"][
-    "threads"
-]
+    threads: get_dds_threads
     params:
-        formula=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)[
-            "deseqdataset"
-        ]["formula"],
-        min_counts=lambda wildcards: get_analysis_config_by_name(
-            wildcards.analysis_name
-        )["deseqdataset"]["min_counts"],
-        extra=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)[
-            "deseqdataset"
-        ]["extra"],
+        formula=get_dds_formula,
+        min_counts=get_dds_min_counts,
+        extra=get_dds_extra,
     wrapper:
         "v6.2.0/bio/deseq2/deseqdataset"
 
@@ -40,32 +32,14 @@ rule deseq2_wald_per_analysis:
         normalized_counts_rds="resources/deseq2/{analysis_name}/{contrast_name}/counts.RDS",
     log:
         "logs/deseq2/{analysis_name}/{contrast_name}/wald.log",
-    threads: lambda wildcards: get_analysis_config_by_index(
-    get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
-        "config_index"
-    ]
-)["wald"]["threads"]
+    threads: get_wald_threads
     params:
         # get user extra parameters from config.yaml
-        deseq_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
-                "config_index"
-            ]
-        )["wald"]["deseq_extra"],
-        shrink_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
-                "config_index"
-            ]
-        )["wald"]["shrink_extra"],
-        results_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
-                "config_index"
-            ]
-        )["wald"]["results_extra"],
+        deseq_extra=get_wald_deseq_extra,
+        shrink_extra=get_wald_shrink_extra,
+        results_extra=get_wald_results_extra,
         # get contrast to be evaluated
-        contrast=lambda wildcards: get_contrast_job_details(
-            wildcards.analysis_name, wildcards.contrast_name
-        )["elements"],
+        contrast=get_wald_contrast_elements,
     wrapper:
         "v6.2.0/bio/deseq2/wald"
 
@@ -78,6 +52,7 @@ rule get_results_from_all_deseq_analyses:
             analysis_name=DESEQ_ANALYSES_NAMES,
         ),
         # Request all Wald test outputs (for each contrast in each analysis)
+        # Use zip to correctly pair analysis_name and contrast_name
         expand(
             [
                 "resources/deseq2/{analysis_name}/{contrast_name}/wald.RDS",
@@ -85,7 +60,7 @@ rule get_results_from_all_deseq_analyses:
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.tsv",
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.RDS",
             ],
-            zip, # Use zip to correctly pair analysis_name and contrast_name
+            zip,
             analysis_name=[job["analysis_name"] for job in CONTRAST_JOBS],
             contrast_name=[job["contrast_name"] for job in CONTRAST_JOBS],
         ),
