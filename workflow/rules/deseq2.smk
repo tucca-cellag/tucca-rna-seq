@@ -7,12 +7,19 @@ rule DESeqDataSet_from_ranged_se_per_analysis:
         dds="resources/deseq2/{analysis_name}/dds.RDS",
     log:
         "logs/deseq2/{analysis_name}/DESeqDataSet_se.log",
-    threads:
-        lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["threads"]
+    threads: lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"][
+    "threads"
+]
     params:
-        formula=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["formula"],
-        min_counts=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["min_counts"],
-        extra=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["extra"],
+        formula=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)[
+            "deseqdataset"
+        ]["formula"],
+        min_counts=lambda wildcards: get_analysis_config_by_name(
+            wildcards.analysis_name
+        )["deseqdataset"]["min_counts"],
+        extra=lambda wildcards: get_analysis_config_by_name(wildcards.analysis_name)[
+            "deseqdataset"
+        ]["extra"],
     wrapper:
         "v6.2.0/bio/deseq2/deseqdataset"
 
@@ -33,28 +40,27 @@ rule deseq2_wald_per_analysis:
         normalized_counts_rds="resources/deseq2/{analysis_name}/{contrast_name}/counts.RDS",
     log:
         "logs/deseq2/{analysis_name}/{contrast_name}/wald.log",
-    threads:
-        lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(
-                wildcards.analysis_name, wildcards.contrast_name
-            )["config_index"]
-        )["wald"]["threads"]
+    threads: lambda wildcards: get_analysis_config_by_index(
+    get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+        "config_index"
+    ]
+)["wald"]["threads"]
     params:
         # get user extra parameters from config.yaml
         deseq_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(
-                wildcards.analysis_name, wildcards.contrast_name
-            )["config_index"]
+            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+                "config_index"
+            ]
         )["wald"]["deseq_extra"],
         shrink_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(
-                wildcards.analysis_name, wildcards.contrast_name
-            )["config_index"]
+            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+                "config_index"
+            ]
         )["wald"]["shrink_extra"],
         results_extra=lambda wildcards: get_analysis_config_by_index(
-            get_contrast_job_details(
-                wildcards.analysis_name, wildcards.contrast_name
-            )["config_index"]
+            get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
+                "config_index"
+            ]
         )["wald"]["results_extra"],
         # get contrast to be evaluated
         contrast=lambda wildcards: get_contrast_job_details(
@@ -67,7 +73,10 @@ rule deseq2_wald_per_analysis:
 rule get_results_from_all_deseq_analyses:
     input:
         # Request all DDS files (one per analysis_name)
-        expand("resources/deseq2/{analysis_name}/dds.RDS", analysis_name=DESEQ_ANALYSES_NAMES),
+        expand(
+            "resources/deseq2/{analysis_name}/dds.RDS",
+            analysis_name=DESEQ_ANALYSES_NAMES,
+        ),
         # Request all Wald test outputs (for each contrast in each analysis)
         expand(
             [
@@ -78,7 +87,11 @@ rule get_results_from_all_deseq_analyses:
             ],
             zip, # Use zip to correctly pair analysis_name and contrast_name
             analysis_name=[job["analysis_name"] for job in CONTRAST_JOBS],
-            contrast_name=[job["contrast_name"] for job in CONTRAST_JOBS]
-        )
+            contrast_name=[job["contrast_name"] for job in CONTRAST_JOBS],
+        ),
     output:
-        touch("workflow/deseq2_analyses_complete.done")
+        touch("resources/deseq2/deseq2_analyses_complete.done"),
+    log:
+        "logs/deseq2/get_results_from_all_deseq_analyses.log",
+    shell:
+        "touch {output}"
