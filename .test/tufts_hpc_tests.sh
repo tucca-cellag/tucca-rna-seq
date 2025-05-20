@@ -127,7 +127,7 @@ PROFILE="profiles/slurm-dev"
 case $TASK in
 lint)
   echo "Linting the Snakemake workflow..."
-  snakemake --lint --workflow-profile ${PROFILE}
+  snakemake --lint --verbose --workflow-profile ${PROFILE}
   ;;
 conda-create-envs-only)
   echo "Running snakemake --conda-create-envs-only"
