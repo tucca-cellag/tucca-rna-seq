@@ -38,9 +38,9 @@ factor_specs_list <- snakemake@params[["factors"]]
 if (!is.null(factor_specs_list) && length(factor_specs_list) > 0) {
   for (i in seq_along(factor_specs_list)) {
     # Get the factor and ref level
-    factor <- factor_specs_list[[i]]
-    factor_name <- factor$name
-    ref_level <- factor$reference_level
+    factor_spec <- factor_specs_list[[i]]
+    factor_name <- factor_spec$name
+    ref_level <- factor_spec$reference_level
 
     # TODO: These if-else blocks can probably be dealt w/ in the config schema
     if (factor_name %in% colnames(coldata)) {
