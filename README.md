@@ -60,7 +60,8 @@ please contact us via [email][contact].
 
 If you use this workflow in a paper, don't forget to give credits to the
 authors by citing the URL of this (original) repository and its DOI (above if
-available). You can also 
+available). You should also cite the individual tools used in this workflow.
+See [CITATIONS.md](CITATIONS.md) file for details.
 
 ## What is Cellular Agriculture? 🧬🌱
 
