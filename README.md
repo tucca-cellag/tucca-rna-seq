@@ -1,5 +1,5 @@
 <div align="left">
-  <img width="25%" align="left" src=images/tucca-rna-seq-logo-white.png>
+  <img width="25%" align="left" src="images/tucca-rna-seq-logo-white.png" alt="tucca-rna-seq logo">
 </div>
 
 **`tucca-cellag/tucca-rna-seq`** is the
