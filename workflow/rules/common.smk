@@ -175,7 +175,11 @@ def is_sra_read(u: pd.Series) -> bool:
     Returns:
         bool: True if the record represents an SRA read, False otherwise.
     """
-    return str(u.sra).strip() != "" and pd.isna(u.fq1) and pd.isna(u.fq2)
+    return (
+        str(u.sra).strip() != ""
+        and (pd.isna(u.fq1) or u.fq1 == "")
+        and (pd.isna(u.fq2) or u.fq2 == "")
+    )
 
 
 def get_sra_filepath(accession: str, read: str) -> Path:
