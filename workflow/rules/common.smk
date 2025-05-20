@@ -146,14 +146,17 @@ def get_unit_record(wildcards: Wildcard) -> pd.Series:
         record = units.loc[(sample_unit)]
     except KeyError:
         raise ValueError(
-            f"Combination of sample_name and unit_name ({sample_unit}) not found in units.tsv"
+            f"Combination of sample_name and unit_name ({sample_unit}) not "
+            f"found in units.tsv"
         )
 
     # If the lookup returns a DataFrame instead of a Series then more than one
     # match was found.
     if isinstance(record, pd.DataFrame):
         raise ValueError(
-            f"Multiple entries found for this combination of sample_name and unit_name ({sample_unit}). Ensure that the metadata has one unique entry per sample-unit pair."
+            f"Multiple entries found for this combination of sample_name and "
+            f"unit_name ({sample_unit}). Ensure that the metadata has one "
+            f"unique entry per sample-unit pair."
         )
     return record
 
@@ -197,6 +200,79 @@ def get_sra_filepath(accession: str, read: str) -> Path:
 #          Parses and provides access to DESeq2 analysis configurations        #
 #          defined in config.yaml under 'diffexp.deseq2.analyses'              #
 ################################################################################
+
+# Set global variables for differential expression analysis
+DESEQ_ANALYSES_LIST = config["diffexp"]["deseq2"]["analyses"]
+
+
+# Helper function to get the full configuration for a specific analysis by its name
+def get_analysis_config_by_name(wildcards_analysis_name):
+    """
+    TODO
+    used by DESeqDataSet_from_ranged_se_per_analysis
+    """
+    for analysis in DESEQ_ANALYSES_LIST:
+        if analysis["name"] == wildcards_analysis_name:
+            return analysis
+    # This error should ideally be caught by schema validation or earlier config checks
+    raise ValueError(
+        f"Configuration for analysis '{wildcards_analysis_name}' not found in "
+        f"DESEQ_ANALYSES_LIST."
+    )
+
+
+# Set global variables for deseq2_wald_per_analysis
+DESEQ_ANALYSES_NAMES = [analysis["name"] for analysis in DESEQ_ANALYSES_LIST]
+
+# Create a list of all contrast jobs to run
+# Used by deseq2_wald_per_analysis
+CONTRAST_JOBS = []
+for i, deseq_analysis in enumerate(DESEQ_ANALYSES_LIST):
+    deseq_analysis_name = deseq_analysis["name"]
+    # Each deseq_analysis MUST have a "contrasts" key (even if empty list)
+    # as per the explicit definition requirement.
+    for contrast_conf_item in deseq_analysis["contrasts"]:  # Direct access
+        contrast_name_item = contrast_conf_item["name"]
+        contrast_elements_item = contrast_conf_item["elements"]
+        CONTRAST_JOBS.append(
+            {
+                "analysis_name": deseq_analysis_name,
+                "contrast_name": contrast_name_item,
+                "elements": contrast_elements_item,
+                "config_index": i,  # Store index to the DESEQ_ANALYSES_LIST list
+            }
+        )
+
+
+def get_analysis_config_by_index(index):
+    """
+    TODO
+    Helper function to get the full configuration for a specific analysis by
+    its index
+
+    used by deseq2_wald_per_analysis
+    """
+    return DESEQ_ANALYSES_LIST[index]
+
+
+def get_contrast_job_details(wildcards_analysis_name, wildcards_contrast_name):
+    """
+    TODO
+    Helper function to get contrast-specific job details (which includes the
+    config_index)
+
+    used by deseq2_wald_per_analysis
+    """
+    for job in CONTRAST_JOBS:
+        if (
+            job["analysis_name"] == wildcards_analysis_name
+            and job["contrast_name"] == wildcards_contrast_name
+        ):
+            return job
+    raise ValueError(
+        f"Details for contrast '{wildcards_contrast_name}' in analysis "
+        f"'{wildcards_analysis_name}' not found in CONTRAST_JOBS."
+    )
 
 
 ################################################################################
