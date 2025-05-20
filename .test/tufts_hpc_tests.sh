@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 # .test/tufts_hpc_tests.sh
 #
 # This script mimics the jobs in .github/workflows/test.yml by invoking
@@ -66,7 +66,8 @@ USE_REFSEQ_SOURCE=false
 # The leading colon in ":t:s:x:h" enables silent error handling for getopts,
 # allowing custom messages for unknown options or missing arguments.
 # -h is a global help option.
-# -t, -s, -x are task-specific options.
+# Task-specific options:
+# -t (target), -r (use RefSeq), -c (complex config), -x (extra args)
 while getopts ":t:x:crh" opt; do
   case ${opt} in
   t) TARGET_OPT="${OPTARG}" ;;
@@ -93,7 +94,7 @@ shift $((OPTIND - 1)) # Remove parsed options and their arguments from $@
 
 # Check for any remaining non-option arguments (unexpected)
 if [ "$#" -gt 0 ]; then
-  echo "Error: Unexpected arguments found after options: $@" >&2
+  echo "Error: Unexpected arguments found after options: $*" >&2
   print_usage
   exit 1
 fi
