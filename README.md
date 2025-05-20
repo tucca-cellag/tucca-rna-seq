@@ -25,7 +25,7 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about)](https://cellularagriculture.tufts.edu/)
 [![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
 [![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
-[![Connect on LindedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
+[![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
 > [!WARNING]
 > This workflow is still under construction. Please do not expect this workflow
@@ -37,7 +37,7 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 
 The usage of this workflow is described in our documentation at
 [tucca-cellag.github.io][2]. If you've found a bug or there is a feature that
-we're missing (in the workflow or in our documentatio) please
+we're missing (in the workflow or in our documentation) please
 [open an issue][5] to let us know.
 
 ## Workflow Overview
