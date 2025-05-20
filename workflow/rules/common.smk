@@ -63,6 +63,20 @@ units["sample_unit"] = (
 units = units.set_index(["sample_unit"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 
+# Check that all sample_name values in units.tsv exist in samples.tsv
+missing_samples = set(units["sample_name"]) - set(samples["sample_name"])
+if missing_samples:
+    raise ValueError(
+        f"The following sample_name values in units.tsv are not found in samples.tsv: {missing_samples}"
+    )
+
+# Check that all sample_name values in samples.tsv are used in units.tsv
+unused_samples = set(samples["sample_name"]) - set(units["sample_name"])
+if unused_samples:
+    raise ValueError(
+        f"The following sample_name values in samples.tsv are not used in units.tsv: {unused_samples}"
+    )
+
 # Check that each (sample, unit) combination is unique.
 if not units.index.is_unique:
     raise ValueError("Each (sample, unit) combination must be unique in units.tsv")
