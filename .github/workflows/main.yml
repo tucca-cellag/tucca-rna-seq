@@ -68,7 +68,7 @@ jobs:
       - Linting
       - Formatting
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         scenario:
           # SRA Reads Scenarios
@@ -153,7 +153,7 @@ jobs:
       - Linting
       - Formatting
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         scenario:
           # SRA Reads Scenarios
