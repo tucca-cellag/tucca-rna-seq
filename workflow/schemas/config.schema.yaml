@@ -68,6 +68,74 @@ properties:
       ncbi:
         type: string
 
+  diffexp:
+    type: object
+    properties:
+      tximeta:
+        type: object
+        properties:
+          factors:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                reference_level:
+                  type: string
+              required: [name, reference_level]
+          extra:
+            type: string
+      deseq2:
+        type: object
+        properties:
+          analyses:
+            type: array
+            minItems: 1
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                deseqdataset:
+                  type: object
+                  properties:
+                    formula:
+                      type: string
+                    min_counts:
+                      type: integer
+                    extra:
+                      type: string
+                    threads:
+                      type: integer
+                  required: [formula, min_counts, threads]
+                wald:
+                  type: object
+                  properties:
+                    deseq_extra:
+                      type: string
+                    shrink_extra:
+                      type: string
+                    results_extra:
+                      type: string
+                    threads:
+                      type: integer
+                  required: [threads]
+                contrasts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      elements:
+                        type: array
+                        items:
+                          type: string
+                    required: [name, elements]
+              required: [name, deseqdataset, wald, contrasts]
+        required: [analyses]
+
   params:
     type: object
     properties:
