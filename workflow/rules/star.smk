@@ -34,7 +34,7 @@ rule star:
             "Log.progress.out",
             "SJ.out.tab",
         ),
-        temp(directory("results/star/{sample_unit}__STARtmp")),
+        directory("results/star/{sample_unit}__STARtmp"),
     log:
         "logs/star/star_{sample_unit}.log",
     params:
