@@ -76,28 +76,34 @@ jobs:
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: SRA Reads (conda)
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
+            cleanup: false
           # Local Reads - Ensembl (COMPLEX ONLY)
           - name: Local Reads (ensembl, complex, dryrun, conda)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: Local Reads (ensembl, complex, conda)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
+            cleanup: false
           # Local Reads - RefSeq (COMPLEX ONLY)
           - name: Local Reads (refseq, complex, dryrun, conda)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: Local Reads (refseq, complex, conda)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: ""
+            cleanup: false
         version:
           - name: stable
             snakemake: 8.27.1
@@ -109,9 +115,15 @@ jobs:
       - name: update apt
         run: sudo apt-get update
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
+        if: ${{ matrix.scenario.cleanup }}
+        uses: jlumbroso/free-disk-space@v1.3.0
         with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
           tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
           android: true
           dotnet: true
           haskell: true
@@ -161,28 +173,34 @@ jobs:
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: SRA Reads (singularity)
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
+            cleanup: false
           # Local Reads - Ensembl (COMPLEX ONLY)
           - name: Local Reads (ensembl, complex, dryrun, singularity)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: Local Reads (ensembl, complex, singularity)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
+            cleanup: false
           # Local Reads - RefSeq (COMPLEX ONLY)
           - name: Local Reads (refseq, complex, dryrun, singularity)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
+            cleanup: false
           - name: Local Reads (refseq, complex, singularity)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: ""
+            cleanup: false
         version:
           - name: stable
             snakemake: 8.27.1
@@ -196,9 +214,15 @@ jobs:
       - name: update apt
         run: sudo apt-get update
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
+        if: ${{ matrix.scenario.cleanup }}
+        uses: jlumbroso/free-disk-space@v1.3.0
         with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
           tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
           android: true
           dotnet: true
           haskell: true
