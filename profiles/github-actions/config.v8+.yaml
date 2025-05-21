@@ -6,9 +6,11 @@
 use-singularity: true
 use-conda: true
 conda-cleanup-pkgs: tarballs
+verbose: true
 all-temp: true
 show-failed-logs: true
-verbose: true
+retries: 3
+rerun-incomplete: true
 cores: all
 latency-wait: 120
 default-resources:
