@@ -462,7 +462,9 @@ def get_final_output() -> List[str]:
         final_output.extend(get_qualimap_paths(row))
         final_output.extend(get_salmon_paths(row))
 
-    # Define non-unit-based output (e.g., MultiQC report)
+    # Define non-unit-based output (e.g., DESeq2 results, MultiQC report)
+    final_output.append("resources/deseq2/deseq2_analyses_complete.done")
+
     multiqc: str = f"results/multiqc/{config['params']['multiqc']['report_name']}.html"
     final_output.append(multiqc)
 
