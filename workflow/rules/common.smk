@@ -55,8 +55,6 @@ units = pd.read_csv(
 units["sample_name"] = units["sample_name"].str.strip()
 units["unit_name"] = units["unit_name"].str.strip()
 # Create a combined sample_unit index for units
-# BUG: Avoiding simple row-wise concatenation using the + operator due to a
-# strange linting issue (arose at commit 1b5f2c3)
 units["sample_unit"] = (
     units["sample_name"].astype(str).str.cat(units["unit_name"].astype(str), sep="_")
 )
@@ -67,14 +65,16 @@ validate(units, schema="../schemas/units.schema.yaml")
 missing_samples = set(units["sample_name"]) - set(samples["sample_name"])
 if missing_samples:
     raise ValueError(
-        f"The following sample_name values in units.tsv are not found in samples.tsv: {missing_samples}"
+        f"The following sample_name values in units.tsv are not found in "
+        f"samples.tsv: {missing_samples}"
     )
 
 # Check that all sample_name values in samples.tsv are used in units.tsv
 unused_samples = set(samples["sample_name"]) - set(units["sample_name"])
 if unused_samples:
     raise ValueError(
-        f"The following sample_name values in samples.tsv are not used in units.tsv: {unused_samples}"
+        f"The following sample_name values in samples.tsv are not used in "
+        f"units.tsv: {unused_samples}"
     )
 
 # Check that each (sample, unit) combination is unique.
@@ -112,7 +112,7 @@ def get_fq_files(wildcards: Wildcard) -> str:
     (R1 or R2) for a sample/unit.
 
     Parameters:
-        wildcards (Wildcard): An object with attributes: sample, unit, read.
+        wildcards (Wildcard): An object with attributes: sample_unit, read.
 
     Returns:
         str: The file path for the specified read.
@@ -135,7 +135,7 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
     reads for a given sample/unit.
 
     Parameters:
-        wildcards (Wildcard): An object with attributes: sample, unit, read.
+        wildcards (Wildcard): An object with attributes: sample_unit, read.
 
     Returns:
         List[str]: A list containing the paths for R1 and R2 reads.
@@ -151,8 +151,22 @@ def get_paired_reads(wildcards: Wildcard) -> List[str]:
 
 def get_unit_record(wildcards: Wildcard) -> pd.Series:
     """
-    TODO: Write function documentation
-    Used by get_fq_files and get_paired_reads
+    Retrieve a single unit record from the units DataFrame using the sample_unit
+    wildcard.
+
+    Used by get_fq_files and get_paired_reads to access unit-specific
+    information.
+
+    Parameters:
+        wildcards (Wildcard): An object with the attribute: sample_unit.
+
+    Returns:
+        pd.Series: A single row from the units DataFrame corresponding to the
+            sample_unit.
+
+    Raises:
+        ValueError: If the sample_unit is not found in units.tsv or if multiple
+            matching entries are found.
     """
     # Clean the wildcard values.
     sample_unit = wildcards.sample_unit.strip()
@@ -181,7 +195,7 @@ def is_sra_read(u: pd.Series) -> bool:
 
     Conditions:
         - u.sra is a non-empty string (after stripping whitespace)
-        - u.fq1 and u.fq2 are NaN
+        - u.fq1 and u.fq2 are NaN or empty strings
 
     Parameters:
         u (pd.Series): A unit row with keys "sra", "fq1" and "fq2".
@@ -210,7 +224,7 @@ def get_sra_filepath(accession: str, read: str) -> Path:
     """
     # Use read number (assumes read is like "R1" or "R2")
     read_num = read[1]
-    return f"data/sra_reads/{accession}_{read_num}.fastq"
+    return Path(f"data/sra_reads/{accession}_{read_num}.fastq")
 
 
 ################################################################################
@@ -224,10 +238,21 @@ DESEQ_ANALYSES_LIST = config["diffexp"]["deseq2"]["analyses"]
 
 
 # Helper function to get the full configuration for a specific analysis by its name
-def get_analysis_config_by_name(wildcards_analysis_name):
+def get_analysis_config_by_name(wildcards_analysis_name) -> dict:
     """
-    TODO
-    used by DESeqDataSet_from_ranged_se_per_analysis
+    Retrieve the configuration for a specific DESeq2 analysis by its name.
+
+    Parameters:
+        wildcards_analysis_name (str): The name of the DESeq2 analysis to
+            retrieve.
+
+    Returns:
+        dict: The configuration for the specified analysis.
+
+    Raises:
+        ValueError: If the analysis name is not found in DESEQ_ANALYSES_LIST.
+
+    Used by: DESeqDataSet_from_ranged_se_per_analysis
     """
     for analysis in DESEQ_ANALYSES_LIST:
         if analysis["name"] == wildcards_analysis_name:
@@ -239,24 +264,24 @@ def get_analysis_config_by_name(wildcards_analysis_name):
     )
 
 
-def get_dds_threads(wildcards: Wildcard):
+def get_dds_threads(wildcards: Wildcard) -> int:
     """Returns the thread count for DESeqDataSet rule."""
     return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["threads"]
 
 
-def get_dds_formula(wildcards: Wildcard):
+def get_dds_formula(wildcards: Wildcard) -> str:
     """Returns the formula for DESeqDataSet rule."""
     return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["formula"]
 
 
-def get_dds_min_counts(wildcards: Wildcard):
+def get_dds_min_counts(wildcards: Wildcard) -> int:
     """Returns the minimum counts for DESeqDataSet rule."""
     return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"][
         "min_counts"
     ]
 
 
-def get_dds_extra(wildcards: Wildcard):
+def get_dds_extra(wildcards: Wildcard) -> str:
     """Returns extra parameters for DESeqDataSet rule."""
     return get_analysis_config_by_name(wildcards.analysis_name)["deseqdataset"]["extra"]
 
@@ -284,24 +309,41 @@ for i, deseq_analysis in enumerate(DESEQ_ANALYSES_LIST):
         )
 
 
-def get_analysis_config_by_index(index):
+def get_analysis_config_by_index(index) -> dict:
     """
-    TODO
-    Helper function to get the full configuration for a specific analysis by
-    its index
+    Retrieve the full configuration for a specific analysis by its index in
+    DESEQ_ANALYSES_LIST.
 
-    used by deseq2_wald_per_analysis
+    Parameters:
+        index (int): The index of the analysis in DESEQ_ANALYSES_LIST.
+
+    Returns:
+        dict: The configuration for the specified analysis.
+
+    Used by: deseq2_wald_per_analysis
     """
     return DESEQ_ANALYSES_LIST[index]
 
 
-def get_contrast_job_details(wildcards_analysis_name, wildcards_contrast_name):
+def get_contrast_job_details(wildcards_analysis_name, wildcards_contrast_name) -> dict:
     """
-    TODO
-    Helper function to get contrast-specific job details (which includes the
-    config_index)
+    Retrieve contrast-specific job details, including the config_index, for a
+    given analysis name and contrast name combination.
 
-    used by deseq2_wald_per_analysis
+    Parameters:
+        wildcards_analysis_name (str): The name of the analysis.
+        wildcards_contrast_name (str): The name of the contrast within the
+            analysis.
+
+    Returns:
+        dict: A dictionary containing contrast job details including
+            analysis_name, contrast_name, elements, and config_index.
+
+    Raises:
+        ValueError: If the specified analysis and contrast combination is not
+            found.
+
+    Used by: deseq2_wald_per_analysis
     """
     for job in CONTRAST_JOBS:
         if (
@@ -315,7 +357,7 @@ def get_contrast_job_details(wildcards_analysis_name, wildcards_contrast_name):
     )
 
 
-def get_wald_threads(wildcards: Wildcard):
+def get_wald_threads(wildcards: Wildcard) -> int:
     """Returns the thread count for DESeq2 Wald test rule."""
     config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
         "config_index"
@@ -323,7 +365,7 @@ def get_wald_threads(wildcards: Wildcard):
     return get_analysis_config_by_index(config_idx)["wald"]["threads"]
 
 
-def get_wald_deseq_extra(wildcards: Wildcard):
+def get_wald_deseq_extra(wildcards: Wildcard) -> str:
     """Returns DESeq extra parameters for DESeq2 Wald test rule."""
     config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
         "config_index"
@@ -331,7 +373,7 @@ def get_wald_deseq_extra(wildcards: Wildcard):
     return get_analysis_config_by_index(config_idx)["wald"]["deseq_extra"]
 
 
-def get_wald_shrink_extra(wildcards: Wildcard):
+def get_wald_shrink_extra(wildcards: Wildcard) -> str:
     """Returns shrink extra parameters for DESeq2 Wald test rule."""
     config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
         "config_index"
@@ -339,7 +381,7 @@ def get_wald_shrink_extra(wildcards: Wildcard):
     return get_analysis_config_by_index(config_idx)["wald"]["shrink_extra"]
 
 
-def get_wald_results_extra(wildcards: Wildcard):
+def get_wald_results_extra(wildcards: Wildcard) -> str:
     """Returns results extra parameters for DESeq2 Wald test rule."""
     config_idx = get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
         "config_index"
@@ -347,7 +389,7 @@ def get_wald_results_extra(wildcards: Wildcard):
     return get_analysis_config_by_index(config_idx)["wald"]["results_extra"]
 
 
-def get_wald_contrast_elements(wildcards: Wildcard):
+def get_wald_contrast_elements(wildcards: Wildcard) -> List[str]:
     """Returns contrast elements for DESeq2 Wald test rule."""
     return get_contrast_job_details(wildcards.analysis_name, wildcards.contrast_name)[
         "elements"
