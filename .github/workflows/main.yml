@@ -61,147 +61,57 @@ jobs:
           args: --lint --verbose
           snakemake-version: ${{ matrix.version.snakemake }}
 
-  Snakemake_Env_Init:
-    name: Build Snakemake workflow cache (using ${{ matrix.version.name }} versions)
+  Run_Workflow_Conda:
+    name: Run Conda workflow for ${{ matrix.scenario.name }} (Snakemake ${{ matrix.version.name }})
     runs-on: ubuntu-latest
     needs:
       - Linting
       - Formatting
     strategy:
-      fail-fast: true
-      matrix:
-        version:
-          - name: stable
-            snakemake: 8.27.1
-            singularity: 3.8.4
-            allow_failure: false
-          - name: latest
-            snakemake: "*"
-            singularity: # Let singularityhub/install-singularity@main pick latest
-            allow_failure: true
-    steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Cache Singularity Images
-        uses: actions/cache@v4
-        with:
-          path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
-          restore-keys: |
-            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
-      - name: Cache Conda Packages
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
-      - name: Cache snakemake Conda Environment
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/miniconda3/envs/snakemake
-          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
-      - name: Install Singularity (specified version)
-        if: ${{ matrix.version.name != 'latest' }}
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: ${{ matrix.version.singularity }}
-      - name: Install Singularity (default latest)
-        if: ${{ matrix.version.name == 'latest' }}
-        uses: singularityhub/install-singularity@main
-      - name: Run Snakemake on dummy_all_images to create cache files
-        uses: snakemake/snakemake-github-action@v2
-        continue-on-error: ${{ matrix.version.allow_failure }}
-        with:
-          directory: .
-          snakefile: workflow/Snakefile
-          args: >
-            all --workflow-profile profiles/github-actions
-            --conda-create-envs-only
-          show-disk-usage-on-error: true
-          snakemake-version: ${{ matrix.version.snakemake }}
-      - name: Upload ./logs/
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: env-init-${{ matrix.version.name }}-logs
-          path: logs/
-
-  Run_Workflow:
-    name: Run workflow for ${{ matrix.scenario.name }} (using ${{ matrix.version.name }} versions)
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-      - Snakemake_Env_Init
-    strategy:
+      fail-fast: false
       matrix:
         scenario:
-          # SRA Reads Scenarios (remain unchanged)
-          - name: SRA Reads (dryrun)
+          # SRA Reads Scenarios
+          - name: SRA Reads (dryrun, conda)
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: --dryrun --printshellcmds
-          - name: SRA Reads
+          - name: SRA Reads (conda)
             rules: all
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
           # Local Reads - Ensembl (COMPLEX ONLY)
-          - name: Local Reads (ensembl, complex, dryrun)
+          - name: Local Reads (ensembl, complex, dryrun, conda)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
-          - name: Local Reads (ensembl, complex)
+          - name: Local Reads (ensembl, complex, conda)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
           # Local Reads - RefSeq (COMPLEX ONLY)
-          - name: Local Reads (refseq, complex, dryrun)
+          - name: Local Reads (refseq, complex, dryrun, conda)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: --dryrun --printshellcmds
-          - name: Local Reads (refseq, complex)
+          - name: Local Reads (refseq, complex, conda)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: ""
         version:
           - name: stable
             snakemake: 8.27.1
-            singularity: 3.8.4
             allow_failure: false
           - name: latest
             snakemake: "*"
-            singularity: # Let singularityhub/install-singularity@main pick latest
-            allow_failure: true
+            allow_failure: false
     steps:
+      - name: update apt
+        run: sudo apt-get update
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
           tool-cache: false
-
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
           android: true
           dotnet: true
           haskell: true
@@ -214,47 +124,18 @@ jobs:
           submodules: true
       - name: Debug file tree
         run: |
-          sudo apt-get update && sudo apt-get install -y tree
+          sudo apt-get install -y tree
           tree -a -I ".snakemake|dev|de_analysis|renv|.RProj.user|data|.github|.git|.Rprofile|.Rhistory|.DS_Store|*.user"
-      - name: Cache Singularity Images
-        uses: actions/cache@v4
-        with:
-          path: .snakemake/singularity
-          key: ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-${{ hashFiles('workflow/rules/*.smk') }}
-          restore-keys: |
-            ${{ runner.os }}-singularity-${{ matrix.version.singularity }}-
-      - name: Cache Conda Packages
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-pkgs-${{ matrix.version.snakemake }}-
-      - name: Cache snakemake Conda Environment
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/miniconda3/envs/snakemake
-          key: ${{ runner.os }}-snakemake-env-${{ hashFiles('.snakemake.environment.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-snakemake-env-${{ matrix.version.snakemake }}-
-      - name: Install Singularity (specified version)
-        if: ${{ matrix.version.name != 'latest' }}
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: ${{ matrix.version.singularity }}
-      - name: Install Singularity (default latest)
-        if: ${{ matrix.version.name == 'latest' }}
-        uses: singularityhub/install-singularity@main
-      - name: Run Snakemake workflow
-        continue-on-error: ${{ matrix.version.allow_failure }}
+      - name: Run Snakemake workflow (Conda)
         uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
         with:
           directory: .
           snakefile: workflow/Snakefile
           args: >
-            all --workflow-profile profiles/github-actions
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
             --configfile ${{ matrix.scenario.configfile }}
-            --config api_keys="{\"ncbi\": \"${{ secrets.BB_NCBI_API_KEY }}\"}"
+            --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
             ${{ matrix.scenario.extra_args }}
           show-disk-usage-on-error: true
           snakemake-version: ${{ matrix.version.snakemake }}
@@ -262,13 +143,101 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: workflow-${{ matrix.scenario.log_name }}-${{ matrix.version.name }}-logs
+          name: conda-workflow-${{ matrix.scenario.name }}-${{ matrix.version.name }}-logs
           path: logs/
 
-      #- name: Test report
-      #  uses: snakemake/snakemake-github-action@v2
-      #  with:
-      #    directory: .test
-      #    snakefile: workflow/Snakefile
-      #    args: "--report report.zip"
-      #    snakemake-version: 8.27.1
+  Run_Workflow_Singularity:
+    name: Run Singularity workflow for ${{ matrix.scenario.name }} (Snakemake ${{ matrix.version.name }})
+    runs-on: ubuntu-latest
+    needs: # No longer needs Snakemake_Env_Init
+      - Linting
+      - Formatting
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          # SRA Reads Scenarios
+          - name: SRA Reads (dryrun, singularity)
+            rules: all
+            configfile: .test/sra_reads/config/config.yaml
+            extra_args: --dryrun --printshellcmds
+          - name: SRA Reads (singularity)
+            rules: all
+            configfile: .test/sra_reads/config/config.yaml
+            extra_args: ""
+          # Local Reads - Ensembl (COMPLEX ONLY)
+          - name: Local Reads (ensembl, complex, dryrun, singularity)
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: --dryrun --printshellcmds
+          - name: Local Reads (ensembl, complex, singularity)
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+          # Local Reads - RefSeq (COMPLEX ONLY)
+          - name: Local Reads (refseq, complex, dryrun, singularity)
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+            extra_args: --dryrun --printshellcmds
+          - name: Local Reads (refseq, complex, singularity)
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+            extra_args: ""
+        version:
+          - name: stable
+            snakemake: 8.27.1
+            singularity: 3.8.4
+            allow_failure: true
+          - name: latest
+            snakemake: "*"
+            singularity: # Let singularityhub/install-singularity@main pick latest
+            allow_failure: true
+    steps:
+      - name: update apt
+        run: sudo apt-get update
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Debug file tree
+        run: |
+          sudo apt-get install -y tree
+          tree -a -I ".snakemake|dev|de_analysis|renv|.RProj.user|data|.github|.git|.Rprofile|.Rhistory|.DS_Store|*.user"
+      - name: Install Singularity (specified version)
+        if: ${{ matrix.version.name != 'latest' && matrix.version.singularity != '' }}
+        uses: singularityhub/install-singularity@main
+        with:
+          singularity-version: ${{ matrix.version.singularity }}
+      - name: Install Singularity (default latest)
+        if: ${{ matrix.version.name == 'latest' && matrix.version.singularity == '' }}
+        uses: singularityhub/install-singularity@main
+      - name: Run Snakemake workflow (Singularity)
+        uses: snakemake/snakemake-github-action@v2
+        continue-on-error: ${{ matrix.version.allow_failure }}
+        with:
+          directory: .
+          snakefile: workflow/Snakefile
+          args: >
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
+            --use-singularity
+            --configfile ${{ matrix.scenario.configfile }}
+            --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
+            ${{ matrix.scenario.extra_args }}
+          show-disk-usage-on-error: true
+          snakemake-version: ${{ matrix.version.snakemake }}
+      - name: Upload ./logs/
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singularity-workflow-${{ matrix.scenario.name }}-${{ matrix.version.name }}-logs
+          path: logs/
