@@ -3,7 +3,7 @@
 
 rule star_index:
     input:
-        genome_fna=branch(
+        fasta=branch(
             config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(
                 genome_asc=config["ref_assembly"]["accession"],
@@ -14,7 +14,7 @@ rule star_index:
                 genome_name=config["ref_assembly"]["name"],
             ),
         ),
-        genome_gtf=branch(
+        gtf=branch(
             config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(
                 genome_asc=config["ref_assembly"]["accession"],
@@ -25,43 +25,16 @@ rule star_index:
             ),
         ),
     output:
-        multiext(
-            "results/star/{genome_asc}_index/".format(
+        directory(
+            "resources/star/{genome_asc}_index".format(
                 genome_asc=config["ref_assembly"]["accession"],
-            ),
-            "chrLength.txt",
-            "chrName.txt",
-            "chrNameLength.txt",
-            "chrStart.txt",
-            "exonGeTrInfo.tab",
-            "exonInfo.tab",
-            "geneInfo.tab",
-            "Genome",
-            "genomeParameters.txt",
-            "Log.out",
-            "SA",
-            "SAindex",
-            "sjdbInfo.txt",
-            "sjdbList.fromGTF.out.tab",
-            "sjdbList.out.tab",
-            "transcriptInfo.tab",
+            )
         ),
-    params:
-        genome_asc=config["ref_assembly"]["accession"],
-        sjdb_overhang=config["params"]["star_index"]["sjdbOverhang"],
-        extra=config["params"]["star_index"]["extra"],
     threads: 12
-    conda:
-        "../envs/star.yaml"
+    params:
+        sjdbOverhang=config["params"]["star_index"]["sjdbOverhang"],
+        extra=config["params"]["star_index"]["extra"],
     log:
         "logs/star/star_index.log",
-    shell:
-        """
-        (STAR --runThreadN {threads} \
-        --runMode genomeGenerate \
-        --genomeDir results/star/{params.genome_asc}_index \
-        --genomeFastaFiles {input.genome_fna} \
-        --sjdbGTFfile {input.genome_gtf} \
-        --sjdbOverhang {params.sjdb_overhang} \
-        {params.extra}) &> {log}
-        """
+    wrapper:
+        "v6.2.0/bio/star/index"

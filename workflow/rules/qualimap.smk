@@ -3,7 +3,7 @@
 
 rule qualimap_rnaseq:
     input:
-        bam="results/star/{sample_unit}_Aligned.sortedByCoord.out.bam",
+        bam="resources/star/{sample_unit}_Aligned.sortedByCoord.out.bam",
         genome_gtf=branch(
             config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/genomic.gtf".format(

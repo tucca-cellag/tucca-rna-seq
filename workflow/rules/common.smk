@@ -415,19 +415,6 @@ def get_fastqc_paths(row: pd.Series) -> List[str]:
     return paths
 
 
-# Helper function for STAR output paths.
-def get_star_paths(row: pd.Series) -> List[str]:
-    sample_unit: str = row.sample_unit
-    paths: List[str] = [
-        f"results/star/{sample_unit}_Aligned.sortedByCoord.out.bam",
-        f"results/star/{sample_unit}_Log.final.out",
-        f"results/star/{sample_unit}_Log.out",
-        f"results/star/{sample_unit}_Log.progress.out",
-        f"results/star/{sample_unit}_SJ.out.tab",
-    ]
-    return paths
-
-
 # Helper function for Qualimap output paths.
 def get_qualimap_paths(row: pd.Series) -> List[str]:
     sample_unit: str = row.sample_unit
@@ -458,7 +445,6 @@ def get_final_output() -> List[str]:
     # Iterate over each unit to collect outputs using helper functions.
     for _, row in units.iterrows():
         final_output.extend(get_fastqc_paths(row))
-        final_output.extend(get_star_paths(row))
         final_output.extend(get_qualimap_paths(row))
         final_output.extend(get_salmon_paths(row))
 
