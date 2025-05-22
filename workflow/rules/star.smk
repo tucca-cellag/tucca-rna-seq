@@ -10,7 +10,6 @@ rule star_pe_multi:
             genome_asc=config["ref_assembly"]["accession"]
         ),
     output:
-        # see STAR manual for additional output files
         aln="resources/star/{sample_unit}_Aligned.sortedByCoord.out.bam",
         log="resources/star/{sample_unit}_Log.out",
         log_progress="resources/star/{sample_unit}_Log.progress.out",

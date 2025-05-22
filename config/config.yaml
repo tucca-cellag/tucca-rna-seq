@@ -118,7 +118,7 @@ params:
     extra: ""
   star_index:
     sjdbOverhang: 149
-    extra: ""
+    extra: "--genomeSAindexNbases 10" # for small genomes (eg. Sc)
   star:
     extra: >
       --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within
