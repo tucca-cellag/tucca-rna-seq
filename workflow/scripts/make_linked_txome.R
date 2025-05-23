@@ -15,11 +15,15 @@ date()
 # still tries to write it.
 
 # This path is relative to the Snakemake working directory
-workflow_xdg_cache_dir <- file.path(getwd(), ".workflow_xdg_cache")
-if (!dir.exists(workflow_xdg_cache_dir)) {
-  dir.create(workflow_xdg_cache_dir, recursive = TRUE, showWarnings = FALSE)
+r_user_cache_base_dir <- file.path(getwd(), ".r_user_cache_for_tximeta")
+if (!dir.exists(r_user_cache_base_dir)) {
+  dir.create(r_user_cache_base_dir, recursive = TRUE, showWarnings = FALSE)
 }
-Sys.setenv(XDG_CACHE_HOME = workflow_xdg_cache_dir)
+# Set R_USER_CACHE_DIR, which rappdirs should respect.
+Sys.setenv(R_USER_CACHE_DIR = r_user_cache_base_dir)
+# Also set XDG_CACHE_HOME for broader compatibility,
+# R_USER_CACHE_DIR might take precedence for rappdirs in R
+Sys.setenv(XDG_CACHE_HOME = r_user_cache_base_dir)
 
 # 2. Define your main tximeta data cache path
 # This is where the actual large cache files (e.g., SQLite DBs) will go.
@@ -41,15 +45,57 @@ Sys.setenv(BIOCFILECACHE_CACHE = tximeta_data_cache_path)
 suppressPackageStartupMessages({
   library(devtools)
 })
+
+# --- START DEBUGGING BLOCK ---
+# Check what rappdirs resolves to AFTER setting env vars and BEFORE loading tximeta.
+# This requires the 'rappdirs' package to be available in the Conda environment.
+# If 'rappdirs' is not found, these messages will indicate that, but the script will continue.
+message("--- Pre-tximeta Load Debug ---")
+message(paste("Timestamp:", Sys.time()))
+message(paste("R_USER_CACHE_DIR set to:", Sys.getenv("R_USER_CACHE_DIR")))
+message(paste("XDG_CACHE_HOME set to:", Sys.getenv("XDG_CACHE_HOME")))
+message(paste("TXIMETA_HUB_CACHE set to:", Sys.getenv("TXIMETA_HUB_CACHE")))
+message(paste("BIOCFILECACHE_CACHE set to:", Sys.getenv("BIOCFILECACHE_CACHE")))
+if (requireNamespace("rappdirs", quietly = TRUE)) {
+  message("rappdirs package is available.")
+  resolved_tximeta_config_dir <- tryCatch(
+    {
+      rappdirs::user_cache_dir("tximeta")
+    },
+    error = function(e) {
+      paste("Error calling rappdirs::user_cache_dir('tximeta'):", e$message)
+    }
+  )
+  message(paste("rappdirs::user_cache_dir('tximeta') resolves to:", resolved_tximeta_config_dir))
+
+  resolved_bfc_config_dir <- tryCatch(
+    {
+      rappdirs::user_cache_dir("BiocFileCache")
+    },
+    error = function(e) {
+      paste("Error calling rappdirs::user_cache_dir('BiocFileCache'):", e$message)
+    }
+  )
+  message(paste("rappdirs::user_cache_dir('BiocFileCache') resolves to:", resolved_bfc_config_dir))
+} else {
+  message("rappdirs package NOT available for pre-check. Ensure it's in the Conda env if issues persist.")
+}
+message("--- End Pre-tximeta Load Debug ---")
+# --- END DEBUGGING BLOCK ---
+
 devtools::session_info()
 
+message("Attempting to load tximeta...")
 suppressPackageStartupMessages({
   library(tximeta)
 })
+message("tximeta loaded successfully.")
 
 # Explicitly set the tximeta cache using its function.
 # The bfcloc.json will point to tximeta_data_cache_path.
-tximeta::setTximetaBFC(dir = tximeta_data_cache_path, quiet = TRUE)
+message(paste("Attempting to set tximeta BFC to:", tximeta_data_cache_path))
+tximeta::setTximetaBFC(dir = tximeta_data_cache_path, quiet = FALSE)
+message("setTximetaBFC called.")
 
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
 organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
@@ -68,6 +114,7 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
+message("Calling makeLinkedTxome...")
 tximeta::makeLinkedTxome(
   # index_dir is a list of files, select the first file's dirname
   indexDir = dirname(snakemake@input[["index_dir"]])[1],
@@ -80,3 +127,4 @@ tximeta::makeLinkedTxome(
   write = TRUE,
   jsonFile = snakemake@output[["jsonFile"]]
 )
+message("makeLinkedTxome finished.")
