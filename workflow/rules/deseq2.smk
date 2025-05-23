@@ -66,7 +66,3 @@ rule get_results_from_all_deseq_analyses:
         ),
     output:
         touch("resources/deseq2/deseq2_analyses_complete.done"),
-    log:
-        "logs/deseq2/get_results_from_all_deseq_analyses.log",
-    shell:
-        "touch {output}"
