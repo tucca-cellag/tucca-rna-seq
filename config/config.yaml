@@ -16,16 +16,6 @@
 # ----------------------------------------------------------
 
 # ----------------------------------------------------------
-# Sample and Unit Sheet Section
-# ----------------------------------------------------------
-# Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: "config/samples.tsv"
-# Path to your sequencing UNIT SHEET which keeps track of your technical
-# replicates (e.g. sequencer lanes or resequencing of the same biological
-# sample)
-units: "config/units.tsv"
-
-# ----------------------------------------------------------
 # Genome Section
 #
 # This section defines the reference genome parameters
@@ -48,16 +38,10 @@ units: "config/units.tsv"
 # ----------------------------------------------------------
 ref_assembly:
   source: "RefSeq"
-  # TODO: Add branching logic to workflow depending on source
   accession: "GCF_016699485.2"
   name: "bGalGal1.mat.broiler.GRCg7b"
   release: ""
   species: "Gallus_gallus"
-  # TODO: Add logic for custom files
-  custom_files:
-    custom_genome_fasta: ""
-    custom_genome_gtf: ""
-    custom_transcriptome_fasta: ""
 
 # ----------------------------------------------------------
 # API Key Section:
@@ -71,11 +55,51 @@ api_keys:
 # Differential Expression Section:
 # ----------------------------------------------------------
 diffexp:
+  tximeta:
+    factors:
+      - name: "treatment1"
+        reference_level: "untreated"
+      - name: "treatment2"
+        reference_level: "untreated"
+    extra: ""
+  deseq2:
+    analyses:
+      - name: "treatment1+treatment2"
+        deseqdataset:
+          formula: "~ treatment1 + treatment2"
+          min_counts: 10
+          extra: ""
+          threads: 1
+        wald:
+          deseq_extra: ""
+          shrink_extra: "type = 'apeglm'"
+          results_extra: "alpha = 0.005"
+          threads: 1
+        contrasts:
+          - name: "treatment1_treated_vs_untreated"
+            elements: ["treatment1", "treated", "untreated"]
+          - name: "treatment2_treated_vs_untreated"
+            elements: ["treatment2", "treated", "untreated"]
+
+  # For min_counts
+  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
+  # Alternatively rely on results()
+  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
 
 # ----------------------------------------------------------
 # Differential Expression Section:
 # ----------------------------------------------------------
 enrichment:
+
+# ----------------------------------------------------------
+# Sample and Unit Sheet Section
+# ----------------------------------------------------------
+# Path to your SAMPLE SHEET which keeps track of your biological replicates
+samples: "config/samples.tsv"
+# Path to your sequencing UNIT SHEET which keeps track of your technical
+# replicates (e.g. sequencer lanes or resequencing of the same biological
+# sample)
+units: "config/units.tsv"
 
 # ----------------------------------------------------------
 # Params Section: Configurable Settings for the Software
@@ -94,20 +118,13 @@ params:
     extra: ""
   star_index:
     sjdbOverhang: 149
-    extra: ""
+    extra: "--genomeSAindexNbases 10" # for small genomes (eg. Sc)
   star:
-    # Note that this Snakemake workflow is currently only built to work when
-    # the output files from STAR are BAM files that are sorted by coordinate.
-    outSAMtype: "BAM SortedByCoordinate" # Changing will break the workflow
-    outSAMunmapped: "Within"
-    outSAMattributes: "Standard"
-    readFilesCommand: "zcat"
-    outFilterMultimapNmax: 1
-    outFilterScoreMinOverLread: 0
-    outFilterMatchNminOverLread: 0
-    alignIntronMin: 1
-    alignIntronMax: 2500
-    extra: ""
+    extra: >-
+      --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within
+      --outSAMattributes Standard --outFilterMultimapNmax 1
+      --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0
+      --alignIntronMin 1 --alignIntronMax 2500
   qualimap_rnaseq:
     counting_alg: "proportional"
     sequencing_protocol: "non-strand-specific"

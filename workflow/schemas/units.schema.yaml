@@ -42,3 +42,23 @@ properties:
 required:
   - sample_name
   - unit_name
+oneOf:
+  - required: ["sra"]
+    properties:
+      sra:
+        pattern: "^SRR[0-9]+$"
+      fq1:
+        type: "string"
+        maxLength: 0
+      fq2:
+        type: "string"
+        maxLength: 0
+  - required: ["fq1", "fq2"]
+    properties:
+      sra:
+        type: "string"
+        maxLength: 0
+      fq1:
+        pattern: "^.+$"
+      fq2:
+        pattern: "^.+$"

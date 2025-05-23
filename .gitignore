@@ -23,6 +23,7 @@ renv.lock
 
 # User-specific files
 .Ruserdata
+.idea
 
 # Example code in package build process
 *-Ex.R

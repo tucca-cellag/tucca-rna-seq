@@ -87,10 +87,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
                 genome_asc=config["ref_assembly"]["accession"]
             ),
         output:
-            multiext(
-                "resources/datasets/",
-                "README.md",
-            ),
+            multiext("resources/datasets/", "README.md", "md5sum.txt"),
             multiext(
                 "resources/datasets/ncbi_dataset/data/",
                 "assembly_data_report.jsonl",
@@ -119,7 +116,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
         shell:
             """
             (mkdir -p resources/datasets && \
-            7z x {input} -oresources/datasets && \
+            7z x {input} -oresources/datasets -y && \
             echo "Directory structure in resources/datasets:" && \
             ls -laR resources/datasets) &> {log}
             """

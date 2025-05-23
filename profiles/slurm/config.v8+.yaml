@@ -16,8 +16,10 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  # TODO Set email to be configurable in config/config.yaml
-  slurm_extra: '"--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"'
+  # Change the following email address to your own email address if you would
+  # like this workflow to notify you via email of started/failed/completed
+  # slurm jobs
+  slurm_extra: '"--mail-type=ALL --mail-user=firstname.lastname@tufts.edu"'
 
 set-resources:
   star_index:

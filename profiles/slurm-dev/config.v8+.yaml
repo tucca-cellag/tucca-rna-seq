@@ -1,7 +1,8 @@
-# profiles/slurm/dev.config.v8+.yaml
+# profiles/slurm-dev/config.v8+.yaml
 # Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
+__use_yte__: true
 executor: slurm
 use-singularity: true
 use-conda: true
@@ -9,7 +10,6 @@ conda-cleanup-pkgs: tarballs
 verbose: true
 show-failed-logs: true
 forceall: true
-all-temp: true
 retries: 3
 rerun-incomplete: true
 jobs: 100 # Slurm jobscript size limit
@@ -20,7 +20,9 @@ default-resources:
   runtime: 4320
   mem_mb: 32000
   cpus_per_task: 12
-  # TODO Set email to be configurable in config/config.yaml
+  # Change the following email address to your own email address if you would
+  # like this workflow to notify you via email of started/failed/completed
+  # slurm jobs
   slurm_extra: '"--mail-type=ALL --mail-user=benjamin.bromberg@tufts.edu"'
 
 set-resources:

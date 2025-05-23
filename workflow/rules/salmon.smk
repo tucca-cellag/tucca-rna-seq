@@ -108,23 +108,22 @@ rule salmon_quant:
             "versionInfo.json",
         ),
     output:
-        quant="results/salmon/{sample}_{unit}/quant.sf",
-        lib="results/salmon/{sample}_{unit}/lib_format_counts.json",
-        aux_info=directory("results/salmon/{sample}_{unit}/aux_info"),
-        cmd_info="results/salmon/{sample}_{unit}/cmd_info.json",
-        libparams=directory("results/salmon/{sample}_{unit}/libParams"),
-        logs=directory("results/salmon/{sample}_{unit}/logs"),
+        quant="results/salmon/{sample_unit}/quant.sf",
+        lib="results/salmon/{sample_unit}/lib_format_counts.json",
+        aux_info=directory("results/salmon/{sample_unit}/aux_info"),
+        cmd_info="results/salmon/{sample_unit}/cmd_info.json",
+        libparams=directory("results/salmon/{sample_unit}/libParams"),
+        logs=directory("results/salmon/{sample_unit}/logs"),
     params:
         libtype=config["params"]["salmon_quant"]["libtype"],
         extra=config["params"]["salmon_quant"]["extra"],
     threads: 12
     log:
-        "logs/salmon/salmon_quant_{sample}_{unit}.log",
+        "logs/salmon/salmon_quant_{sample_unit}.log",
     message:
         """
         Running Salmon Quant for:
-            sample = {wildcards.sample},
-            unit = {wildcards.unit}
+            sample_unit = {wildcards.sample_unit}
         Running Salmon Quant with the inputs:
             {input.r1}
             {input.r2}

@@ -1,14 +1,17 @@
 # profiles/github-actions/config.v8+.yaml
 # Configured for exclusive use with GitHub Actions testing workflow
+# Defaulting to Conda-only execution.
+# Singularity runs will add --use-singularity explicitly.
 # See .github/workflows/main.yml
 
 # Profile Settings
-use-singularity: true
 use-conda: true
 conda-cleanup-pkgs: tarballs
+verbose: true
 all-temp: true
 show-failed-logs: true
-verbose: true
+retries: 3
+rerun-incomplete: true
 cores: all
 latency-wait: 120
 default-resources:

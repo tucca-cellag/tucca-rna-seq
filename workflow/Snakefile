@@ -8,8 +8,8 @@ min_version("8.27.1")
 configfile: "config/config.yaml"
 
 
-# this container defines the underlying OS for each job when using the workflow
-# with --use-conda --use-singularity
+# This container allows users to fix the underlying OS via singularity for
+# each job when using the workflow with --use-conda --use-singularity
 container: "docker://continuumio/miniconda3"
 
 
@@ -26,6 +26,9 @@ include: "rules/snapshot_config.smk"
 include: "rules/sra_tools.smk"
 include: "rules/star_index.smk"
 include: "rules/star.smk"
+include: "rules/make_linked_txome.smk"
+include: "rules/tximeta.smk"
+include: "rules/deseq2.smk"
 
 
 ##### target rules #####
@@ -34,9 +37,8 @@ include: "rules/star.smk"
 rule all:
     input:
         get_final_output(),
-        "results/last_run_config_snapshot/snapshot_done.done",
+        "results/last_run_config_snapshot/snapshot_taken.done",
     message:
         """
-        Workflow completed successfully! All final reports and intermediate
-        files have been generated.
+        Workflow completed successfully!
         """

@@ -1,0 +1,5 @@
+sample_name	treatment	time	replicate_num	sequencing_batch
+PlusDy24	treated	24	1	1
+MinusDy24	untreated	24	1	1
+PlusDy18	treated	18	1	1
+MinusDy18	untreated	18	1	1
