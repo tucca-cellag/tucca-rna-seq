@@ -154,19 +154,19 @@ jobs:
             rules: aggregate_sra_pe_reads
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
-            cleanup: false
+            cleanup: true
           # Local Reads - Ensembl (COMPLEX ONLY)
           - name: Local Reads (ensembl, complex, singularity)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
-            cleanup: false
+            cleanup: true
           # Local Reads - RefSeq (COMPLEX ONLY)
           - name: Local Reads (refseq, complex, singularity)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
             extra_args: ""
-            cleanup: false
+            cleanup: true
         version:
           - name: stable
             snakemake: 8.27.1
