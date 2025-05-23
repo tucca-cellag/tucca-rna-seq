@@ -7,6 +7,29 @@ suppressPackageStartupMessages({
 })
 devtools::session_info()
 
+# Get the desired cache path from Snakemake parameters
+tximeta_cache_path <- snakemake@params[["tximeta_cache"]]
+
+# Using the following approach to set TXIMETA_HUB_CACHE because
+# Singularity/Apptainer containers on GitHub runners do not offer the necessary
+# write permissions for setTximetaBFC() to create
+# /home/runner/.config/R/tximeta/
+
+# Ensure the target cache directory exists.
+# This path is relative to the Snakemake working directory
+# (e.g., "resources/tximeta") and should be writable within containers
+if (!dir.exists(tximeta_cache_path)) {
+  dir.create(tximeta_cache_path, recursive = TRUE, showWarnings = FALSE)
+}
+
+# Set the TXIMETA_HUB_CACHE environment variable.
+# tximeta is documented to respect this variable for locating its BiocFileCache.
+Sys.setenv(TXIMETA_HUB_CACHE = tximeta_cache_path)
+
+# For good measure, also set BIOCFILECACHE_CACHE, as BiocFileCache is the
+# underlying caching mechanism used by tximeta.
+Sys.setenv(BIOCFILECACHE_CACHE = tximeta_cache_path)
+
 suppressPackageStartupMessages({
   library(tximeta)
 })
@@ -27,8 +50,6 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
 } else {
   source <- snakemake@params[["source"]]
 }
-
-setTximetaBFC(snakemake@params[["tximeta_cache"]])
 
 tximeta::makeLinkedTxome(
   # index_dir is a list of files, select the first file's dirname
