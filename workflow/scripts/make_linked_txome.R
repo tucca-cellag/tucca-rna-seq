@@ -62,7 +62,7 @@ message("setTximetaBFC called.")
 
 # Prepare parameters for makeLinkedTxome
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
-organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
+organism_reformat <- paste(organism_split[1], organism_split[2])
 
 if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   # Enforce creation of a TxDb object for Ensembl and GENCODE when
