@@ -171,11 +171,11 @@ jobs:
           - name: stable
             snakemake: 8.27.1
             singularity: 3.8.4
-            allow_failure: true
+            allow_failure: false
           - name: latest
             snakemake: "*"
             singularity: # Let singularityhub/install-singularity@main pick latest
-            allow_failure: true
+            allow_failure: false
     steps:
       - name: update apt
         run: sudo apt-get update
