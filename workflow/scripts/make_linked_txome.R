@@ -2,89 +2,52 @@ log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
 sink(log, type = "message")
 date()
+suppressPackageStartupMessages({
+  library(devtools)
+})
+devtools::session_info()
 
-# Using the following approach to set a few environment variables because
-# Singularity/Apptainer containers on GitHub runners do not offer the necessary
-# write permissions for setTximetaBFC() to create
-# /home/runner/.config/R/tximeta/bfcloc.json
+# Configure tximeta to use cache and config directories within the project
+# workspace. This ensures that tximeta's files (like bfcloc.json and the main
+# data cache) are stored in predictable, project-local paths. This complements
+# system-level configurations or container environment setups (e.g., GitHub
+# Actions bind mounts that make system-level config paths like
+# /home/runner/.config/R writable). See issue #11 for more context.
 
-# 1. Define and set XDG_CACHE_HOME to a writable path
-# This is where rappdirs::user_cache_dir() (used by tximeta/BiocFileCache)
-# will try to create user-specific config/cache subdirectories like 'tximeta'.
-# The problematic 'bfcloc.json' should end up in a subdirectory here if tximeta
-# still tries to write it.
-
-# This path is relative to the Snakemake working directory
+# 1. Define and set R_USER_CACHE_DIR/XDG_CACHE_HOME to a writable path in the
+# workspace. This directs where packages like tximeta (via rappdirs) might
+# place user-specific configuration files (e.g., bfcloc.json) if not managed
+# by setTximetaBFC's primary mechanism.
 r_user_cache_base_dir <- file.path(getwd(), ".r_user_cache_for_tximeta")
 if (!dir.exists(r_user_cache_base_dir)) {
   dir.create(r_user_cache_base_dir, recursive = TRUE, showWarnings = FALSE)
 }
-# Set R_USER_CACHE_DIR, which rappdirs should respect.
 Sys.setenv(R_USER_CACHE_DIR = r_user_cache_base_dir)
-# Also set XDG_CACHE_HOME for broader compatibility,
-# R_USER_CACHE_DIR might take precedence for rappdirs in R
 Sys.setenv(XDG_CACHE_HOME = r_user_cache_base_dir)
+message(paste(
+  "Set R_USER_CACHE_DIR and XDG_CACHE_HOME to:", r_user_cache_base_dir
+))
 
-# 2. Define your main tximeta data cache path
-# This is where the actual large cache files (e.g., SQLite DBs) will go.
-# This was 'resources/tximeta' in your Snakemake rule.
-# Get the desired cache path from Snakemake parameters
+# 2. Define the main tximeta data cache path (where large SQLite DBs, etc.,
+# will go). This path is typically provided via Snakemake params
+# (e.g., "resources/tximeta").
 tximeta_data_cache_path <- snakemake@params[["tximeta_cache"]]
-
-# Ensure the target cache directory exists.
-# This path is relative to the Snakemake working directory
-# (e.g., "resources/tximeta") and should be writable within containers
 if (!dir.exists(tximeta_data_cache_path)) {
   dir.create(tximeta_data_cache_path, recursive = TRUE, showWarnings = FALSE)
 }
+message(paste(
+  "Main tximeta data cache path defined as:", tximeta_data_cache_path
+))
 
-# 3. Set environment variables for tximeta and BiocFileCache data
+# 3. Set environment variables for tximeta and BiocFileCache to use the defined
+# data cache path.
 Sys.setenv(TXIMETA_HUB_CACHE = tximeta_data_cache_path)
 Sys.setenv(BIOCFILECACHE_CACHE = tximeta_data_cache_path)
+message(paste(
+  "Set TXIMETA_HUB_CACHE and BIOCFILECACHE_CACHE to:", tximeta_data_cache_path
+))
 
-suppressPackageStartupMessages({
-  library(devtools)
-})
-
-# --- START DEBUGGING BLOCK ---
-# Check what rappdirs resolves to AFTER setting env vars and BEFORE loading tximeta.
-# This requires the 'rappdirs' package to be available in the Conda environment.
-# If 'rappdirs' is not found, these messages will indicate that, but the script will continue.
-message("--- Pre-tximeta Load Debug ---")
-message(paste("Timestamp:", Sys.time()))
-message(paste("R_USER_CACHE_DIR set to:", Sys.getenv("R_USER_CACHE_DIR")))
-message(paste("XDG_CACHE_HOME set to:", Sys.getenv("XDG_CACHE_HOME")))
-message(paste("TXIMETA_HUB_CACHE set to:", Sys.getenv("TXIMETA_HUB_CACHE")))
-message(paste("BIOCFILECACHE_CACHE set to:", Sys.getenv("BIOCFILECACHE_CACHE")))
-if (requireNamespace("rappdirs", quietly = TRUE)) {
-  message("rappdirs package is available.")
-  resolved_tximeta_config_dir <- tryCatch(
-    {
-      rappdirs::user_cache_dir("tximeta")
-    },
-    error = function(e) {
-      paste("Error calling rappdirs::user_cache_dir('tximeta'):", e$message)
-    }
-  )
-  message(paste("rappdirs::user_cache_dir('tximeta') resolves to:", resolved_tximeta_config_dir))
-
-  resolved_bfc_config_dir <- tryCatch(
-    {
-      rappdirs::user_cache_dir("BiocFileCache")
-    },
-    error = function(e) {
-      paste("Error calling rappdirs::user_cache_dir('BiocFileCache'):", e$message)
-    }
-  )
-  message(paste("rappdirs::user_cache_dir('BiocFileCache') resolves to:", resolved_bfc_config_dir))
-} else {
-  message("rappdirs package NOT available for pre-check. Ensure it's in the Conda env if issues persist.")
-}
-message("--- End Pre-tximeta Load Debug ---")
-# --- END DEBUGGING BLOCK ---
-
-devtools::session_info()
-
+# Load tximeta
 message("Attempting to load tximeta...")
 suppressPackageStartupMessages({
   library(tximeta)
@@ -97,6 +60,7 @@ message(paste("Attempting to set tximeta BFC to:", tximeta_data_cache_path))
 tximeta::setTximetaBFC(dir = tximeta_data_cache_path, quiet = FALSE)
 message("setTximetaBFC called.")
 
+# Prepare parameters for makeLinkedTxome
 organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
 organism_reformat <- paste(paste(organism_split[1], organism_split[2]))
 
@@ -114,6 +78,19 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
+message(paste(
+  "Parameters for makeLinkedTxome:",
+  "\n  Index Dir (first):", dirname(snakemake@input[["index_dir"]])[1],
+  "\n  Source:", source,
+  "\n  Organism:", organism_reformat,
+  "\n  Release:", snakemake@params[["release"]],
+  "\n  Genome:", snakemake@params[["genome"]],
+  "\n  Fasta:", snakemake@input[["fasta"]],
+  "\n  GTF:", snakemake@input[["gtf"]],
+  "\n  JSON Output:", snakemake@output[["jsonFile"]]
+))
+
+# Call makeLinkedTxome
 message("Calling makeLinkedTxome...")
 tximeta::makeLinkedTxome(
   # index_dir is a list of files, select the first file's dirname
@@ -128,3 +105,4 @@ tximeta::makeLinkedTxome(
   jsonFile = snakemake@output[["jsonFile"]]
 )
 message("makeLinkedTxome finished.")
+message(paste("Script completed at:", Sys.time()))
