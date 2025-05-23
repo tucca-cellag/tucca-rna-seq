@@ -119,10 +119,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Debug file tree
-        run: |
-          sudo apt-get install -y tree
-          tree -a -I ".snakemake|dev|de_analysis|renv|.RProj.user|data|.github|.git|.Rprofile|.Rhistory|.DS_Store|*.user"
       - name: Run Snakemake workflow (Conda)
         uses: snakemake/snakemake-github-action@v2
         continue-on-error: ${{ matrix.version.allow_failure }}
@@ -203,10 +199,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Debug file tree
-        run: |
-          sudo apt-get install -y tree
-          tree -a -I ".snakemake|dev|de_analysis|renv|.RProj.user|data|.github|.git|.Rprofile|.Rhistory|.DS_Store|*.user"
       - name: Install Singularity (specified version)
         if: ${{ matrix.version.name != 'latest' && matrix.version.singularity != '' }}
         uses: singularityhub/install-singularity@main
