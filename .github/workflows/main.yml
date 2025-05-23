@@ -199,6 +199,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Create host directory for R config (Singularity)
+        run: mkdir -p ${{ github.workspace }}/.host_R_config_singularity
       - name: Install Singularity
         uses: singularityhub/install-singularity@main
         with:
@@ -212,6 +214,7 @@ jobs:
           args: >
             ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
             --use-singularity
+            --singularity-args "--bind ${{ github.workspace }}/.host_R_config_singularity:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
             --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
             ${{ matrix.scenario.extra_args }}
@@ -284,6 +287,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Create host directory for R config (Apptainer)
+        run: mkdir -p ${{ github.workspace }}/.host_R_config_apptainer
       - name: Install Apptainer
         uses: eWaterCycle/setup-apptainer@v2
         with:
@@ -297,6 +302,7 @@ jobs:
           args: >
             ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
             --use-singularity
+            --singularity-args "--bind ${{ github.workspace }}/.host_R_config_apptainer:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
             --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
             ${{ matrix.scenario.extra_args }}
