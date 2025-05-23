@@ -71,34 +71,19 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads Scenarios
-          - name: SRA Reads (dryrun, conda)
-            rules: all
-            configfile: .test/sra_reads/config/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
+          # SRA Reads
           - name: SRA Reads (conda)
-            rules: all
+            rules: aggregate_sra_pe_reads
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - Ensembl (COMPLEX ONLY)
-          - name: Local Reads (ensembl, complex, dryrun, conda)
-            rules: all
-            configfile: .test/local_reads/ensembl/config_complex/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
           - name: Local Reads (ensembl, complex, conda)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - RefSeq (COMPLEX ONLY)
-          - name: Local Reads (refseq, complex, dryrun, conda)
-            rules: all
-            configfile: .test/local_reads/refseq/config_complex/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
           - name: Local Reads (refseq, complex, conda)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
@@ -168,34 +153,19 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads Scenarios
-          - name: SRA Reads (dryrun, singularity)
-            rules: all
-            configfile: .test/sra_reads/config/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
+          # SRA Reads
           - name: SRA Reads (singularity)
-            rules: all
+            rules: aggregate_sra_pe_reads
             configfile: .test/sra_reads/config/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - Ensembl (COMPLEX ONLY)
-          - name: Local Reads (ensembl, complex, dryrun, singularity)
-            rules: all
-            configfile: .test/local_reads/ensembl/config_complex/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
           - name: Local Reads (ensembl, complex, singularity)
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - RefSeq (COMPLEX ONLY)
-          - name: Local Reads (refseq, complex, dryrun, singularity)
-            rules: all
-            configfile: .test/local_reads/refseq/config_complex/config.yaml
-            extra_args: --dryrun --printshellcmds
-            cleanup: false
           - name: Local Reads (refseq, complex, singularity)
             rules: all
             configfile: .test/local_reads/refseq/config_complex/config.yaml
