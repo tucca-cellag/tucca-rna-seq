@@ -124,7 +124,7 @@ params:
       --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within
       --outSAMattributes Standard --outFilterMultimapNmax 1
       --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0
-      --alignIntronMin 1 alignIntronMax 2500
+      --alignIntronMin 1 --alignIntronMax 2500
   qualimap_rnaseq:
     counting_alg: "proportional"
     sequencing_protocol: "non-strand-specific"
