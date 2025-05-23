@@ -175,7 +175,7 @@ jobs:
           - name: latest
             snakemake: "*"
             singularity: 3.8.4
-            allow_failure: true # b/c of bug commit c8c8295 tries to deal with
+            allow_failure: false
     steps:
       - name: update apt
         run: sudo apt-get update
@@ -211,6 +211,8 @@ jobs:
         with:
           directory: .
           snakefile: workflow/Snakefile
+          # Usage of --bind required for success of rule make_linked_txome
+          # on GitHub runners
           args: >
             ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
             --use-singularity
@@ -263,7 +265,7 @@ jobs:
           - name: latest
             snakemake: "*"
             apptainer: 1.4.1
-            allow_failure: true # b/c of bug commit c8c8295 tries to deal with
+            allow_failure: false
     steps:
       - name: update apt
         run: sudo apt-get update
@@ -299,6 +301,8 @@ jobs:
         with:
           directory: .
           snakefile: workflow/Snakefile
+          # Usage of --bind required for success of rule make_linked_txome
+          # on GitHub runners
           args: >
             ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
             --use-singularity
