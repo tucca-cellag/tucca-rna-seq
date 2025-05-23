@@ -1,3 +1,6 @@
+# workflow/rules/make_linked_txome.smk
+
+
 rule make_linked_txome:
     input:
         index_dir=multiext(

@@ -1,3 +1,6 @@
+# workflow/rules/deseq2.smk
+
+
 # Rule 1: Create DESeqDataSet for each analysis configuration
 # DDS is parameterized by the analysis name from config.yaml
 rule DESeqDataSet_from_ranged_se_per_analysis:
