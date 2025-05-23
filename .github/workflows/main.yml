@@ -136,7 +136,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: conda-workflow-${{ matrix.scenario.name }}-${{ matrix.version.name }}-logs
+          name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
 
   SDM_Singularity_Conda:
@@ -225,7 +225,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: singularity-workflow-${{ matrix.scenario.name }}-${{ matrix.version.name }}-logs
+          name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
 
   SDM_Apptainer_Conda:
@@ -310,5 +310,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: singularity-workflow-${{ matrix.scenario.name }}-${{ matrix.version.name }}-logs
+          name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
