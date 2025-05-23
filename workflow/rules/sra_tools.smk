@@ -3,7 +3,7 @@
 
 rule configure_sra_tools:
     output:
-        "resources/sra_tools/sra_config_completed.done",
+        touch("resources/sra_tools/sra_config_completed.done"),
     params:
         vdb_config_ra_path=config["params"]["sra_tools"]["vdb_config_ra_path"],
     log:
@@ -12,8 +12,7 @@ rule configure_sra_tools:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (vdb-config --set {params.vdb_config_ra_path} --verbose
-        touch {output}) &> {log}
+        (vdb-config --set {params.vdb_config_ra_path} --verbose) &> {log}
         """
 
 
