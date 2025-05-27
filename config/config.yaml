@@ -10,9 +10,6 @@
 # If you cannot find a satisfactory answer in our documentation, please let us
 # know about your issue on our GitHub page, so we can assist you further:
 # https://github.com/tucca-cellag/tucca-rna-seq/issues/new
-
-# The default data/configuration is an example analysis using data from
-# BioProject PRJNA716186 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA716186)
 # ----------------------------------------------------------
 
 # ----------------------------------------------------------
@@ -37,11 +34,11 @@
 #
 # ----------------------------------------------------------
 ref_assembly:
-  source: "RefSeq"
-  accession: "GCF_016699485.2"
-  name: "bGalGal1.mat.broiler.GRCg7b"
-  release: ""
-  species: "Gallus_gallus"
+  source: "Ensembl"
+  accession: "GCA_000146045.2"
+  name: "R64-1-1"
+  release: "113"
+  species: "Saccharomyces_cerevisiae"
 
 # ----------------------------------------------------------
 # API Key Section:
