@@ -136,7 +136,7 @@ conda-create-envs-only)
   ;;
 report)
   echo "Running snakemake --report"
-  snakemake --report report.zip
+  snakemake --report report.zip --verbose
   ;;
 test)
   # Set optional values if necessary
