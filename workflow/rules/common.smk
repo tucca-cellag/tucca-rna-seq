@@ -451,7 +451,7 @@ def get_final_output() -> List[str]:
     # Define non-unit-based output (e.g., DESeq2 results, MultiQC report)
     final_output.append("resources/deseq2/deseq2_analyses_complete.done")
 
-    multiqc: str = f"results/multiqc/{config['params']['multiqc']['report_name']}.html"
+    multiqc: str = f"results/multiqc/multiqc.html"
     final_output.append(multiqc)
 
     return final_output

@@ -8,6 +8,9 @@ min_version("8.27.1")
 configfile: "config/config.yaml"
 
 
+report: "report/workflow.rst"
+
+
 # This container allows users to fix the underlying OS via singularity for
 # each job when using the workflow with --use-conda --use-singularity
 container: "docker://continuumio/miniconda3"
