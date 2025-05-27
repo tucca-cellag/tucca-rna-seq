@@ -134,6 +134,10 @@ conda-create-envs-only)
   echo "Running snakemake --conda-create-envs-only"
   snakemake --conda-create-envs-only --workflow-profile ${PROFILE}
   ;;
+report)
+  echo "Running snakemake --report"
+  snakemake --report report.html
+  ;;
 test)
   # Set optional values if necessary
   SMK_TARGET=${TARGET_OPT:-all}
