@@ -1,13 +1,10 @@
 sample_name	unit_name	sra	fq1	fq2
-IB_Primary_CEF_A	lane1	SRR14027951		
-IB_Primary_CEF_B	lane1	SRR14027952		
-IB_Primary_CEF_C	lane1	SRR14027953		
-BR308_Primary_CEF_A	lane1	SRR14027954		
-BR308_Primary_CEF_B	lane1	SRR14027955		
-BR308_Primary_CEF_C	lane1	SRR14027956		
-IB_SI_AI_CEF_A	lane1	SRR14027957		
-IB_SI_AI_CEF_B	lane1	SRR14027958		
-IB_SI_AI_CEF_C	lane1	SRR14027959		
-BR308_SI_AI_CEF_A	lane1	SRR14027960		
-BR308_SI_AI_CEF_B	lane1	SRR14027961		
-BR308_SI_AI_CEF_C	lane1	SRR14027962		
+etoh60_1	lane1		.test/data/snakemake_data/yeast/reads/etoh60_1_1.fq	.test/data/snakemake_data/yeast/reads/etoh60_1_2.fq
+etoh60_2	lane1		.test/data/snakemake_data/yeast/reads/etoh60_2_1.fq	.test/data/snakemake_data/yeast/reads/etoh60_2_2.fq
+etoh60_3	lane1		.test/data/snakemake_data/yeast/reads/etoh60_3_1.fq	.test/data/snakemake_data/yeast/reads/etoh60_3_2.fq
+ref1	lane1		.test/data/snakemake_data/yeast/reads/ref1_1.fq	.test/data/snakemake_data/yeast/reads/ref1_2.fq
+ref2	lane1		.test/data/snakemake_data/yeast/reads/ref2_1.fq	.test/data/snakemake_data/yeast/reads/ref2_2.fq
+ref3	lane1		.test/data/snakemake_data/yeast/reads/ref3_1.fq	.test/data/snakemake_data/yeast/reads/ref3_2.fq
+temp33_1	lane1		.test/data/snakemake_data/yeast/reads/temp33_1_1.fq	.test/data/snakemake_data/yeast/reads/temp33_1_2.fq
+temp33_2	lane1		.test/data/snakemake_data/yeast/reads/temp33_2_1.fq	.test/data/snakemake_data/yeast/reads/temp33_2_2.fq
+temp33_3	lane1		.test/data/snakemake_data/yeast/reads/temp33_3_1.fq	.test/data/snakemake_data/yeast/reads/temp33_3_2.fq
