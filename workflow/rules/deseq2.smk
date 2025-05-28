@@ -47,6 +47,25 @@ rule deseq2_wald_per_analysis:
         "v6.2.0/bio/deseq2/wald"
 
 
+rule deseq2_datavzrd_dge:
+    input:
+        config="resources/datavzrd/dge.datavzrd.yaml",
+        table="resources/deseq2/{analysis_name}/{contrast_name}/dge.tsv",
+    output:
+        report=report(
+            "resources/deseq2_datavzrd/{analysis_name}/{contrast_name}/dge_datavzrd.html",
+            caption="../report/datavzrd_deseq2_dge.rst",
+            category="Differential Expression",
+            subcategory="{analysis_name}: {contrast_name}",
+        ),
+    params:
+        extra="",
+    log:
+        "logs/deseq2/{analysis_name}/{contrast_name}/datavzrd_dge.log",
+    wrapper:
+        "v6.2.0/utils/datavzrd"
+
+
 rule get_results_from_all_deseq_analyses:
     input:
         # Request all DDS files (one per analysis_name)
@@ -62,6 +81,7 @@ rule get_results_from_all_deseq_analyses:
                 "resources/deseq2/{analysis_name}/{contrast_name}/dge.tsv",
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.tsv",
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.RDS",
+                "resources/deseq2_datavzrd/{analysis_name}/{contrast_name}/dge_datavzrd.html",
             ],
             zip,
             analysis_name=[job["analysis_name"] for job in CONTRAST_JOBS],
