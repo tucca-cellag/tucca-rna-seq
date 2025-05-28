@@ -53,7 +53,8 @@ rule deseq2_datavzrd_dge:
         table="resources/deseq2/{analysis_name}/{contrast_name}/dge.tsv",
     output:
         report(
-            "resources/deseq2_datavzrd/{analysis_name}/{contrast_name}/dge_datavzrd.html",
+            directory("results/tables/dge/{analysis_name}/{contrast_name}"),
+            htmlindex="index.html",
             caption="../report/datavzrd_deseq2_dge.rst",
             category="Differential Expression",
             subcategory="{analysis_name}: {contrast_name}",
@@ -61,7 +62,7 @@ rule deseq2_datavzrd_dge:
     params:
         extra="",
     log:
-        "logs/deseq2/{analysis_name}/{contrast_name}/datavzrd_dge.log",
+        "logs/viz/deseq2/{analysis_name}/{contrast_name}/dge.log",
     wrapper:
         "v6.2.0/utils/datavzrd"
 
