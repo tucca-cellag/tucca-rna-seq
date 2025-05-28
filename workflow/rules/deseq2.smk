@@ -82,7 +82,7 @@ rule get_results_from_all_deseq_analyses:
                 "resources/deseq2/{analysis_name}/{contrast_name}/dge.tsv",
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.tsv",
                 "resources/deseq2/{analysis_name}/{contrast_name}/counts.RDS",
-                "resources/deseq2_datavzrd/{analysis_name}/{contrast_name}/dge_datavzrd.html",
+                "results/tables/dge/{analysis_name}/{contrast_name}",
             ],
             zip,
             analysis_name=[job["analysis_name"] for job in CONTRAST_JOBS],
