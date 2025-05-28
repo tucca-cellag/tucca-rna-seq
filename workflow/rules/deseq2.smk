@@ -52,7 +52,7 @@ rule deseq2_datavzrd_dge:
         config="resources/datavzrd/dge.datavzrd.yaml",
         table="resources/deseq2/{analysis_name}/{contrast_name}/dge.tsv",
     output:
-        report=report(
+        report(
             "resources/deseq2_datavzrd/{analysis_name}/{contrast_name}/dge_datavzrd.html",
             caption="../report/datavzrd_deseq2_dge.rst",
             category="Differential Expression",
