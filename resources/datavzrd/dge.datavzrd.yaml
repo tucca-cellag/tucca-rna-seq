@@ -1,0 +1,26 @@
+__use_yte__: true
+
+datasets:
+  dge:
+    path: ?input.table
+    separator: "\t"
+
+views:
+  dge:
+    dataset: dge
+    render-table:
+      columns:
+        baseMean:
+        log2FoldChange:
+        lfcSE:
+        stat:
+        pvalue:
+          spell:
+            url: v1.3.0/stats/p-value
+            with:
+              significance_threshold: 0.05
+        padj:
+          spell:
+            url: v1.3.0/stats/p-value
+            with:
+              significance_threshold: 0.05
