@@ -56,11 +56,10 @@ rule deseq2_datavzrd_dge:
             directory("results/tables/dge/{analysis_name}/{contrast_name}"),
             htmlindex="index.html",
             caption="../report/datavzrd_deseq2_dge.rst",
-            category="Differential Expression",
-            subcategory="{analysis_name}: {contrast_name}",
+            category="Tables",
+            subcategory="Differential Expression",
+            labels={"table": "dge"},
         ),
-    params:
-        extra="",
     log:
         "logs/viz/deseq2/{analysis_name}/{contrast_name}/dge.log",
     wrapper:
