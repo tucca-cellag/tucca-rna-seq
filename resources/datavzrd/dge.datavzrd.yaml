@@ -11,9 +11,13 @@ views:
     render-table:
       columns:
         baseMean:
+          ellipsis: 10
         log2FoldChange:
+          ellipsis: 10
         lfcSE:
+          ellipsis: 10
         stat:
+          ellipsis: 10
         pvalue:
           spell:
             url: v1.3.0/stats/p-value
