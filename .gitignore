@@ -1,7 +1,7 @@
 # OS Files
 .DS_Store
 
-# Workflow Output
+# Snakemake
 .snakemake
 .snakemake/**
 logs/**
@@ -10,8 +10,6 @@ results/**
 # Development Tools
 dev
 de_analysis
-renv/**
-renv.lock
 
 # History files
 .Rhistory
@@ -36,11 +34,6 @@ renv.lock
 
 # RStudio files
 .Rproj.user/
-.Rprofile
-
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
@@ -55,12 +48,3 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
-
-# pkgdown site
-docs/
-
-# translation temp files
-po/*~
-
-# RStudio Connect folder
-rsconnect/
