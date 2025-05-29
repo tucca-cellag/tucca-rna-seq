@@ -77,6 +77,9 @@ diffexp:
             elements: ["treatment1", "treated", "untreated"]
           - name: "treatment2_treated_vs_untreated"
             elements: ["treatment2", "treated", "untreated"]
+    transform:
+      method: "rlog"
+      extra: ""
 
   # For min_counts
   # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering

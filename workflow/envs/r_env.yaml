@@ -1,3 +1,4 @@
+name: r_env
 channels:
   - conda-forge
   - bioconda
@@ -7,3 +8,4 @@ dependencies:
   - r-devtools =2.4
   - r-tidyverse =2.0
   - bioconductor-tximeta =1.24
+  - bioconductor-deseq2 =1.49

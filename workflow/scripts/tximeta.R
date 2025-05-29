@@ -1,6 +1,6 @@
 log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
-sink(log, type = "message")
+sink(log, type = c("output", "message"))
 date()
 suppressPackageStartupMessages({
   library(devtools)
@@ -79,7 +79,7 @@ if (snakemake@config[["ref_assembly"]][["source"]] == "RefSeq") {
   skipSeqinfo <- FALSE
 }
 
-extra <- snakemake@params[["tximeta_extra"]]
+extra <- snakemake@params[["extra"]]
 
 # Create summarized experiment using tximeta
 se <- tximeta(coldata,

@@ -47,6 +47,23 @@ rule deseq2_wald_per_analysis:
         "v6.2.0/bio/deseq2/wald"
 
 
+# TODO Make wrapper bio/deseq2/deseqtransform or add to bio/deseq2/deseqdataset
+rule deseq2_transform:
+    input:
+        dds="resources/deseq2/{analysis_name}/dds.RDS",
+    output:
+        dst="resources/deseq2/{analysis_name}/dst.RDS",
+    params:
+        method=config["diffexp"]["deseq2"]["transform"]["method"],
+        extra=config["diffexp"]["deseq2"]["transform"]["extra"],
+    conda:
+        "../envs/r_env.yaml"
+    log:
+        "logs/deseq2/{analysis_name}/transform.log",
+    script:
+        "../scripts/deseqtransform.R"
+
+
 rule get_results_from_all_deseq_analyses:
     input:
         # Request all DDS files (one per analysis_name)

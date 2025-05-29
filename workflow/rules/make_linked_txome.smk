@@ -56,7 +56,7 @@ rule make_linked_txome:
         genome=config["ref_assembly"]["name"],
         tximeta_cache="resources/tximeta",
     conda:
-        "../envs/tximeta.yaml"
+        "../envs/r_env.yaml"
     log:
         "logs/tximeta/make_linked_txome.log",
     script:
