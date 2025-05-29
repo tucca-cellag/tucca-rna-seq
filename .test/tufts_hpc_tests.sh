@@ -13,7 +13,8 @@ set -euo pipefail
 
 # Hard-coded API key—replace this placeholder with your actual NCBI API key.
 API_KEY="YOUR_NCBI_API_KEY"
-DEFAULT_CONDA_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev"
+DEFAULT_CONDA_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
+DEFAULT_SINGULARITY_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
 
 # Function to print usage information
 print_usage() {
@@ -37,21 +38,23 @@ print_usage() {
   echo "Global Options (can be used with any task, or alone for help):"
   echo "  -h                               Show this help message and exit."
   echo "  -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
-  echo "                                   Example: -x \"--cores 1 --conda-prefix /custom/path\""
-  echo "  -p                               Use the default conda prefix (${DEFAULT_CONDA_PREFIX}) for Snakemake"
-  echo "                                   (for tasks: conda-create-envs-only, test, sra-reads)."
-  echo "                                   If a custom --conda-prefix is needed, use the -x option."
+  echo "                                   Example: -x \"--cores 1 --conda-prefix /custom/conda --singularity-prefix /custom/singularity\""
+  echo "  -p                               Use default prefixes for Snakemake (for tasks: conda-create-envs-only, test, sra-reads):"
+  echo "                                     --conda-prefix ${DEFAULT_CONDA_PREFIX}"
+  echo "                                     --singularity-prefix ${DEFAULT_SINGULARITY_PREFIX}"
+  echo "                                   If custom paths are needed for these, use the -x option instead of/in addition to -p."
   echo ""
   echo "Examples:"
-  echo "  bash $0 test -t rule1             # No --conda-prefix used"
-  echo "  bash $0 test -p                   # Uses --conda-prefix ${DEFAULT_CONDA_PREFIX}"
-  echo "  bash $0 test -x \"--conda-prefix /my/custom/path\" # Uses custom --conda-prefix via -x"
-  echo "  bash $0 test -t my_custom_rule -r -x \"--cores 1\" -p # Uses refseq, default prefix, and extra args"
+  echo "  bash $0 test -t rule1             # No default prefixes used by -p"
+  echo "  bash $0 test -p                   # Uses default conda and singularity prefixes"
+  echo "  bash $0 test -x \"--conda-prefix /my/custom/conda\" # Uses custom conda prefix via -x"
+  echo "  bash $0 test -p -x \"--conda-prefix /my/custom/conda\" # -p ignored for conda, default singularity used, custom conda from -x"
   echo "  bash $0 -h"
 }
 
 # --- Initial Checks ---
-if [ -z "${1}" ] || [ "${1}" == "-h" ]; then # Handle -h globally before task/option parsing
+# Handle -h globally before task/option parsing
+if [ -z "${1}" ] || [ "${1}" == "-h" ]; then
   print_usage
   exit 0
 fi
@@ -71,17 +74,16 @@ TARGET_OPT="all"
 EXTRA_SNAKEMAKE_ARGS_OPT=""
 CONFIG_SUBDIR="config_basic"
 USE_REFSEQ_SOURCE=false
-USE_DEFAULT_P_PREFIX=false
+USE_DEFAULT_P_PREFIXES=false # Changed variable name for clarity
 
 OPTIND=1 # Reset OPTIND
-# -p is now a simple flag
 while getopts ":t:x:crhp" opt; do
   case ${opt} in
   t) TARGET_OPT="${OPTARG}" ;;
   x) EXTRA_SNAKEMAKE_ARGS_OPT="${OPTARG}" ;;
   c) CONFIG_SUBDIR="config_complex" ;;
   r) USE_REFSEQ_SOURCE=true ;;
-  p) USE_DEFAULT_P_PREFIX=true ;;
+  p) USE_DEFAULT_P_PREFIXES=true ;; # -p is a flag to use default for both
   h)
     print_usage
     exit 0
@@ -132,49 +134,68 @@ fi
 # Global settings for the Snakemake call.
 PROFILE="profiles/slurm-dev"
 
-# --- Task Execution ---
-# Prepare dynamic arguments for snakemake calls
+# --- Prepare Snakemake dynamic arguments and informational message ---
 SNAKEMAKE_DYNAMIC_ARGS=()
-CONDA_PREFIX_MESSAGE=""
+PATH_MESSAGE_SEGMENTS=()
 
-if [ "${USE_DEFAULT_P_PREFIX}" = true ]; then
-  # Check if --conda-prefix is already in EXTRA_SNAKEMAKE_ARGS_OPT
-  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" == *"--conda-prefix"* ]]; then
-    echo "Warning: -p option is used, but --conda-prefix is also specified in -x arguments." >&2
-    echo "The --conda-prefix from -x will be used: '${EXTRA_SNAKEMAKE_ARGS_OPT}'" >&2
-    CONDA_PREFIX_MESSAGE=" (custom --conda-prefix from -x used)"
-  else
+if [ "${USE_DEFAULT_P_PREFIXES}" = true ]; then
+  # Conda Prefix
+  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" != *"--conda-prefix"* ]]; then
     SNAKEMAKE_DYNAMIC_ARGS+=("--conda-prefix" "${DEFAULT_CONDA_PREFIX}")
-    CONDA_PREFIX_MESSAGE=" with default conda prefix: ${DEFAULT_CONDA_PREFIX}"
+    PATH_MESSAGE_SEGMENTS+=("default conda prefix: ${DEFAULT_CONDA_PREFIX}")
+  else
+    PATH_MESSAGE_SEGMENTS+=("--conda-prefix from -x")
+  fi
+  # Singularity Prefix
+  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" != *"--singularity-prefix"* ]]; then
+    SNAKEMAKE_DYNAMIC_ARGS+=("--singularity-prefix" "${DEFAULT_SINGULARITY_PREFIX}")
+    PATH_MESSAGE_SEGMENTS+=("default singularity prefix: ${DEFAULT_SINGULARITY_PREFIX}")
+  else
+    PATH_MESSAGE_SEGMENTS+=("--singularity-prefix from -x")
   fi
 else
+  PATH_MESSAGE_SEGMENTS+=("no default prefixes via -p")
   if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" == *"--conda-prefix"* ]]; then
-    CONDA_PREFIX_MESSAGE=" (custom --conda-prefix from -x used)"
-  else
-    CONDA_PREFIX_MESSAGE=" (no --conda-prefix specified by -p or -x)"
+    PATH_MESSAGE_SEGMENTS+=("--conda-prefix from -x detected")
+  fi
+  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" == *"--singularity-prefix"* ]]; then
+    PATH_MESSAGE_SEGMENTS+=("--singularity-prefix from -x detected")
   fi
 fi
 
+FINAL_PATH_MESSAGE=""
+if [ ${#PATH_MESSAGE_SEGMENTS[@]} -gt 0 ]; then
+  FINAL_PATH_MESSAGE=" ("
+  for i in "${!PATH_MESSAGE_SEGMENTS[@]}"; do
+    FINAL_PATH_MESSAGE+="${PATH_MESSAGE_SEGMENTS[$i]}"
+    if [ $i -lt $((${#PATH_MESSAGE_SEGMENTS[@]} - 1)) ]; then
+      FINAL_PATH_MESSAGE+="; "
+    fi
+  done
+  FINAL_PATH_MESSAGE+=")"
+fi
+
+# --- Task Execution ---
 case $TASK in
 lint)
   echo "Linting the Snakemake workflow..."
-  # Lint task does not use --conda-prefix from -p
+  # Lint task does not use --conda-prefix or --singularity-prefix from -p
   snakemake --lint --verbose --workflow-profile ${PROFILE} ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 conda-create-envs-only)
-  echo "Running snakemake --conda-create-envs-only${CONDA_PREFIX_MESSAGE}"
+  echo "Running snakemake --conda-create-envs-only${FINAL_PATH_MESSAGE}"
   snakemake --conda-create-envs-only --workflow-profile ${PROFILE} "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 test)
   SMK_TARGET=${TARGET_OPT:-all}
   SOURCE=$([ "${USE_REFSEQ_SOURCE}" = true ] && echo "refseq" || echo "ensembl")
 
-  echo "Dry-run for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${CONDA_PREFIX_MESSAGE}..."
+  echo "Dry-run for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${FINAL_PATH_MESSAGE}..."
   if snakemake ${SMK_TARGET} -np --workflow-profile ${PROFILE} \
     --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
     echo "The dry-run for target '${SMK_TARGET}' on '${SOURCE}' assembly with '${CONFIG_SUBDIR}' was successful."
-    echo "Running Snakemake workflow for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${CONDA_PREFIX_MESSAGE}..."
+    echo "Running Snakemake workflow for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${FINAL_PATH_MESSAGE}..."
     snakemake ${SMK_TARGET} --workflow-profile ${PROFILE} \
       --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
       --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
@@ -187,12 +208,12 @@ test)
 sra-reads)
   SMK_TARGET=${TARGET_OPT:-all}
 
-  echo "Dry-run on SRA reads (target: '${SMK_TARGET}')${CONDA_PREFIX_MESSAGE}..."
+  echo "Dry-run on SRA reads (target: '${SMK_TARGET}')${FINAL_PATH_MESSAGE}..."
   if snakemake ${SMK_TARGET} -np --workflow-profile ${PROFILE} \
     --configfile ".test/sra_reads/config/config.yaml" \
     --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
     echo "The dry-run on SRA reads (target: '${SMK_TARGET}') was successful!!"
-    echo "Running Snakemake workflow on SRA reads (target: '${SMK_TARGET}')${CONDA_PREFIX_MESSAGE}..."
+    echo "Running Snakemake workflow on SRA reads (target: '${SMK_TARGET}')${FINAL_PATH_MESSAGE}..."
     snakemake ${SMK_TARGET} --workflow-profile ${PROFILE} \
       --configfile ".test/sra_reads/config/config.yaml" \
       --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
