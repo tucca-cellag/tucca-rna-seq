@@ -137,10 +137,8 @@ params:
     libtype: "A"
     extra: "--seqBias --posBias --writeUnmappedNames"
   multiqc:
-    report_name: "multiqc_report"
-    overwrite_existing: "-f"
-    # Leave out if you don't want to automatically overwrite existing reports
-    multiqc_config_path: "config/multiqc_config.yaml"
-    extra: ""
+    # Leave out --force if you don't want to automatically overwrite existing
+    # multiqc results on a re-run
+    extra: "--verbose --force"
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"

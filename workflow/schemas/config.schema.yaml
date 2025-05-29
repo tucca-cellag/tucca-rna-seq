@@ -200,12 +200,6 @@ properties:
       multiqc:
         type: object
         properties:
-          report_name:
-            type: string
-          overwrite_existing:
-            type: string
-          multiqc_config_path:
-            type: string
           extra:
             type: string
       sra_tools:
