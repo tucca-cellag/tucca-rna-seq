@@ -24,7 +24,11 @@ print_usage() {
   echo ""
   echo "Tasks:"
   echo "  lint                             Lint the Snakemake workflow."
+  echo "    Options for lint:"
+  echo "      -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
   echo "  conda-create-envs-only           Create Conda environments only (no other options)."
+  echo "    Options for conda-create-envs-only:"
+  echo "      -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
   echo "  test                             Run a specific target rule with local reads."
   echo "    Options for test:"
   echo "      -t <target_name>             Optional Snakemake target (defaults to 'all')."
@@ -128,11 +132,11 @@ PROFILE="profiles/slurm-dev"
 case $TASK in
 lint)
   echo "Linting the Snakemake workflow..."
-  snakemake --lint --verbose --workflow-profile ${PROFILE}
+  snakemake --lint --verbose --workflow-profile ${PROFILE} ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 conda-create-envs-only)
   echo "Running snakemake --conda-create-envs-only"
-  snakemake --conda-create-envs-only --workflow-profile ${PROFILE}
+  snakemake --conda-create-envs-only --workflow-profile ${PROFILE} ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 test)
   # Set optional values if necessary
