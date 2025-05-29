@@ -17,13 +17,13 @@ DEFAULT_CONDA_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev"
 
 # Function to print usage information
 print_usage() {
-  echo "Usage: $0 <task> [options]"
+  echo "Usage: bash $0 <task> [options]  OR  ./$0 <task> [options] (if executable)"
   echo ""
   echo "This script runs various Snakemake workflow tests."
   echo ""
   echo "Tasks:"
   echo "  lint                             Lint the Snakemake workflow."
-  echo "  conda-create-envs-only           Create Conda environments only (no other options)."
+  echo "  conda-create-envs-only           Create Conda environments only."
   echo "  test                             Run a specific target rule with local reads."
   echo "    Options for test:"
   echo "      -t <target_name>             Optional Snakemake target (defaults to 'all')."
@@ -36,30 +36,34 @@ print_usage() {
   echo ""
   echo "Global Options (can be used with any task, or alone for help):"
   echo "  -h                               Show this help message and exit."
-  echo "  -x \"<extra_args>\"              Optional extra arguments for Snakemake (quote if multiple)."
-  echo "  -p [<path>]                      Set the --conda-prefix for Snakemake (for tasks: conda-create-envs-only, test, sra-reads)."
-  echo "                                     - If -p is omitted, no --conda-prefix is used."
-  echo "                                     - If -p is used without <path>, defaults to: ${DEFAULT_CONDA_PREFIX}"
-  echo "                                     - If -p <path> is used, the specified <path> is used."
+  echo "  -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
+  echo "                                   Example: -x \"--cores 1 --conda-prefix /custom/path\""
+  echo "  -p                               Use the default conda prefix (${DEFAULT_CONDA_PREFIX}) for Snakemake"
+  echo "                                   (for tasks: conda-create-envs-only, test, sra-reads)."
+  echo "                                   If a custom --conda-prefix is needed, use the -x option."
   echo ""
   echo "Examples:"
-  echo "  sh $0 test -t my_custom_rule -r -x \"--cores 1\"  # Uses refseq source"
-  echo "  sh $0 test -t my_custom_rule      # Uses ensembl source (default)"
-  echo "  sh $0 test -p                   # Uses --conda-prefix ${DEFAULT_CONDA_PREFIX}"
-  echo "  sh $0 test -p /my/custom/path   # Uses --conda-prefix /my/custom/path"
-  echo "  sh $0 test -t my_custom_rule -r -x \"--cores 1\" -p # Uses refseq, default prefix"
-  echo "  sh $0 sra-reads -t specific_sra_target -x \"--debug\""
-  echo "  sh $0 -h"
+  echo "  bash $0 test -t rule1             # No --conda-prefix used"
+  echo "  bash $0 test -p                   # Uses --conda-prefix ${DEFAULT_CONDA_PREFIX}"
+  echo "  bash $0 test -x \"--conda-prefix /my/custom/path\" # Uses custom --conda-prefix via -x"
+  echo "  bash $0 test -t my_custom_rule -r -x \"--cores 1\" -p # Uses refseq, default prefix, and extra args"
+  echo "  bash $0 -h"
 }
 
-# --- Initial Checks and Task Definition ---
-if [ -z "${1}" ] || [ "${1}" == "-h" ]; then
+# --- Initial Checks ---
+if [ -z "${1}" ] || [ "${1}" == "-h" ]; then # Handle -h globally before task/option parsing
   print_usage
   exit 0
 fi
 
+# --- Task Definition ---
+if [[ "${1}" =~ ^- ]]; then
+  echo "Error: Task must be the first argument." >&2
+  print_usage
+  exit 1
+fi
 TASK=$1
-shift # Remove task from arguments, so getopts processes the rest for options
+shift # Remove task from arguments, so $@ contains only options now
 
 # --- Option Parsing ---
 # Initialize variables for options
@@ -67,25 +71,17 @@ TARGET_OPT="all"
 EXTRA_SNAKEMAKE_ARGS_OPT=""
 CONFIG_SUBDIR="config_basic"
 USE_REFSEQ_SOURCE=false
-P_OPTION_USED=false
-CONDA_PREFIX_ARG="" # Will store the actual prefix path if -p is used
+USE_DEFAULT_P_PREFIX=false
 
-# The leading colon in getopts string enables silent error handling.
-# p:: means -p can take an optional argument.
-while getopts ":t:x:crhp::" opt; do
+OPTIND=1 # Reset OPTIND
+# -p is now a simple flag
+while getopts ":t:x:crhp" opt; do
   case ${opt} in
   t) TARGET_OPT="${OPTARG}" ;;
   x) EXTRA_SNAKEMAKE_ARGS_OPT="${OPTARG}" ;;
   c) CONFIG_SUBDIR="config_complex" ;;
   r) USE_REFSEQ_SOURCE=true ;;
-  p)
-    P_OPTION_USED=true
-    if [ -z "${OPTARG}" ]; then # -p was used without a value
-      CONDA_PREFIX_ARG="${DEFAULT_CONDA_PREFIX}"
-    else # -p was used with a value
-      CONDA_PREFIX_ARG="${OPTARG}"
-    fi
-    ;;
+  p) USE_DEFAULT_P_PREFIX=true ;;
   h)
     print_usage
     exit 0
@@ -95,7 +91,7 @@ while getopts ":t:x:crhp::" opt; do
     print_usage
     exit 1
     ;;
-  :) # Handles missing arguments for options that require them (e.g., t, x)
+  :)
     echo "Option -${OPTARG} requires an argument." >&2
     print_usage
     exit 1
@@ -137,25 +133,37 @@ fi
 PROFILE="profiles/slurm-dev"
 
 # --- Task Execution ---
-# Prepare dynamic arguments for snakemake calls that use conda prefix
-SNAKEMAKE_CONDA_ARGS=()
-CONDA_PREFIX_MESSAGE="" # For logging
-if [ "${P_OPTION_USED}" = true ]; then
-  SNAKEMAKE_CONDA_ARGS+=("--conda-prefix" "${CONDA_PREFIX_ARG}")
-  CONDA_PREFIX_MESSAGE=" with conda prefix: ${CONDA_PREFIX_ARG}"
+# Prepare dynamic arguments for snakemake calls
+SNAKEMAKE_DYNAMIC_ARGS=()
+CONDA_PREFIX_MESSAGE=""
+
+if [ "${USE_DEFAULT_P_PREFIX}" = true ]; then
+  # Check if --conda-prefix is already in EXTRA_SNAKEMAKE_ARGS_OPT
+  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" == *"--conda-prefix"* ]]; then
+    echo "Warning: -p option is used, but --conda-prefix is also specified in -x arguments." >&2
+    echo "The --conda-prefix from -x will be used: '${EXTRA_SNAKEMAKE_ARGS_OPT}'" >&2
+    CONDA_PREFIX_MESSAGE=" (custom --conda-prefix from -x used)"
+  else
+    SNAKEMAKE_DYNAMIC_ARGS+=("--conda-prefix" "${DEFAULT_CONDA_PREFIX}")
+    CONDA_PREFIX_MESSAGE=" with default conda prefix: ${DEFAULT_CONDA_PREFIX}"
+  fi
 else
-  CONDA_PREFIX_MESSAGE=" (no --conda-prefix specified)"
+  if [[ "${EXTRA_SNAKEMAKE_ARGS_OPT}" == *"--conda-prefix"* ]]; then
+    CONDA_PREFIX_MESSAGE=" (custom --conda-prefix from -x used)"
+  else
+    CONDA_PREFIX_MESSAGE=" (no --conda-prefix specified by -p or -x)"
+  fi
 fi
 
 case $TASK in
 lint)
   echo "Linting the Snakemake workflow..."
-  # Lint task does not use --conda-prefix
+  # Lint task does not use --conda-prefix from -p
   snakemake --lint --verbose --workflow-profile ${PROFILE} ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 conda-create-envs-only)
   echo "Running snakemake --conda-create-envs-only${CONDA_PREFIX_MESSAGE}"
-  snakemake --conda-create-envs-only --workflow-profile ${PROFILE} "${SNAKEMAKE_CONDA_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
+  snakemake --conda-create-envs-only --workflow-profile ${PROFILE} "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
   ;;
 test)
   SMK_TARGET=${TARGET_OPT:-all}
@@ -164,12 +172,12 @@ test)
   echo "Dry-run for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${CONDA_PREFIX_MESSAGE}..."
   if snakemake ${SMK_TARGET} -np --workflow-profile ${PROFILE} \
     --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_CONDA_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
     echo "The dry-run for target '${SMK_TARGET}' on '${SOURCE}' assembly with '${CONFIG_SUBDIR}' was successful."
     echo "Running Snakemake workflow for target '${SMK_TARGET}' using a '${SOURCE}' assembly with '${CONFIG_SUBDIR}' config${CONDA_PREFIX_MESSAGE}..."
     snakemake ${SMK_TARGET} --workflow-profile ${PROFILE} \
       --configfile ".test/local_reads/${SOURCE}/${CONFIG_SUBDIR}/config.yaml" \
-      --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_CONDA_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
+      --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
   else
     DRY_RUN_EXIT_CODE=$?
     echo "The dry-run for target '${SMK_TARGET}' on '${SOURCE}' assembly with '${CONFIG_SUBDIR}' failed with exit code ${DRY_RUN_EXIT_CODE}. Skipping actual run." >&2
@@ -182,12 +190,12 @@ sra-reads)
   echo "Dry-run on SRA reads (target: '${SMK_TARGET}')${CONDA_PREFIX_MESSAGE}..."
   if snakemake ${SMK_TARGET} -np --workflow-profile ${PROFILE} \
     --configfile ".test/sra_reads/config/config.yaml" \
-    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_CONDA_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
+    --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}; then
     echo "The dry-run on SRA reads (target: '${SMK_TARGET}') was successful!!"
     echo "Running Snakemake workflow on SRA reads (target: '${SMK_TARGET}')${CONDA_PREFIX_MESSAGE}..."
     snakemake ${SMK_TARGET} --workflow-profile ${PROFILE} \
       --configfile ".test/sra_reads/config/config.yaml" \
-      --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_CONDA_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
+      --config api_keys="{\"ncbi\": \"${API_KEY}\"}" "${SNAKEMAKE_DYNAMIC_ARGS[@]}" ${EXTRA_SNAKEMAKE_ARGS_OPT}
   else
     DRY_RUN_EXIT_CODE=$?
     echo "The dry-run on SRA reads (target: '${SMK_TARGET}') failed with exit code ${DRY_RUN_EXIT_CODE}. Skipping actual run." >&2
