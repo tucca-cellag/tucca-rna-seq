@@ -36,6 +36,7 @@ print_usage() {
   echo ""
   echo "Global Options (can be used with any task, or alone for help):"
   echo "  -h                               Show this help message and exit."
+  echo "  -x \"<extra_args>\"              Optional extra arguments for Snakemake (quote if multiple)."
   echo "  -p [<path>]                      Set the --conda-prefix for Snakemake (for tasks: conda-create-envs-only, test, sra-reads)."
   echo "                                     - If -p is omitted, no --conda-prefix is used."
   echo "                                     - If -p is used without <path>, defaults to: ${DEFAULT_CONDA_PREFIX}"
