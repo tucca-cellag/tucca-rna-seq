@@ -68,8 +68,10 @@ rule get_results_from_all_deseq_analyses:
     input:
         # Request all DDS files (one per analysis_name)
         expand(
-            "resources/deseq2/{analysis_name}/dds.RDS",
-            "resources/deseq2/{analysis_name}/dst.RDS",
+            [
+                "resources/deseq2/{analysis_name}/dds.RDS",
+                "resources/deseq2/{analysis_name}/dst.RDS",
+            ],
             analysis_name=DESEQ_ANALYSES_NAMES,
         ),
         # Request all Wald test outputs (for each contrast in each analysis)
