@@ -15,6 +15,8 @@ set -euo pipefail
 API_KEY="YOUR_NCBI_API_KEY"
 DEFAULT_CONDA_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
 DEFAULT_SINGULARITY_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
+PROFILE_PROD_PATH="profiles/slurm"
+PROFILE_DEV_PATH="profiles/slurm-dev"
 
 # Function to print usage information
 print_usage() {
@@ -37,16 +39,19 @@ print_usage() {
   echo ""
   echo "Global Options (can be used with any task, or alone for help):"
   echo "  -h                               Show this help message and exit."
-  echo "  -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
-  echo "                                   Example: -x \"--cores 1 --conda-prefix /custom/conda --singularity-prefix /custom/singularity\""
+  echo "  -d                               Use development Slurm profile (${PROFILE_DEV_PATH})."
+  echo "                                   Default is production profile (${PROFILE_PROD_PATH})."
   echo "  -p                               Use default prefixes for Snakemake (for tasks: conda-create-envs-only, test, sra-reads):"
   echo "                                     --conda-prefix ${DEFAULT_CONDA_PREFIX}"
   echo "                                     --singularity-prefix ${DEFAULT_SINGULARITY_PREFIX}"
   echo "                                   If custom paths are needed for these, use the -x option instead of/in addition to -p."
+  echo "  -x \"<extra_args>\"            Optional extra arguments for Snakemake (quote if multiple)."
+  echo "                                   Example: -x \"--cores 1 --conda-prefix /custom/conda --singularity-prefix /custom/singularity\""
   echo ""
   echo "Examples:"
   echo "  bash $0 test -t rule1             # No default prefixes used by -p"
   echo "  bash $0 test -p                   # Uses default conda and singularity prefixes"
+  echo "  bash $0 test -d                   # Uses development Slurm profile"
   echo "  bash $0 test -x \"--conda-prefix /my/custom/conda\" # Uses custom conda prefix via -x"
   echo "  bash $0 test -p -x \"--conda-prefix /my/custom/conda\" # -p ignored for conda, default singularity used, custom conda from -x"
   echo "  bash $0 -h"
@@ -75,14 +80,16 @@ EXTRA_SNAKEMAKE_ARGS_OPT=""
 CONFIG_SUBDIR="config_basic"
 USE_REFSEQ_SOURCE=false
 USE_DEFAULT_P_PREFIXES=false # Changed variable name for clarity
+USE_DEV_PROFILE=false
 
 OPTIND=1 # Reset OPTIND
-while getopts ":t:x:crhp" opt; do
+while getopts ":t:x:crdhp" opt; do
   case ${opt} in
   t) TARGET_OPT="${OPTARG}" ;;
   x) EXTRA_SNAKEMAKE_ARGS_OPT="${OPTARG}" ;;
   c) CONFIG_SUBDIR="config_complex" ;;
   r) USE_REFSEQ_SOURCE=true ;;
+  d) USE_DEV_PROFILE=true ;;
   p) USE_DEFAULT_P_PREFIXES=true ;; # -p is a flag to use default for both
   h)
     print_usage
@@ -132,7 +139,14 @@ if ! command -v conda &>/dev/null; then
 fi
 
 # Global settings for the Snakemake call.
-PROFILE="profiles/slurm-dev"
+# Set PROFILE based on the -d flag
+PROFILE="${PROFILE_PROD_PATH}" # Default to production profile
+if [ "${USE_DEV_PROFILE}" = true ]; then
+  PROFILE="${PROFILE_DEV_PATH}"
+  echo "Using development Slurm profile: ${PROFILE}"
+else
+  echo "Using production Slurm profile: ${PROFILE}"
+fi
 
 # --- Prepare Snakemake dynamic arguments and informational message ---
 SNAKEMAKE_DYNAMIC_ARGS=()
