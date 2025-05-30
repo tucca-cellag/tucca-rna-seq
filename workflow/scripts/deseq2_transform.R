@@ -1,6 +1,6 @@
 log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
-sink(log, type = c("output", "message"))
+sink(log, type = "message")
 date()
 suppressPackageStartupMessages({
   library(devtools)
