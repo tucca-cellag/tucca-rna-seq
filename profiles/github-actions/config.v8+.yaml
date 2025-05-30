@@ -5,6 +5,8 @@
 # See .github/workflows/main.yml
 
 # Profile Settings
+# To learn more see:
+# https://snakemake.readthedocs.io/en/stable/executing/cli.html
 use-conda: true
 conda-cleanup-pkgs: tarballs
 verbose: true
