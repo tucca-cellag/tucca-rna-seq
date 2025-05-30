@@ -1,41 +1,45 @@
-log <- file(snakemake@log[[1]], open = "wt")
-sink(log)
-sink(log, type = "message")
-date()
-suppressPackageStartupMessages({
-  library(devtools)
-})
+log <- base::file(snakemake@log[[1]], open = "wt")
+base::sink(log)
+base::sink(log, type = "message")
+base::date()
+
+base::library(package = "devtools", character.only = TRUE)
 devtools::session_info()
 
-suppressPackageStartupMessages({
-  library(DESeq2)
-})
+base::library(package = "DESeq2", character.only = TRUE)
 
 # Get Snakemake inputs and params
-dds <- readRDS(snakemake@input[["dds"]])
-transformation_method <- tolower(snakemake@params[["method"]])
-extra <- snakemake@params[["extra"]]
+dds <- base::readRDS(snakemake@input[["dds"]])
+transformation_method <- base::tolower(snakemake@params[["method"]])
+extra_params_str <- base::as.character(snakemake@params[["extra"]])
+
+cmd_str <- "dds"
+if (extra_params_str != "") {
+  cmd_str <- base::paste(cmd_str, extra_params_str, sep = ",")
+}
 
 dst_cmd <- base::paste0(
-  "DESeq2::", transformation_method, "(dds", extra, ")"
+  "DESeq2::", transformation_method, "(", cmd_str, ")"
 )
 base::message("Transformation command:")
 base::message(dst_cmd)
 
 # Perform the transformation
-tryCatch(
+base::tryCatch(
   {
     dst <- base::eval(base::parse(text = dst_cmd))
   },
-  error = function(msg) {
-    stop(
-      "Unsupported transformation_method: '", transformation_method,
-      "'. Choose 'vst' or 'rlog'."
+  error = function(e) {
+    detailed_error_message <- base::paste0(
+      "Error executing DESeq2 transformation ('", transformation_method,
+      "'). \n", "Command attempted: '", dst_cmd, "'\n",
+      "Original error message: ", e$message
     )
+    base::stop(detailed_error_message, call. = FALSE)
   }
 )
 
 # Save the DESeqTransform object
-saveRDS(dst, file = snakemake@output[["dst"]])
+base::saveRDS(dst, file = snakemake@output[["dst"]])
 
-save.image(file = snakemake@output[["image"]])
+base::save.image(file = snakemake@output[["image"]])
