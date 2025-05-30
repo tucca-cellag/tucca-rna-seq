@@ -53,6 +53,7 @@ rule deseq2_transform:
         dds="resources/deseq2/{analysis_name}/dds.RDS",
     output:
         dst="resources/deseq2/{analysis_name}/dst.RDS",
+        image="resources/deseq2/{analysis_name}/.RData",
     params:
         method=config["diffexp"]["deseq2"]["transform"]["method"],
         extra=config["diffexp"]["deseq2"]["transform"]["extra"],
