@@ -1,0 +1,24 @@
+{
+    "creators": [
+        {
+            "orcid": "0009-0001-3166-6329",
+            "affiliation": "Tufts University Center for Cellular Agriculture",
+            "name": "Bromberg, Benjamin"
+        }
+    ],
+
+    "license": "MIT",
+
+    "title": "tucca-rna-seq",
+
+    "keywords": [
+      "bioinformatics", "rna-seq", "snakemake", "reproducible-research",
+      "conda", "singularity", "apptainer", "reproducible-science", "rnaseq",
+      "reproducibility", "high-throughput", "transcriptomics", 
+      "snakemake-workflow", "salmon-deseq2", "sciworkflows", "rnaseq-pipeline"
+    ],
+
+    "communities": [
+        {"identifier": "tucca-cellag"}
+    ]
+}

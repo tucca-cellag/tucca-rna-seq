@@ -1,0 +1,47 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: tucca-rna-seq
+message: >-
+    If you use this software, please cite it using the
+    metadata from this file.
+type: software
+authors:
+    - given-names: Benjamin
+      family-names: Bromberg
+      email: benjamin.bromberg@tufts.edu
+      affiliation: Tufts University Center for Cellular Agriculture
+      orcid: "https://orcid.org/0009-0001-3166-6329"
+    - name: Tufts University Center for Cellular Agriculture
+      country: MA
+      website: "https://cellularagriculture.tufts.edu/"
+      city: Medford
+      post-code: "02155"
+      location: United States
+repository-code: "https://github.com/tucca-cellag/tucca-rna-seq"
+url: "https://tucca-cellag.github.io/tucca-rna-seq/introduction"
+abstract: >-
+    tucca-cellag/tucca-rna-seq is the Tufts University Center
+    for Cellular Agriculture's (TUCCA) RNA-Seq workflow
+    specifically designed for cellular agriculture projects.
+keywords:
+    - bioinformatics
+    - rna-seq
+    - snakemake
+    - reproducible-research
+    - conda
+    - singularity
+    - apptainer
+    - reproducible-science
+    - rnaseq
+    - reproducibility
+    - high-throughput
+    - transcriptomics
+    - snakemake-workflow
+    - salmon-deseq2
+    - sciworkflows
+    - rnaseq-pipeline
+license: MIT
+version: 0.9.0
+date-released: "2025-06-03"
