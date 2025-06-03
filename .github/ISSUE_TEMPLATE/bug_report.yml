@@ -1,0 +1,50 @@
+name: Bug report
+description: Report something that is broken or incorrect
+labels: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you post this issue, please check the documentation:
+
+        - [tucca-cellag/tucca-rna-seq: pipeline documentation](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
+        - [tucca-cellag/tucca-rna-seq: troubleshooting](https://tucca-cellag.github.io/tucca-rna-seq/troubleshooting)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: command_used
+    attributes:
+      label: Command used and terminal output
+      description: Steps to reproduce the behaviour. Please paste the command you used to launch the pipeline and the output from your terminal.
+      render: console
+      placeholder: |
+        $ snakemake all ...
+
+        Some output where something broke
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Relevant files
+      description: |
+        Please drag and drop the relevant files here. Create a `.zip` archive if the extension is not allowed.
+        The verbose log file from your latest run is often useful _(this is a hidden file found in `.snakemake/log`)_ as well as your custom Snakemake configuration files from the `config` directory
+
+  - type: textarea
+    id: system
+    attributes:
+      label: System information
+      description: |
+        * Snakemake version _(eg. 8.27.1)_
+        * Hardware _(eg. HPC, Desktop, Cloud)_
+        * Executor _(eg. slurm, local, awsbatch)_
+        * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter, Charliecloud, or Apptainer)_
+        * OS _(eg. CentOS Linux, macOS, Linux Mint)_
+        * Version of tucca-cellag/tucca-rna-seq _(eg. 1.0, 1.3, 2.8.2)_
