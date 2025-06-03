@@ -101,7 +101,7 @@ the `tucca-cellag` community, we ask that you observe our [code of conduct][7].
 [2.5]: https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html
 [3]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html
 [4]: https://github.com/tucca-cellag/tucca-rna-seq/issues
-[5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new
+[5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new/choose
 [contact]: <mailto:benjamin.bromberg@tufts.edu>
 [6]: .github/CONTRIBUTING.md
 [7]: CODE_OF_CONDUCT.md
