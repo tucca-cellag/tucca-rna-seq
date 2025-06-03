@@ -21,7 +21,7 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Docusaurus](https://img.shields.io/badge/tucca--cellag.github.io-3EB049?logo=docusaurus&label=Docusaurus)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
 [![Issues](https://img.shields.io/github/issues/tucca-cellag/tucca-rna-seq?style=flat&label=issues&color=3EB049)](https://github.com/tucca-cellag/tucca-rna-seq/issues)
 [![Open Issues](https://img.shields.io/badge/GitHub-Open%20Issue-blue?logo=github)](https://github.com/tucca-cellag/tucca-rna-seq/issues/new)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/tucca-cellag/tucca-rna-seq/total)
+<!-- ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/tucca-cellag/tucca-rna-seq/total) -->
 [![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about)](https://cellularagriculture.tufts.edu/)
 [![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
 [![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
@@ -61,7 +61,7 @@ please contact us via [email][contact].
 If you use this workflow in a paper, don't forget to give credits to the
 authors by citing the URL of this (original) repository and its DOI (above if
 available). You should also cite the individual tools used in this workflow.
-See [CITATIONS.md](CITATIONS.md) file for details.
+See [CITATIONS.md](CITATIONS.md) for details.
 
 ## What is Cellular Agriculture? 🧬🌱
 
@@ -103,5 +103,5 @@ the `tucca-cellag` community, we ask that you observe our [code of conduct][7].
 [4]: https://github.com/tucca-cellag/tucca-rna-seq/issues
 [5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new
 [contact]: <mailto:benjamin.bromberg@tufts.edu>
-[6]: CONTRIBUTING.md
+[6]: .github/CONTRIBUTING.md
 [7]: CODE_OF_CONDUCT.md
