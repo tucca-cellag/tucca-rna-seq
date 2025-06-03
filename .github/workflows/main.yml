@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -f .Rprofile
+        run: rm -rf .Rprofile renv renv.lock
       - name: Run Super-Linter
         uses: github/super-linter@v7
         env:
@@ -55,7 +55,7 @@ jobs:
         with:
           submodules: true
       - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -f .Rprofile
+        run: rm -rf .Rprofile renv renv.lock
       - name: Lint workflow
         uses: snakemake/snakemake-github-action@v2
         continue-on-error: ${{ matrix.version.allow_failure }}
@@ -124,7 +124,7 @@ jobs:
         with:
           submodules: true
       - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -f .Rprofile
+        run: rm -rf .Rprofile renv renv.lock
       - name: Run Snakemake workflow (Conda)
         uses: snakemake/snakemake-github-action@v2
         continue-on-error: ${{ matrix.version.allow_failure }}
@@ -206,7 +206,7 @@ jobs:
         with:
           submodules: true
       - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -f .Rprofile
+        run: rm -rf .Rprofile renv renv.lock
       - name: Create host directory for R config (Singularity)
         run: mkdir -p ${{ github.workspace }}/.host_R_config_singularity
       - name: Install Singularity
@@ -298,7 +298,7 @@ jobs:
         with:
           submodules: true
       - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -f .Rprofile
+        run: rm -rf .Rprofile renv renv.lock
       - name: Create host directory for R config (Apptainer)
         run: mkdir -p ${{ github.workspace }}/.host_R_config_apptainer
       - name: Install Apptainer
