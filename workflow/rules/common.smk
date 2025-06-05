@@ -466,7 +466,7 @@ def render_enrichment_environment(
     dep_string = "".join(sorted(env_config["dependencies"]))
     dep_hash = hashlib.md5(dep_string.encode()).hexdigest()[:8]
 
-    output_dir = Path("results/envs")
+    output_dir = Path("../envs")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"enrichment.{dep_hash}.yaml"
 
