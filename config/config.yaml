@@ -87,9 +87,17 @@ diffexp:
   # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
 
 # ----------------------------------------------------------
-# Differential Expression Section:
+# Pathway Enrichment Section:
 # ----------------------------------------------------------
 enrichment:
+  # Significance level for pathway enrichment results
+  alpha_pathway: 0.05
+  # Organism-specific annotation package from Bioconductor
+  org_db_pkg: "org.Bt.eg.db"
+  # Species name for msigdbr and other tools
+  species: "Bos taurus"
+  # List of target gene symbols to search for in enriched pathways
+  targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
 
 # ----------------------------------------------------------
 # Sample and Unit Sheet Section

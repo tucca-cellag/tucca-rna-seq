@@ -20,6 +20,8 @@ import shutil
 from typing import Protocol, List
 from snakemake.utils import validate
 import re
+import yaml
+import hashlib
 
 ################################################################################
 #                                GLOBAL VARIABLES                              #
@@ -397,6 +399,90 @@ def get_wald_contrast_elements(wildcards: Wildcard) -> List[str]:
 
 
 ################################################################################
+#                   ENRICHMENT ENVIRONMENT HELPER FUNCTIONS                    #
+################################################################################
+
+
+def get_all_contrasts(config):
+    """
+    TODO
+    """
+    contrast_paths = []
+    if "deseq2" in config["diffexp"] and "analyses" in config["diffexp"]["deseq2"]:
+        for analysis in config["diffexp"]["deseq2"]["analyses"]:
+            analysis_name = analysis["name"]
+            if "contrasts" in analysis:
+                for contrast in analysis["contrasts"]:
+                    contrast_name = contrast["name"]
+                    contrast_paths.append(f"{analysis_name}/{contrast_name}")
+    return contrast_paths
+
+
+ALL_CONTRASTS = get_all_contrasts(config)
+
+
+def get_orgdb_pkg_name(config):
+    """
+    Constructs the Bioconductor OrgDb package name from the species in config.
+    Example: "Saccharomyces_cerevisiae" -> "org.Sc.eg.db"
+    """
+    try:
+        # Assumes species is in "Genus_species" format
+        species_name = config["ref_assembly"]["species"]
+        parts = species_name.split("_")
+        # Creates abbreviation like 'Sc' from 'Saccharomyces cerevisiae'
+        species_abbrev = parts[0][0].upper() + parts[1][0].lower()
+        return f"org.{species_abbrev}.eg.db"
+    except (KeyError, IndexError) as e:
+        raise ValueError(
+            "Could not determine OrgDb package. Ensure config['ref_assembly']['species'] "
+            f"is in 'Genus_species' format. Error: {e}"
+        )
+
+
+def render_enrichment_environment(
+    config, template_path="workflow/envs/enrichment_template.yaml"
+):
+    """
+    Reads a template conda env, adds the project-specific OrgDb package,
+    and writes it to a new file in 'results/envs/'.
+    Returns the path to the newly created file.
+    """
+    # 1. Determine the required conda package for the organism
+    orgdb_pkg = get_orgdb_pkg_name(config)
+    # Bioconductor package names in conda are typically all lowercase
+    conda_pkg_name = f"bioconductor-{orgdb_pkg.lower()}"
+
+    # 2. Read the template environment file
+    with open(template_path) as f:
+        env_config = yaml.safe_load(f)
+
+    # 3. Add the new dependency if it's not already there
+    if conda_pkg_name not in env_config["dependencies"]:
+        env_config["dependencies"].append(conda_pkg_name)
+
+    # 4. Write the new, specific environment file to a stable location
+    # We use a hash of the dependencies to ensure the file is unique per environment
+    dep_string = "".join(sorted(env_config["dependencies"]))
+    dep_hash = hashlib.md5(dep_string.encode()).hexdigest()[:8]
+
+    output_dir = Path("results/envs")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"enrichment.{dep_hash}.yaml"
+
+    with open(output_path, "w") as f:
+        yaml.dump(env_config, f, sort_keys=False)
+
+    # Return the path for the rule's conda directive
+    return str(output_path)
+
+
+# Call the function to generate the environment file path.
+# Snakemake will execute this when parsing the Snakefile.
+ENRICHMENT_ENV_FILE = render_enrichment_environment(config)
+
+
+################################################################################
 #                            TARGET RULE ALL HELPERS                           #
 #          defines get_final_output() and it's helpers for use in              #
 #        the workflow's target rule (rule all) in workflow/Snakefile           #
@@ -450,6 +536,7 @@ def get_final_output() -> List[str]:
 
     # Define non-unit-based output (e.g., DESeq2 results, MultiQC report)
     final_output.append("resources/deseq2/deseq2_analyses_complete.done")
+    final_output.append("resources/enrichment/enrichment_analyses_complete.done")
 
     multiqc: str = f"results/multiqc/multiqc.html"
     final_output.append(multiqc)

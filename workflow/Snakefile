@@ -29,6 +29,7 @@ include: "rules/star.smk"
 include: "rules/make_linked_txome.smk"
 include: "rules/tximeta.smk"
 include: "rules/deseq2.smk"
+include: "rules/enrichment.smk"
 
 
 ##### target rules #####

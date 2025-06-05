@@ -1,0 +1,14 @@
+name: enrichment
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.4
+  - r-devtools
+  - r-tidyverse
+  - r-foreach
+  - bioconductor-clusterprofiler
+  - bioconductor-spia
+  - bioconductor-reactomepa
+  - r-msigdbr
