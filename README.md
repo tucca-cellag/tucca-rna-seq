@@ -28,10 +28,22 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
 > [!WARNING]
-> This workflow is still under construction. Please do not expect this workflow
-> and associated documentation to be complete until version 1.0.0 has been
-> released. In the meantime, feel free to [contact us][contact] with any
-> questions.
+> This workflow is still under construction. [Release v0.9.0][8] marks our first
+> public release. v0.9.0 contains all logic to process raw paired-end RNA-Seq
+> reads through differential expression. Currently, the workflow can generate a
+> large number of DESeq2 result files, especially for experiments with multiple
+> conditions and contrasts. While this is thorough, we recognize that navigating
+> dozens of individual result files can be challenging. The centerpiece of the
+> v1.0.0 release will be an interactive analysis toolkit that allows you to
+> dynamically explore and visualize your results. This will include a suite of
+> Shiny applications leveraging powerful packages like [`pcaExplorer`][9],
+> [`ideal`][10], and [`GeneTonic`][11] to bring your data to life, as well as
+> custom scripting to generate our favorite [`clusterProfiler`][12] figures. We
+> encourage users to test this v0.9.0 release and provide feedback. Users should
+> expect our documentation to be incomplete and continue to have major reworks
+> until v1.0.0 is released. Please [open an issue][5] to report any bugs or
+> suggest improvements. Additionally, feel free to [contact us][contact] with
+> any questions.
 
 ## Documentation
 
@@ -45,6 +57,13 @@ we're missing (in the workflow or in our documentation) please
 <div align="center">
   <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow-no-logo.png" width="700">
   <p>Created in <a href="https://BioRender.com">https://BioRender.com</a></p>
+</div>
+
+## Rulegraph
+
+<div align="center">
+  <img alt="tucca-rna-seq workflow map" src="images/rulegraph.png" width="700">
+  <p>Created via `snakemake --rulegraph`</a></p>
 </div>
 
 ## How do I get help?
@@ -105,3 +124,8 @@ the `tucca-cellag` community, we ask that you observe our [code of conduct][7].
 [contact]: <mailto:benjamin.bromberg@tufts.edu>
 [6]: .github/CONTRIBUTING.md
 [7]: CODE_OF_CONDUCT.md
+[8]: https://github.com/tucca-cellag/tucca-rna-seq/releases/tag/v0.9.0
+[9]: https://bioconductor.org/packages/release/bioc/html/pcaExplorer.html
+[10]: https://bioconductor.org/packages/release/bioc/html/ideal.html
+[11]: https://bioconductor.org/packages/release/bioc/html/GeneTonic.html
+[12]: https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
