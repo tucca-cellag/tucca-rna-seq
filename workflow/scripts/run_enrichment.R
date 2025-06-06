@@ -33,6 +33,9 @@ library(tidyverse)
 # Load the organism-specific database package dynamically
 library(snakemake@params$org_db_pkg, character.only = TRUE)
 
+# --- Get Output Directory ---
+output_dir <- snakemake@output[[1]]
+dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 # -----------------------------------------------------------------------------
 # 2. Load Data and Prepare Gene Lists
 # -----------------------------------------------------------------------------
@@ -81,9 +84,9 @@ gseaGO <- gseGO(
   pvalueCutoff = snakemake@params$alpha_pathway,
   verbose = FALSE
 )
-saveRDS(gseaGO, file = snakemake@output$gsea_go_rds)
+saveRDS(gseaGO, file = file.path(output_dir, "gsea_go.rds"))
 if (nrow(gseaGO) > 0) {
-  write_csv(as.data.frame(gseaGO@result), file = snakemake@output$gsea_go_csv)
+  write_csv(as.data.frame(gseaGO@result), file = file.path(output_dir, "gsea_go_summary.csv"))
 }
 
 # --- GSEA against KEGG ---
@@ -98,9 +101,9 @@ gseaKegg <- gseKEGG(
   pvalueCutoff = snakemake@params$alpha_pathway,
   verbose = FALSE
 )
-saveRDS(gseaKegg, file = snakemake@output$gsea_kegg_rds)
+saveRDS(gseaKegg, file = file.path(output_dir, "gsea_kegg.rds"))
 if (nrow(gseaKegg) > 0) {
-  write_csv(as.data.frame(gseaKegg@result), file = snakemake@output$gsea_kegg_csv)
+  write_csv(as.data.frame(gseaKegg@result), file = file.path(output_dir, "gsea_kegg_summary.csv"))
 }
 
 # --- GSEA against Reactome ---
@@ -114,9 +117,9 @@ gseaReact <- gsePathway(
   pvalueCutoff = snakemake@params$alpha_pathway,
   verbose = FALSE
 )
-saveRDS(gseaReact, file = snakemake@output$gsea_reactome_rds)
+saveRDS(gseaReact, file = file.path(output_dir, "gsea_reactome.rds"))
 if (nrow(gseaReact) > 0) {
-  write_csv(as.data.frame(gseaReact@result), file = snakemake@output$gsea_reactome_csv)
+  write_csv(as.data.frame(gseaReact@result), file = file.path(output_dir, "gsea_reactome_summary.csv"))
 }
 
 # --- GSEA against WikiPathways ---
@@ -130,9 +133,9 @@ gseaWP <- gseWP(
   pvalueCutoff = snakemake@params$alpha_pathway,
   verbose = FALSE
 )
-saveRDS(gseaWP, file = snakemake@output$gsea_wp_rds)
+saveRDS(gseaWP, file = file.path(output_dir, "gsea_wp.rds"))
 if (nrow(gseaWP) > 0) {
-  write_csv(as.data.frame(gseaWP@result), file = snakemake@output$gsea_wp_csv)
+  write_csv(as.data.frame(gseaWP@result), file = file.path(output_dir, "gsea_wp_summary.csv"))
 }
 
 
@@ -149,9 +152,9 @@ gseaMSigH <- GSEA(
   pvalueCutoff = snakemake@params$alpha_pathway,
   verbose = FALSE
 )
-saveRDS(gseaMSigH, file = snakemake@output$gsea_msigdb_h_rds)
+saveRDS(gseaMSigH, file = file.path(output_dir, "gsea_msigdb_h.rds"))
 if (nrow(gseaMSigH) > 0) {
-  write_csv(as.data.frame(gseaMSigH@result), file = snakemake@output$gsea_msigdb_h_csv)
+  write_csv(as.data.frame(gseaMSigH@result), file = file.path(output_dir, "gsea_msigdb_h_summary.csv"))
 }
 
 
@@ -173,10 +176,10 @@ spia_result <- spia(
   data.dir = spia_data_dir,
   verbose = FALSE
 )
-saveRDS(spia_result, file = snakemake@output$spia_rds)
+saveRDS(spia_result, file = file.path(output_dir, "spia.rds"))
 if (!is.null(spia_result) && nrow(spia_result) > 0) {
   spia_result_sig <- spia_result %>% filter(pGFdr < snakemake@params$alpha_pathway)
-  write_csv(spia_result_sig, file = snakemake@output$spia_csv)
+  write_csv(spia_result_sig, file = file.path(output_dir, "spia_summary.csv"))
 }
 
 
@@ -214,7 +217,7 @@ if (nrow(all_gsea_results) > 0) {
       str_detect(Description, regex(search_pattern, ignore_case = TRUE))) %>%
     mutate(targets_found = map_chr(str_extract_all(core_enrichment, regex(search_pattern, ignore_case = TRUE)), ~ paste(unique(.x), collapse = ", ")))
 
-  write_csv(target_pathways, file = snakemake@output$target_pathways_csv)
+  write_csv(target_pathways, file = file.path(output_dir, "target_pathways.csv"))
 }
 
 message("Enrichment script finished successfully.")

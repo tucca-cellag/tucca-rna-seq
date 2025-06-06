@@ -61,7 +61,7 @@ diffexp:
     extra: ""
   deseq2:
     analyses:
-      - name: "treatment1+treatment2"
+      - name: "treatment1_treatment2"
         deseqdataset:
           formula: "~ treatment1 + treatment2"
           min_counts: 10
@@ -92,12 +92,15 @@ diffexp:
 enrichment:
   # Significance level for pathway enrichment results
   alpha_pathway: 0.05
-  # Organism-specific annotation package from Bioconductor
-  org_db_pkg: "org.Bt.eg.db"
-  # Species name for msigdbr and other tools
-  species: "Bos taurus"
   # List of target gene symbols to search for in enriched pathways
   targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
+  databases:
+    - "gsea_go"
+    - "gsea_kegg"
+    - "gsea_reactome"
+    - "gsea_wp"
+    - "gsea_msigdb_h"
+    - "spia"
 
 # ----------------------------------------------------------
 # Sample and Unit Sheet Section

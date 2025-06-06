@@ -43,6 +43,9 @@ rule deseq2_wald_per_analysis:
         results_extra=get_wald_results_extra,
         # get contrast to be evaluated
         contrast=get_wald_contrast_elements,
+    wildcard_constraints:
+        analysis_name="[^/]+",
+        contrast_name="[^/]+",
     wrapper:
         "v6.2.0/bio/deseq2/wald"
 
