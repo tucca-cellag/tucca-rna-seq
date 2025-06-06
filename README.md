@@ -21,11 +21,13 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Docusaurus](https://img.shields.io/badge/tucca--cellag.github.io-3EB049?logo=docusaurus&label=Docusaurus)](https://tucca-cellag.github.io/tucca-rna-seq/introduction)
 [![Issues](https://img.shields.io/github/issues/tucca-cellag/tucca-rna-seq?style=flat&label=issues&color=3EB049)](https://github.com/tucca-cellag/tucca-rna-seq/issues)
 [![Open Issues](https://img.shields.io/badge/GitHub-Open%20Issue-blue?logo=github)](https://github.com/tucca-cellag/tucca-rna-seq/issues/new)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15605826.svg)](https://doi.org/10.5281/zenodo.15605826)
 <!-- ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/tucca-cellag/tucca-rna-seq/total) -->
 [![Learn about TUCCA](http://img.shields.io/badge/TUCCA-3172AE.svg?label=learn%20about)](https://cellularagriculture.tufts.edu/)
 [![Watch on YouTube](http://img.shields.io/badge/TUCCA-FF0000?label=youtube&logo=youtube)](https://www.youtube.com/channel/UC29F8uqsu_K7aRxOgjfG_HQ)
 [![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
 [![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
+
 
 > [!WARNING]
 > This workflow is still under construction. [Release v0.9.0][8] marks our first
