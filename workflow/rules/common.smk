@@ -445,7 +445,7 @@ def render_enrichment_environment(
 ):
     """
     Reads a template conda env, adds the project-specific OrgDb package,
-    and writes it to a new file in 'results/envs/'.
+    and writes it to a new file in 'workflow/envs/'.
     Returns the path to the newly created file.
     """
     # 1. Determine the required conda package for the organism
