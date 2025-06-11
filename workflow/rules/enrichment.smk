@@ -1,21 +1,18 @@
+# This rule generates the dynamic post-deployment script
 rule prepare_enrichment_env:
-    input:
-        template="workflow/envs/enrichment.yaml",
-        # Add config to inputs to ensure rule re-runs if config changes
-        config="config/config.yaml",
     output:
-        touch("resources/enrichment/prepare_enrichment_env.done"),
+        script="workflow/envs/enrichment.post-deploy.sh",
     params:
         org_db_pkg=get_orgdb_pkg_name(config),
     log:
         "logs/enrichment/prepare_enrichment_env.log",
     script:
-        "workflow/scripts/prepare_enrichment_env.py"
+        "../scripts/prepare_enrichment_env.py"
 
 
 rule run_enrichment:
     input:
-        "resources/enrichment/prepare_enrichment_env.done",
+        post_deploy_script="workflow/envs/enrichment.post-deploy.sh",
         dge_tsv="resources/deseq2/{analysis}/{contrast}/dge.tsv",
     output:
         directory("resources/enrichment/{analysis}/{contrast}"),
@@ -29,9 +26,9 @@ rule run_enrichment:
     log:
         "logs/enrichment/{analysis}/{contrast}/enrichment.log",
     conda:
-        "../envs/enrichment.yaml"
+        "workflow/envs/enrichment.yaml"
     script:
-        "workflow/scripts/run_enrichment.R"
+        "../scripts/run_enrichment.R"
 
 
 rule all_enrichment:
