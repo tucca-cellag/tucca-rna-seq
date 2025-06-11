@@ -26,7 +26,7 @@ rule run_enrichment:
     log:
         "logs/enrichment/{analysis}/{contrast}/enrichment.log",
     conda:
-        "workflow/envs/enrichment.yaml"
+        "../envs/enrichment.yaml"
     script:
         "../scripts/run_enrichment.R"
 
