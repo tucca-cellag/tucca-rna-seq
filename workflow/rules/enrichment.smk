@@ -1,10 +1,10 @@
 rule prepare_enrichment_env:
     input:
-        template="workflow/envs/enrichment_template.yaml",
+        template="workflow/envs/enrichment.yaml",
         # Add config to inputs to ensure rule re-runs if config changes
         config="config/config.yaml",
     output:
-        env_file="workflow/envs/enrichment.yaml",
+        touch("resources/enrichment/prepare_enrichment_env.done"),
     params:
         org_db_pkg=get_orgdb_pkg_name(config),
     log:
@@ -15,8 +15,8 @@ rule prepare_enrichment_env:
 
 rule run_enrichment:
     input:
+        "resources/enrichment/prepare_enrichment_env.done",
         dge_tsv="resources/deseq2/{analysis}/{contrast}/dge.tsv",
-        env_yaml="workflow/envs/enrichment.yaml",
     output:
         directory("resources/enrichment/{analysis}/{contrast}"),
     params:

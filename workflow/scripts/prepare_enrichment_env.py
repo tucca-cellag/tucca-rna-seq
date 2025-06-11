@@ -26,11 +26,9 @@ with open(log_file_path, "w", encoding="utf-8") as log_f:
 
     # --- Get parameters from Snakemake ---
     template_path = snakemake.input.template
-    output_path = snakemake.output.env_file
     org_db_pkg = snakemake.params.org_db_pkg
 
     print(f"Input template: {template_path}")
-    print(f"Output file: {output_path}")
     print(f"Organism DB package to add: {org_db_pkg}")
 
     # --- Main logic ---
@@ -45,7 +43,7 @@ with open(log_file_path, "w", encoding="utf-8") as log_f:
     else:
         print(f"'{conda_pkg_name}' is already in the dependency list.")
 
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(template_path, "w", encoding="utf-8") as f:
         yaml.dump(env_config, f, sort_keys=False)
 
     print("Successfully wrote updated environment file.")
