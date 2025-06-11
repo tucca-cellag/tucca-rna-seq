@@ -29,6 +29,9 @@ def cp_config_to_res_dir() -> None:
 
 
 def main():
+    """
+    Snapshots the config directory and creates a marker file.
+    """
     cp_config_to_res_dir()
     print("Configuration snapshot completed.")
     # The marker file is provided as the first command-line argument.
