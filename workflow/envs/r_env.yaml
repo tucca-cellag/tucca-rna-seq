@@ -7,5 +7,8 @@ dependencies:
   - r-base =4.4
   - r-devtools =2.4
   - r-tidyverse =2.0
+  - r-biocmanager =1.30
   - bioconductor-tximeta =1.24
   - bioconductor-deseq2 =1.46
+  - bioconductor-clusterprofiler =4.14
+  - bioconductor-annotationdbi =1.68

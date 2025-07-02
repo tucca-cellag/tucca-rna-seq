@@ -59,7 +59,7 @@ rule clusterprofiler_gsea:
     log:
         "logs/enrichment/{analysis}/{contrast}/gsea.log",
     conda:
-        "../envs/enrichment.yaml"
+        "../envs/r_env.yaml"
     wildcard_constraints:
         analysis="[^/]+",
         contrast="[^/]+",
@@ -77,7 +77,7 @@ rule clusterprofiler_ora:
     log:
         "logs/enrichment/{analysis}/{contrast}/ora.log",
     conda:
-        "../envs/enrichment.yaml"
+        "../envs/r_env.yaml"
     wildcard_constraints:
         analysis="[^/]+",
         contrast="[^/]+",
