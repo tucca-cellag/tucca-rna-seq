@@ -107,7 +107,7 @@ ora_results <- base::list()
 
 # ORA for Gene Ontology (GO)
 base::message("Running ORA for GO (BP)...")
-enrichgo_defaults <- "gene = significant_genes, universe = universe_genes, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID', pAdjustMethod = 'BH', readable = TRUE"
+enrichgo_defaults <- "gene = significant_genes, universe = universe_genes, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID', pAdjustMethod = 'BH', readable = FALSE"
 enrichgo_final_args <- base::paste(
   enrichgo_defaults, enrichment_params$enrichgo_extra,
   sep = ", "
