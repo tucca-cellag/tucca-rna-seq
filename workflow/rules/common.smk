@@ -409,7 +409,7 @@ ORGDB_MAPPING = {
     "Homo_sapiens": "org.Hs.eg.db",
     "Mus_musculus": "org.Mm.eg.db",
     "Rattus_norvegicus": "org.Rn.eg.db",
-    "Saccharomyces_cerevisiae": "org.Sc.eg.db",
+    "Saccharomyces_cerevisiae": "org.Sc.sgd.db",
     "Caenorhabditis_elegans": "org.Ce.eg.db",
     "Drosophila_melanogaster": "org.Dm.eg.db",
     "Danio_rerio": "org.Dr.eg.db",
@@ -500,23 +500,27 @@ def get_enrichment_deps(wildcards):
 # Helper function to get dynamic params
 def get_enrichment_params(wildcards):
     info = get_orgdb_install_info(config)
-    return {
-        "install_method": info["method"],
-        "install_source": info["source"],
-        "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
-        "kegg_organism": get_kegg_organism_code(config),
-        "padj_cutoff": config["enrichment"]["padj_cutoff"],
-        "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"]["extra"],
-        "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
-            "extra"
-        ],
-        "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
-            "extra"
-        ],
-        "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichKEGG"][
-            "extra"
-        ],
-    }
+    return list(
+        {
+            "install_method": info["method"],
+            "install_source": info["source"],
+            "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
+            "kegg_organism": get_kegg_organism_code(config),
+            "padj_cutoff": config["enrichment"]["padj_cutoff"],
+            "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"][
+                "extra"
+            ],
+            "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
+                "extra"
+            ],
+            "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
+                "extra"
+            ],
+            "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"][
+                "enrichKEGG"
+            ]["extra"],
+        }
+    )
 
 
 ################################################################################
