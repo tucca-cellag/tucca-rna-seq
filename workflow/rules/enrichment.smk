@@ -55,7 +55,7 @@ rule clusterprofiler_gsea:
     output:
         gsea_rds="resources/enrichment/{analysis}/{contrast}/gsea_results.RDS",
     params:
-        get_enrichment_params,
+        lambda wildcards: get_enrichment_params(wildcards),
     log:
         "logs/enrichment/{analysis}/{contrast}/gsea.log",
     conda:
@@ -73,7 +73,7 @@ rule clusterprofiler_ora:
     output:
         ora_rds="resources/enrichment/{analysis}/{contrast}/ora_results.RDS",
     params:
-        get_enrichment_params,
+        lambda wildcards: get_enrichment_params(wildcards),
     log:
         "logs/enrichment/{analysis}/{contrast}/ora.log",
     conda:

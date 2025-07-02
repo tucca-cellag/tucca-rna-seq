@@ -500,27 +500,23 @@ def get_enrichment_deps(wildcards):
 # Helper function to get dynamic params
 def get_enrichment_params(wildcards):
     info = get_orgdb_install_info(config)
-    return list(
-        {
-            "install_method": info["method"],
-            "install_source": info["source"],
-            "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
-            "kegg_organism": get_kegg_organism_code(config),
-            "padj_cutoff": config["enrichment"]["padj_cutoff"],
-            "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"][
-                "extra"
-            ],
-            "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
-                "extra"
-            ],
-            "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
-                "extra"
-            ],
-            "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"][
-                "enrichKEGG"
-            ]["extra"],
-        }
-    )
+    return {
+        "install_method": info["method"],
+        "install_source": info["source"],
+        "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
+        "kegg_organism": get_kegg_organism_code(config),
+        "padj_cutoff": config["enrichment"]["padj_cutoff"],
+        "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"]["extra"],
+        "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
+            "extra"
+        ],
+        "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
+            "extra"
+        ],
+        "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichKEGG"][
+            "extra"
+        ],
+    }
 
 
 ################################################################################
