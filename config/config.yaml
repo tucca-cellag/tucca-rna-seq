@@ -89,18 +89,29 @@ diffexp:
 # ----------------------------------------------------------
 # Pathway Enrichment Section:
 # ----------------------------------------------------------
+# ----------------------------------------------------------
+# Pathway Enrichment Section:
+# ----------------------------------------------------------
 enrichment:
-  # Significance level for pathway enrichment results
-  alpha_pathway: 0.05
-  # List of target gene symbols to search for in enriched pathways
+  # Adjusted p-value cutoff to define significant genes for ORA
+  padj_cutoff: 0.05
+  # List of target gene symbols to search for in enriched pathways (Not yet implemented)
   targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
-  databases:
-    - "gsea_go"
-    - "gsea_kegg"
-    - "gsea_reactome"
-    - "gsea_wp"
-    - "gsea_msigdb_h"
-    - "spia"
+  clusterprofiler:
+    gsea:
+      gseGO:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+      gseKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    ora:
+      enrichGO:
+        extra: "pvalueCutoff = 0.05, qvalueCutoff = 0.2"
+      enrichKEGG:
+        extra: "pvalueCutoff = 0.05"
+  annotationforge:
+    version: "0.1.0"
+    author: "tucca-rna-seq <benjamin.bromberg@tufts.edu>"
+    extra: "useSynonyms = TRUE"
 
 # ----------------------------------------------------------
 # Sample and Unit Sheet Section

@@ -133,6 +133,51 @@ properties:
               required: [name, deseqdataset, wald, contrasts]
         required: [analyses]
 
+  enrichment:
+    type: object
+    properties:
+      padj_cutoff:
+        type: number
+        description: "Adjusted p-value cutoff to define significant genes for ORA."
+      targets:
+        type: array
+        items:
+          type: string
+      clusterprofiler:
+        type: object
+        properties:
+          gsea:
+            type: object
+            properties:
+              gseGO:
+                type: object
+                properties:
+                  extra: { type: string }
+              gseKEGG:
+                type: object
+                properties:
+                  extra: { type: string }
+          ora:
+            type: object
+            properties:
+              enrichGO:
+                type: object
+                properties:
+                  extra: { type: string }
+              enrichKEGG:
+                type: object
+                properties:
+                  extra: { type: string }
+      annotationforge:
+        type: object
+        properties:
+          version:
+            type: string
+          author:
+            type: string
+          extra:
+            type: string
+
   params:
     type: object
     properties:
@@ -210,4 +255,6 @@ required:
   - units
   - ref_assembly
   - api_keys
+  - diffexp
+  - enrichment
   - params

@@ -403,39 +403,120 @@ def get_wald_contrast_elements(wildcards: Wildcard) -> List[str]:
 ################################################################################
 
 
-def get_all_enrichment_dirs(config):
-    """
-    Generates a list of all enrichment output directories based on the config.
-    """
-    all_dirs = []
-    # Loop through the analyses defined in the config file
-    for analysis in config["diffexp"]["deseq2"]["analyses"]:
-        analysis_name = analysis["name"]
-        # Loop through the contrasts for each analysis
-        for contrast in analysis["contrasts"]:
-            contrast_name = contrast["name"]
-            # Construct the directory path
-            all_dirs.append(f"resources/enrichment/{analysis_name}/{contrast_name}")
-    return all_dirs
+# A mapping of species names (from config.yaml) to their official OrgDb package
+# names. A user can add to this list if a new package becomes available.
+ORGDB_MAPPING = {
+    "Homo_sapiens": "org.Hs.eg.db",
+    "Mus_musculus": "org.Mm.eg.db",
+    "Rattus_norvegicus": "org.Rn.eg.db",
+    "Saccharomyces_cerevisiae": "org.Sc.eg.db",
+    "Caenorhabditis_elegans": "org.Ce.eg.db",
+    "Drosophila_melanogaster": "org.Dm.eg.db",
+    "Danio_rerio": "org.Dr.eg.db",
+    "Bos_taurus": "org.Bt.eg.db",
+    "Sus_scrofa": "org.Ss.eg.db",
+    "Canis_lupus_familiaris": "org.Cf.eg.db",
+    "Gallus_gallus": "org.Gg.eg.db",
+    "Arabidopsis_thaliana": "org.At.tair.db",
+    "Macaca_mulatta": "org.Mmu.eg.db",
+    "Xenopus_laevis": "org.Xl.eg.db",
+    "Anopheles_gambiae": "org.Ag.eg.db",
+    "Pan_troglodytes": "org.Pt.eg.db",
+    "Escherichia_coli_K_12_strain_MG1655": "org.EcK12.eg.db",
+    "Plasmodium_falciparum": "org.Pf.plasmo.db",
+}
 
 
-def get_orgdb_pkg_name(config):
+def get_orgdb_install_info(config):
     """
-    Constructs the Bioconductor OrgDb package name from the species in config.
-    Example: "Saccharomyces_cerevisiae" -> "org.Sc.eg.db"
+    Looks up the species in the ORGDB_MAPPING.
+    Returns install info for Bioconda if found, otherwise for a local build.
+    """
+    species = config["ref_assembly"]["species"]
+    if species in ORGDB_MAPPING:
+        # Package exists, instruct to install from Bioconda
+        pkg_name = ORGDB_MAPPING[species]
+        return {
+            "method": "bioconda",
+            "source": pkg_name,
+            "pkg_name": pkg_name,
+            "local_build_needed": False,
+        }
+    else:
+        # Package not found, instruct to build locally
+        # The package name will be derived by AnnotationForge
+        return {
+            "method": "local",
+            "source": "resources/enrichment/local_orgdb_build",
+            "pkg_name": "built.locally",  # Placeholder, not used for install
+            "local_build_needed": True,
+        }
+
+
+def get_kegg_organism_code(config):
+    """
+    Constructs the 3-letter KEGG organism code from the species name.
+    Example: "Saccharomyces_cerevisiae" -> "sce"
     """
     try:
-        # Assumes species is in "Genus_species" format
         species_name = config["ref_assembly"]["species"]
         parts = species_name.split("_")
-        # Creates abbreviation like 'Sc' from 'Saccharomyces cerevisiae'
-        species_abbrev = parts[0][0].upper() + parts[1][0].lower()
-        return f"org.{species_abbrev}.eg.db"
+        return (parts[0][0] + parts[1][:2]).lower()
     except (KeyError, IndexError) as e:
         raise ValueError(
-            "Could not determine OrgDb package. Ensure config['ref_assembly']['species'] "
+            "Could not determine KEGG organism code. Ensure config['ref_assembly']['species'] "
             f"is in 'Genus_species' format. Error: {e}"
         )
+
+
+def get_enrichment_outputs():
+    """Generates a list of all clusterProfiler output files."""
+    outputs = []
+    # CONTRAST_JOBS is defined earlier in common.smk
+    for job in CONTRAST_JOBS:
+        analysis_name = job["analysis_name"]
+        contrast_name = job["contrast_name"]
+        outputs.append(
+            f"resources/enrichment/{analysis_name}/{contrast_name}/gsea_results.RDS"
+        )
+        outputs.append(
+            f"resources/enrichment/{analysis_name}/{contrast_name}/ora_results.RDS"
+        )
+    return outputs
+
+
+# Helper function to get dynamic inputs based on the dictionary lookup
+def get_enrichment_deps(wildcards):
+    info = get_orgdb_install_info(config)
+    deps = {
+        "dge_tsv": f"resources/deseq2/{wildcards.analysis}/{wildcards.contrast}/dge.tsv"
+    }
+    if info["local_build_needed"]:
+        deps["local_build"] = "resources/enrichment/local_orgdb_build"
+        deps["tax_id"] = "resources/enrichment/tax_id.txt"
+    return list(deps.values())
+
+
+# Helper function to get dynamic params
+def get_enrichment_params(wildcards):
+    info = get_orgdb_install_info(config)
+    return {
+        "install_method": info["method"],
+        "install_source": info["source"],
+        "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
+        "kegg_organism": get_kegg_organism_code(config),
+        "padj_cutoff": config["enrichment"]["padj_cutoff"],
+        "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"]["extra"],
+        "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
+            "extra"
+        ],
+        "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
+            "extra"
+        ],
+        "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichKEGG"][
+            "extra"
+        ],
+    }
 
 
 ################################################################################

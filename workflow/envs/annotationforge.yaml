@@ -1,0 +1,10 @@
+# workflow/envs/annotationforge.yaml
+name: annotationforge
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.4
+  - r-devtools
+  - bioconductor-annotationforge
