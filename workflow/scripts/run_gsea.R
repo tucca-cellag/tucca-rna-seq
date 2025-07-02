@@ -100,7 +100,7 @@ gsea_results <- base::list()
 
 # GSEA for Gene Ontology (GO)
 base::message("Running GSEA for GO (BP)...")
-gsego_defaults <- "geneList = genelist_fc_sort, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID', verbose = FALSE"
+gsego_defaults <- "geneList = genelist_fc_sort, OrgDb = get(org_db_pkg), keyType = 'ENTREZID'"
 gsego_final_args <- base::paste(
   gsego_defaults, enrichment_params$gsego_extra,
   sep = ", "
@@ -114,7 +114,7 @@ gsea_results$GO <- base::eval(base::parse(text = gsego_cmd))
 base::message("Running GSEA for KEGG...")
 gsekegg_defaults <- base::paste0(
   "geneList = genelist_fc_sort, organism = '", enrichment_params$kegg_organism,
-  "', verbose = FALSE"
+  "', keyType = 'ncbi-geneid'"
 )
 gsekegg_final_args <- base::paste(
   gsekegg_defaults, enrichment_params$gsekegg_extra,
