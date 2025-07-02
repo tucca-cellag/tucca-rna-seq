@@ -51,7 +51,7 @@ rule build_local_orgdb:
 
 rule clusterprofiler_gsea:
     input:
-        get_enrichment_deps,
+        unpack(get_enrichment_deps),
     output:
         gsea_rds="resources/enrichment/{analysis}/{contrast}/gsea_results.RDS",
     params:
@@ -69,7 +69,7 @@ rule clusterprofiler_gsea:
 
 rule clusterprofiler_ora:
     input:
-        get_enrichment_deps,
+        unpack(get_enrichment_deps),
     output:
         ora_rds="resources/enrichment/{analysis}/{contrast}/ora_results.RDS",
     params:
