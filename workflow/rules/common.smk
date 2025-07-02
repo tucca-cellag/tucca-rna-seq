@@ -494,7 +494,7 @@ def get_enrichment_deps(wildcards):
     if info["local_build_needed"]:
         deps["local_build"] = "resources/enrichment/local_orgdb_build"
         deps["tax_id"] = "resources/enrichment/tax_id.txt"
-    return list(deps.values())
+    return deps
 
 
 # Helper function to get dynamic params
