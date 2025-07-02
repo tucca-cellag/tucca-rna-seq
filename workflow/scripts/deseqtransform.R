@@ -1,3 +1,26 @@
+# -----------------------------------------------------------------------------
+# tucca-rna-seq/workflow/scripts/deseqtransform.R
+#
+# Purpose:
+# This script applies a variance-stabilizing transformation to a DESeqDataSet
+# object. The transformation method (e.g., rlog, vst) is specified via
+# Snakemake parameters. This is a common step before downstream visualization
+# analyses like PCA or sample clustering, which assume homoscedastic data
+# (variance is constant across the range of mean values).
+#
+# Inputs:
+#   - dds: An RDS file containing the raw DESeqDataSet object.
+#
+# Outputs:
+#   - dst: An RDS file containing the transformed DESeqTransform object.
+#   - image: An .RData file saving the entire R session image for debugging.
+#
+# Parameters:
+#   - method: The transformation method to use (e.g., "rlog", "vst").
+#   - extra: A string of extra arguments to be passed to the transformation
+#            function.
+#
+# -----------------------------------------------------------------------------
 log <- base::file(snakemake@log[[1]], open = "wt")
 base::sink(log)
 base::sink(log, type = "message")

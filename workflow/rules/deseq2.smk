@@ -20,7 +20,8 @@ rule DESeqDataSet_from_ranged_se_per_analysis:
 
 
 # Rule 2: Run DESeq2 Wald test for each specified contrast within each analysis
-# DDS comes from the DESeqDataSet_from_ranged_se_per_analysis rule, specific to the {analysis_name}
+# DDS comes from the DESeqDataSet_from_ranged_se_per_analysis rule, specific to
+# the {analysis_name}
 rule deseq2_wald_per_analysis:
     input:
         dds="resources/deseq2/{analysis_name}/dds.RDS",
@@ -50,6 +51,9 @@ rule deseq2_wald_per_analysis:
         "v6.2.0/bio/deseq2/wald"
 
 
+# Rule to apply a variance-stabilizing transformation (e.g., rlog) to the count
+# data, preparing it for downstream visualization analyses like PCA and sample
+# clustering.
 # TODO Make wrapper bio/deseq2/deseqtransform or add to bio/deseq2/deseqdataset
 rule deseq2_transform:
     input:
