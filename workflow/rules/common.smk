@@ -494,13 +494,16 @@ def get_enrichment_deps(wildcards):
     if info["local_build_needed"]:
         deps["local_build"] = "resources/enrichment/local_orgdb_build"
         deps["tax_id"] = "resources/enrichment/tax_id.txt"
+    print(
+        f"DEBUG: get_enrichment_deps for {wildcards.analysis}/{wildcards.contrast}: {deps}"
+    )
     return deps
 
 
 # Helper function to get dynamic params
 def get_enrichment_params(wildcards):
     info = get_orgdb_install_info(config)
-    return {
+    params = {
         "install_method": info["method"],
         "install_source": info["source"],
         "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
@@ -517,6 +520,10 @@ def get_enrichment_params(wildcards):
             "extra"
         ],
     }
+    print(
+        f"DEBUG: get_enrichment_params for {wildcards.analysis}/{wildcards.contrast}: {params}"
+    )
+    return params
 
 
 ################################################################################

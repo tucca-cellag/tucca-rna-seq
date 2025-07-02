@@ -33,8 +33,9 @@ base::library(package = "dplyr", character.only = TRUE)
 base::library(package = "readr", character.only = TRUE)
 
 # --- 2. Install and Load Organism-Specific Database ---
-install_method <- snakemake@params[["install_method"]]
-install_source <- snakemake@params[["install_source"]]
+enrichment_params <- snakemake@params[["enrichment"]]
+install_method <- enrichment_params$install_method
+install_source <- enrichment_params$install_source
 
 # Determine the actual package name
 org_db_pkg <- if (install_method == "local") {
@@ -45,7 +46,7 @@ org_db_pkg <- if (install_method == "local") {
   if (length(pkg_name) == 0) base::stop("Could not find locally built OrgDb package directory.")
   pkg_name[1]
 } else {
-  snakemake@params[["org_db_pkg"]]
+  enrichment_params[["org_db_pkg"]]
 }
 base::message("Target OrgDb package: ", org_db_pkg)
 
@@ -101,7 +102,7 @@ gsea_results <- base::list()
 base::message("Running GSEA for GO (BP)...")
 gsego_defaults <- "geneList = genelist_fc_sort, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID', verbose = FALSE"
 gsego_final_args <- base::paste(
-  gsego_defaults, snakemake@params$gsego_extra,
+  gsego_defaults, enrichment_params$gsego_extra,
   sep = ", "
 )
 gsego_cmd <- base::paste0("clusterProfiler::gseGO(", gsego_final_args, ")")
@@ -112,11 +113,11 @@ gsea_results$GO <- base::eval(base::parse(text = gsego_cmd))
 # GSEA for KEGG Pathways
 base::message("Running GSEA for KEGG...")
 gsekegg_defaults <- base::paste0(
-  "geneList = genelist_fc_sort, organism = '", snakemake@params$kegg_organism,
+  "geneList = genelist_fc_sort, organism = '", enrichment_params$kegg_organism,
   "', verbose = FALSE"
 )
 gsekegg_final_args <- base::paste(
-  gsekegg_defaults, snakemake@params$gsekegg_extra,
+  gsekegg_defaults, enrichment_params$gsekegg_extra,
   sep = ", "
 )
 gsekegg_cmd <- base::paste0(

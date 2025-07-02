@@ -34,8 +34,9 @@ base::library(package = "dplyr", character.only = TRUE)
 base::library(package = "readr", character.only = TRUE)
 
 # --- 2. Install and Load Organism-Specific Database ---
-install_method <- snakemake@params[["install_method"]]
-install_source <- snakemake@params[["install_source"]]
+enrichment_params <- snakemake@params[["enrichment"]]
+install_method <- enrichment_params$install_method
+install_source <- enrichment_params$install_source
 
 # Determine the actual package name
 org_db_pkg <- if (install_method == "local") {
@@ -46,7 +47,7 @@ org_db_pkg <- if (install_method == "local") {
   if (length(pkg_name) == 0) base::stop("Could not find locally built OrgDb package directory.")
   pkg_name[1]
 } else {
-  snakemake@params[["org_db_pkg"]]
+  enrichment_params$org_db_pkg
 }
 base::message("Target OrgDb package: ", org_db_pkg)
 
@@ -83,7 +84,7 @@ res_tb_filtered <- res_tb %>%
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 
 significant_genes <- res_tb_filtered %>%
-  dplyr::filter(padj < snakemake@params$padj_cutoff) %>%
+  dplyr::filter(padj < enrichment_params$padj_cutoff) %>%
   dplyr::pull(entrez_id)
 base::message(base::paste(
   "Found", base::length(significant_genes), "significant genes for ORA."
@@ -108,7 +109,7 @@ ora_results <- base::list()
 base::message("Running ORA for GO (BP)...")
 enrichgo_defaults <- "gene = significant_genes, universe = universe_genes, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID', pAdjustMethod = 'BH', readable = TRUE"
 enrichgo_final_args <- base::paste(
-  enrichgo_defaults, snakemake@params$enrichgo_extra,
+  enrichgo_defaults, enrichment_params$enrichgo_extra,
   sep = ", "
 )
 enrichgo_cmd <- base::paste0(
@@ -121,10 +122,10 @@ ora_results$GO <- base::eval(base::parse(text = enrichgo_cmd))
 base::message("Running ORA for KEGG...")
 enrichkegg_defaults <- base::paste0(
   "gene = significant_genes, universe = universe_genes, organism = '",
-  snakemake@params$kegg_organism, "'"
+  enrichment_params$kegg_organism, "'"
 )
 enrichkegg_final_args <- base::paste(
-  enrichkegg_defaults, snakemake@params$enrichkegg_extra,
+  enrichkegg_defaults, enrichment_params$enrichkegg_extra,
   sep = ", "
 )
 enrichkegg_cmd <- base::paste0(
