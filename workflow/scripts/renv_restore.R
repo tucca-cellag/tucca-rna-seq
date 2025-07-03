@@ -36,7 +36,7 @@ message("Restoring renv library from lockfile...")
 # correct, regardless of the script's execution context.
 renv::restore(
   project = base::getwd(),
-  lockfile = base::file.path(base::getwd(), "renv.lock")
+  lockfile = base::file.path(base::getwd(), "renv.lock"),
   prompt = FALSE,
   clean = TRUE
 )
