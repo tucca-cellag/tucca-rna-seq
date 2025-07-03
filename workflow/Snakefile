@@ -30,6 +30,7 @@ include: "rules/make_linked_txome.smk"
 include: "rules/tximeta.smk"
 include: "rules/deseq2.smk"
 include: "rules/enrichment.smk"
+include: "rules/renv.smk"
 
 
 ##### target rules #####
@@ -39,6 +40,7 @@ rule all:
     input:
         get_final_output(),
         "results/last_run_config_snapshot/snapshot_taken.done",
+        ".renv_restore.done",
     message:
         """
         Workflow completed successfully!
