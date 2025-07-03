@@ -37,7 +37,8 @@ message("Starting renv snapshot...")
 renv::snapshot(
   project = getwd(),
   type = "all",
-  prompt = FALSE
+  prompt = FALSE,
+  force = TRUE
 )
 
 message("renv snapshot completed successfully.")
