@@ -49,6 +49,20 @@ rule build_local_orgdb:
         "../scripts/build_local_orgdb.R"
 
 
+# Rule to install the appropriate OrgDb package
+rule install_orgdb:
+    output:
+        touch(get_orgdb_install_flag(config)),
+    params:
+        enrichment=get_enrichment_params,
+    log:
+        "logs/enrichment/install_orgdb.log",
+    conda:
+        "../envs/r_env.yaml"
+    script:
+        "../scripts/install_orgdb.R"
+
+
 rule clusterprofiler_gsea:
     input:
         unpack(get_enrichment_deps),

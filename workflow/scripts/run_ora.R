@@ -33,7 +33,7 @@ base::library(package = "magrittr", character.only = TRUE) # For the %>% pipe
 base::library(package = "dplyr", character.only = TRUE)
 base::library(package = "readr", character.only = TRUE)
 
-# --- 2. Install and Load Organism-Specific Database ---
+# --- 2. Load Organism-Specific Database ---
 enrichment_params <- snakemake@params[["enrichment"]]
 install_method <- enrichment_params$install_method
 install_source <- enrichment_params$install_source
@@ -51,19 +51,8 @@ org_db_pkg <- if (install_method == "local") {
 }
 base::message("Target OrgDb package: ", org_db_pkg)
 
-# Install if necessary
-if (!base::require(org_db_pkg, character.only = TRUE)) {
-  base::message(base::paste("Package", org_db_pkg, "not found, installing..."))
-  base::message(base::paste("Method:", install_method, "| Source:", install_source))
-
-  if (install_method == "local") {
-    devtools::install(file.path(install_source, org_db_pkg), upgrade = "never")
-  } else {
-    BiocManager::install(install_source, update = FALSE, ask = FALSE)
-  }
-
-  base::library(org_db_pkg, character.only = TRUE)
-}
+# Load the package (it should be pre-installed by the 'install_orgdb' rule)
+base::library(org_db_pkg, character.only = TRUE)
 
 # --- 3. Load Data and Prepare Gene Lists ---
 base::message("Loading DGE results from: ", snakemake@input$dge_tsv)

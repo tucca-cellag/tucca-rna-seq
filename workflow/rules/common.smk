@@ -489,14 +489,12 @@ def get_enrichment_outputs():
 def get_enrichment_deps(wildcards):
     info = get_orgdb_install_info(config)
     deps = {
-        "dge_tsv": f"resources/deseq2/{wildcards.analysis}/{wildcards.contrast}/dge.tsv"
+        "dge_tsv": f"resources/deseq2/{wildcards.analysis}/{wildcards.contrast}/dge.tsv",
+        "orgdb_install_flag": get_orgdb_install_flag(config),
     }
     if info["local_build_needed"]:
         deps["local_build"] = "resources/enrichment/local_orgdb_build"
         deps["tax_id"] = "resources/enrichment/tax_id.txt"
-    print(
-        f"DEBUG: get_enrichment_deps for {wildcards.analysis}/{wildcards.contrast}: {deps}"
-    )
     return deps
 
 
@@ -520,10 +518,13 @@ def get_enrichment_params(wildcards):
             "extra"
         ],
     }
-    print(
-        f"DEBUG: get_enrichment_params for {wildcards.analysis}/{wildcards.contrast}: {params}"
-    )
     return params
+
+
+def get_orgdb_install_flag(config):
+    """Returns the path to the installation flag for the OrgDb package."""
+    pkg_name = get_orgdb_install_info(config)["pkg_name"]
+    return f"resources/enrichment/{pkg_name}.installed"
 
 
 ################################################################################
