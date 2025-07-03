@@ -23,10 +23,40 @@ base::sink(log)
 base::sink(log, type = "message")
 base::date()
 
-# --- 2. Load renv ---
+# --- 2. Diagnostic Information ---
+base::message("--- STARTING BUILD DIAGNOSTICS ---")
+
+base::message("Querying environment variables...")
+env_vars <- c(
+  "PATH", "LD_LIBRARY_PATH", "PKG_CONFIG_PATH", "CFLAGS", "LDFLAGS",
+  "CPPFLAGS", "CONDA_PREFIX"
+)
+for (v in env_vars) {
+  base::message(paste0(v, ": ", base::Sys.getenv(v)))
+}
+
+base::message("\nRunning build tool diagnostics...")
+base::message("Output of: pkg-config --cflags --libs libxml-2.0")
+try(base::system("pkg-config --cflags --libs libxml-2.0"))
+
+base::message("\nOutput of: xml2-config --cflags --libs")
+try(base::system("xml2-config --cflags --libs"))
+
+conda_prefix <- base::Sys.getenv("CONDA_PREFIX")
+if (nchar(conda_prefix) > 0) {
+  base::message("\nChecking for libxml2 in $CONDA_PREFIX/lib...")
+  try(base::system(paste("ls -lh", base::shQuote(base::file.path(conda_prefix, "lib")), "| grep xml")))
+
+  base::message("\nChecking for xml2-config in $CONDA_PREFIX/bin...")
+  try(base::system(paste("ls -lh", base::shQuote(base::file.path(conda_prefix, "bin")), "| grep xml")))
+}
+
+base::message("--- END OF BUILD DIAGNOSTICS ---")
+
+# --- 3. Load renv ---
 base::library(renv)
 
-# --- 3. Restore Project Library ---
+# --- 4. Restore Project Library ---
 base::message("Restoring renv library from lockfile...")
 
 # Set configure arguments for packages that have trouble finding libraries
