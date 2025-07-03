@@ -31,9 +31,11 @@ message("Restoring renv library from lockfile...")
 
 # This command installs packages from the lockfile into the project library.
 # `prompt = FALSE` is critical for non-interactive use. `clean = TRUE` ensures
-# the library is an exact match to the lockfile, removing extraneous packages.
+# the library is an exact match to the lockfile.
+# We use `snakemake@workflow$basedir` to ensure the project path is always
+# correct, regardless of the script's execution context.
 renv::restore(
-  project = getwd(),
+  project = snakemake@workflow$basedir,
   prompt = FALSE,
   clean = TRUE
 )
