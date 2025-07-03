@@ -26,6 +26,7 @@ dependencies:
   # require sudo access for end-users.
   - conda-forge::make
   - conda-forge::pandoc
+  - conda-forge::pkg-config
   - conda-forge::libcurl
   - conda-forge::openssl
   - conda-forge::libxml2
