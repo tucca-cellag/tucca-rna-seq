@@ -18,16 +18,38 @@
 # fully provisioned R environment as soon as the pipeline finishes.
 
 # --- 1. Setup and Logging ---
-log <- file(snakemake@log[[1]], open = "wt")
-sink(log)
-sink(log, type = "message")
-date()
+log <- base::file(snakemake@log[[1]], open = "wt")
+base::sink(log)
+base::sink(log, type = "message")
+base::date()
 
 # --- 2. Load renv ---
-library(renv)
+base::library(renv)
 
 # --- 3. Restore Project Library ---
-message("Restoring renv library from lockfile...")
+base::message("Restoring renv library from lockfile...")
+
+# Set configure arguments for packages that have trouble finding libraries
+# in a conda environment. This explicitly tells the build system where to look.
+lib_path <- base::file.path(base::Sys.getenv("CONDA_PREFIX"), "lib")
+include_path <- base::file.path(base::Sys.getenv("CONDA_PREFIX"), "include")
+
+base::options(
+  configure.args = base::c(
+    XML = base::paste0(
+      "--with-xml-config=", base::file.path(base::Sys.getenv("CONDA_PREFIX"), "bin", "xml2-config"),
+      " --with-libxml-include=", include_path,
+      " --with-libxml-lib=", lib_path
+    ),
+    curl = base::paste0(
+      "--with-curl-config=", base::file.path(base::Sys.getenv("CONDA_PREFIX"), "bin", "curl-config")
+    ),
+    openssl = base::paste0(
+      "--with-ssl-include=", include_path,
+      " --with-ssl-lib=", lib_path
+    )
+  )
+)
 
 # This command installs packages from the lockfile into the project library.
 # `prompt = FALSE` is critical for non-interactive use. `clean = TRUE` ensures
@@ -41,5 +63,5 @@ renv::restore(
   clean = TRUE
 )
 
-message("renv library restored successfully.")
-date()
+base::message("renv library restored successfully.")
+base::date()
