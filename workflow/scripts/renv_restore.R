@@ -35,7 +35,8 @@ message("Restoring renv library from lockfile...")
 # We use `snakemake@workflow$basedir` to ensure the project path is always
 # correct, regardless of the script's execution context.
 renv::restore(
-  project = snakemake@workflow$basedir,
+  project = base::getwd(),
+  lockfile = base::file.path(base::getwd(), "renv.lock")
   prompt = FALSE,
   clean = TRUE
 )
