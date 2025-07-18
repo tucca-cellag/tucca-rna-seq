@@ -134,8 +134,8 @@ fi
 
 # Check that conda is in the PATH.
 if ! command -v conda &>/dev/null; then
-  echo -e "No Conda module is loaded.\nNow loading miniforge/24.11.2-py312 ..."
-  module load miniforge/24.11.2-py312
+  echo -e "No Conda module is loaded.\nNow loading miniforge/25.3.0-3 ..."
+  module load miniforge/25.3.0-3
 fi
 
 # Global settings for the Snakemake call.
