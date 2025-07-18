@@ -23,72 +23,25 @@ base::sink(log)
 base::sink(log, type = "message")
 base::date()
 
-# --- 2. Diagnostic Information ---
-base::message("--- STARTING BUILD DIAGNOSTICS ---")
-
-base::message("Querying environment variables...")
-env_vars <- c(
-  "PATH", "LD_LIBRARY_PATH", "PKG_CONFIG_PATH", "CFLAGS", "LDFLAGS",
-  "CPPFLAGS", "CONDA_PREFIX"
-)
-for (v in env_vars) {
-  base::message(paste0(v, ": ", base::Sys.getenv(v)))
-}
-
-base::message("\nRunning build tool diagnostics...")
-base::message("Output of: pkg-config --cflags --libs libxml-2.0")
-try(base::system("pkg-config --cflags --libs libxml-2.0"))
-
-base::message("\nOutput of: xml2-config --cflags --libs")
-try(base::system("xml2-config --cflags --libs"))
-
+# --- 2. Set Build Environment Variables ---
+# This is a robust method to ensure all R packages that compile C/C++ code
+# can find the libraries and headers provided by the conda environment. We
+# explicitly set the environment variables that the compiler and linker use,
+# which is necessary when the job scheduler (e.g. SLURM) sanitizes them.
 conda_prefix <- base::Sys.getenv("CONDA_PREFIX")
 if (nchar(conda_prefix) > 0) {
-  base::message("\nChecking for libxml2 in $CONDA_PREFIX/lib...")
-  try(base::system(paste("ls -lh", base::shQuote(base::file.path(conda_prefix, "lib")), "| grep xml")))
-
-  base::message("\nChecking for xml2-config in $CONDA_PREFIX/bin...")
-  try(base::system(paste("ls -lh", base::shQuote(base::file.path(conda_prefix, "bin")), "| grep xml")))
+  base::Sys.setenv(
+    PKG_CONFIG_PATH = base::file.path(conda_prefix, "lib", "pkgconfig"),
+    CPPFLAGS = paste0("-I", base::file.path(conda_prefix, "include")),
+    LDFLAGS = paste0("-L", base::file.path(conda_prefix, "lib"))
+  )
 }
 
-base::message("--- END OF BUILD DIAGNOSTICS ---")
-
-# --- 3. Load renv ---
-base::library(renv)
-
-# --- 4. Restore Project Library ---
+# --- 3. Load renv and Restore ---
 base::message("Restoring renv library from lockfile...")
-
-# Set configure arguments for packages that have trouble finding libraries
-# in a conda environment. This explicitly tells the build system where to look.
-lib_path <- base::file.path(base::Sys.getenv("CONDA_PREFIX"), "lib")
-include_path <- base::file.path(base::Sys.getenv("CONDA_PREFIX"), "include")
-
-base::options(
-  configure.args = base::c(
-    XML = base::paste0(
-      "--with-xml-config=", base::file.path(base::Sys.getenv("CONDA_PREFIX"), "bin", "xml2-config"),
-      " --with-libxml-include=", include_path,
-      " --with-libxml-lib=", lib_path
-    ),
-    curl = base::paste0(
-      "--with-curl-config=", base::file.path(base::Sys.getenv("CONDA_PREFIX"), "bin", "curl-config")
-    ),
-    openssl = base::paste0(
-      "--with-ssl-include=", include_path,
-      " --with-ssl-lib=", lib_path
-    )
-  )
-)
-
-# This command installs packages from the lockfile into the project library.
-# `prompt = FALSE` is critical for non-interactive use. `clean = TRUE` ensures
-# the library is an exact match to the lockfile.
-# We use `snakemake@workflow$basedir` to ensure the project path is always
-# correct, regardless of the script's execution context.
+base::library(renv)
 renv::restore(
   project = base::getwd(),
-  lockfile = base::file.path(base::getwd(), "renv.lock"),
   prompt = FALSE,
   clean = TRUE
 )
