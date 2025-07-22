@@ -254,6 +254,7 @@ if (
   # The pca2go function requires the organism ID and gene ID type.
   pca2go_obj <- pcaExplorer::pca2go(
     dst,
+    pca_ngenes = 1000,
     annopkg = org_db_pkg,
     annotation = annotation_obj,
     inputType = keytype, # from previous chunk
