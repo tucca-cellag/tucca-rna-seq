@@ -210,13 +210,36 @@ if (base::require(org_db_pkg, character.only = TRUE)) {
 
   base::message(base::paste("Using", org_db_pkg, "for annotation."))
 
+  # Determine the correct column for gene symbols, which can vary between OrgDb
+  # packages (e.g., 'SYMBOL' vs. 'GENENAME').
+  all_cols <- AnnotationDbi::columns(base::get(org_db_pkg))
+  symbol_col <- "SYMBOL"
+  if (!symbol_col %in% all_cols) {
+    base::message(
+      "'SYMBOL' column not found. Searching for 'GENENAME' as an alternative."
+    )
+    if ("GENENAME" %in% all_cols) {
+      symbol_col <- "GENENAME"
+      base::message("Found 'GENENAME' as the gene symbol column.")
+    } else {
+      base::stop(
+        "Could not find a 'SYMBOL' or 'GENENAME' column in this OrgDb.",
+        " Please inspect `AnnotationDbi::columns(base::get(org_db_pkg))`",
+        " and manually set the `symbol_col` variable in this script."
+      )
+    }
+  }
+
   annotation_obj <- AnnotationDbi::select(
     base::get(org_db_pkg),
     keys = AnnotationDbi::keys(base::get(org_db_pkg), keytype = keytype),
-    columns = c("SYMBOL"),
+    columns = c(symbol_col),
     keytype = keytype
-  ) %>%
-    dplyr::rename(gene_id = dplyr::all_of(keytype), gene_name = "SYMBOL") %>%
+  ) |>
+    dplyr::rename(
+      gene_id = dplyr::all_of(keytype),
+      gene_name = dplyr::all_of(symbol_col)
+    ) |>
     dplyr::filter(!base::is.na(gene_name))
 } else {
   base::message(
