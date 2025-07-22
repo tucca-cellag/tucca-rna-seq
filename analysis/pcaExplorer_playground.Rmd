@@ -251,13 +251,18 @@ if (
 ) {
   base::message("Computing pca2go object for GO term enrichment analysis...")
 
-  # The pca2go function requires the OrgDb package to be specified
-  # to correctly map genes to GO terms.
+  # Extract the species abbreviation (e.g., "Hs") from the OrgDb package name
+  # (e.g., "org.Hs.eg.db") for the 'organism' parameter.
+  species_id <- gsub("org\\.(.*?)\\..*", "\\1", org_db_pkg)
+  base::message("Using species ID '", species_id, "' for pca2go.")
+
+  # The pca2go function requires the organism ID and gene ID type.
   pca2go_obj <- pcaExplorer::pca2go(
     dst,
-    orgdb = base::get(org_db_pkg),
+    organism = species_id,
     annotation = annotation_obj,
-    gene_id_type = keytype # from previous chunk
+    inputType = keytype, # from previous chunk
+    ensToGeneSymbol = (keytype == "ENSEMBL")
   )
 }
 ```
