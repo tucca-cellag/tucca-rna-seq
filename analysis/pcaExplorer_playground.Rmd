@@ -176,12 +176,27 @@ if (!base::require(org_db_pkg, character.only = TRUE)) {
 
 # Now, try to load it again. If it works, create the annotation object.
 if (base::require(org_db_pkg, character.only = TRUE)) {
-  # The annotation object needs columns: 'gene_id', 'gene_name'
-  # We will map from ENSEMBL IDs (if they are the rownames of our dds)
-  keys <- utils::head(base::rownames(dst))
-  keytype <- "ENSEMBL" # TODO: Automate ENSEMBL or ENTREZID based on workflow
+  # Determine the keytype based on the genome annotation source from config.yaml
+  ref_source <- config$ref_assembly$source
+  keytype <- if (ref_source %in% c("Ensembl", "GENCODE")) {
+    "ENSEMBL"
+  } else if (ref_source == "RefSeq") {
+    "ENTREZID"
+  } else {
+    base::warning(paste(
+      "Unrecognized ref_assembly.source:", ref_source,
+      "- defaulting keytype to ENSEMBL."
+    ))
+    "ENSEMBL"
+  }
 
-  base::message(base::paste("Using", org_db_pkg, "for annotation."))
+  base::message(base::paste(
+    "Using", org_db_pkg, "for annotation with keytype '", keytype, "'."
+  ))
+
+  # The annotation object needs columns: 'gene_id', 'gene_name'
+  # We will map from the appropriate gene IDs based on the keytype
+  keys <- utils::head(base::rownames(dst))
 
   # Determine the correct column for gene symbols, which can vary between OrgDb
   # packages. We create a prioritized list of candidates to check.
