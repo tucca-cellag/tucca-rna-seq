@@ -100,10 +100,10 @@ configuration above.
 dds_path <- here::here(
   "tucca-rna-seq", "resources", "deseq2", analysis_name, "dds.RDS"
 )
-res_path <- here::here(
+res_path <- DESeq2::results(here::here(
   "tucca-rna-seq", "resources", "deseq2", analysis_name, contrast_name,
   "wald.RDS"
-)
+))
 ora_path <- here::here(
   "tucca-rna-seq", "resources", "enrichment", analysis_name, contrast_name,
   "ora_results.RDS"
