@@ -41,8 +41,7 @@ here::i_am("tucca-rna-seq/analysis/GeneTonic_playground.Rmd")
 # We explicitly tell renv where its project directory is.
 # The renv project is in the `tucca-rna-seq` subdirectory.
 renv::restore(
-  project = here::here("tucca-rna-seq"),
-  prompt = FALSE, clean = TRUE
+  project = here::here("tucca-rna-seq"), prompt = FALSE, clean = TRUE
 )
 
 # All functions in this notebook will be called with explicit package namespaces
@@ -299,7 +298,10 @@ if (!base::is.null(res_enrich) && !base::is.null(annotation_obj)) {
   # Launch the app!
   GeneTonic::GeneTonic(gtl = gtl, project_id = "My Project")
 } else {
-  base::message("Could not launch GeneTonic because enrichment results or annotation object are missing.")
+  base::message(
+    "Could not launch GeneTonic because enrichment results or annotation",
+    "object are missing."
+  )
 }
 ```
 
