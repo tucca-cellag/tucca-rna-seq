@@ -100,10 +100,10 @@ configuration above.
 dds_path <- here::here(
   "tucca-rna-seq", "resources", "deseq2", analysis_name, "dds.RDS"
 )
-res_path <- DESeq2::results(here::here(
+res_path <- here::here(
   "tucca-rna-seq", "resources", "deseq2", analysis_name, contrast_name,
   "wald.RDS"
-))
+)
 ora_path <- here::here(
   "tucca-rna-seq", "resources", "enrichment", analysis_name, contrast_name,
   "ora_results.RDS"
@@ -115,7 +115,7 @@ gsea_path <- here::here(
 
 # Load the main objects
 dds <- base::readRDS(dds_path)
-res_de <- base::readRDS(res_path) # This is the DESeqResults object
+res_de <- DESeq2::results(base::readRDS(res_path)) # DESeqResults object
 ora_results <- base::readRDS(ora_path)
 gsea_results <- base::readRDS(gsea_path)
 config <- yaml::read_yaml(config_path)
