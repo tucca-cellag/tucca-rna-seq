@@ -96,10 +96,7 @@ configuration above.
 
 ```{r load_data}
 # Construct file paths
-dds_path <- here::here(
-  "tucca-rna-seq", "resources", "deseq2", analysis_name, "dds.RDS"
-)
-res_path <- here::here(
+wald_path <- here::here(
   "tucca-rna-seq", "resources", "deseq2", analysis_name, contrast_name,
   "wald.RDS"
 )
@@ -113,8 +110,8 @@ gsea_path <- here::here(
 )
 
 # Load the main objects
-dds <- base::readRDS(dds_path)
-res_de <- DESeq2::results(base::readRDS(res_path)) # DESeqResults object
+dds_wald <- base::readRDS(wald_path)
+res_de <- DESeq2::results(base::readRDS(wald_path)) # DESeqResults object
 ora_results <- base::readRDS(ora_path)
 gsea_results <- base::readRDS(gsea_path)
 config <- yaml::read_yaml(config_path)
@@ -126,8 +123,9 @@ res_enrich <- gsea_results$GO # or gsea_results$KEGG, or ora_results$GO, etc.
 
 # Prepare Inputs for GeneTonic
 
-`GeneTonic` requires a few specific inputs: `dds`, `res_de`, `res_enrich`, and
-`annotation_obj`. We have the first three, now we create the annotation object.
+`GeneTonic` requires a few specific inputs: `dds_wald`, `res_de`, `res_enrich`,
+and `annotation_obj`. We have the first three, now we create the annotation
+object.
 
 ## Create `annotation_obj`
 
@@ -203,9 +201,9 @@ if (!base::require(org_db_pkg, character.only = TRUE)) {
 # Now, try to load it again. If it works, create the annotation object.
 if (base::require(org_db_pkg, character.only = TRUE)) {
   # The annotation object needs columns: 'gene_id', 'gene_name'
-  # We will map from ENSEMBL IDs (if they are the rownames of our dds)
-  keys <- utils::head(base::rownames(dds))
-  keytype <- "ENSEMBL" # Change if your dds uses other identifiers like ENTREZID
+  # We will map from ENSEMBL IDs (if they are the rownames of our dds_wald)
+  keys <- utils::head(base::rownames(dds_wald))
+  keytype <- "ENSEMBL" # TODO: Automate ENSEMBL or ENTREZID based on workflow
 
   base::message(base::paste("Using", org_db_pkg, "for annotation."))
 
@@ -289,7 +287,7 @@ and launch the interactive application.
 if (!base::is.null(res_enrich) && !base::is.null(annotation_obj)) {
   # Create the GeneTonicList object
   gtl <- GeneTonic::GeneTonicList(
-    dds = dds,
+    dds = dds_wald,
     res_de = res_de,
     res_enrich = res_enrich_shaken,
     annotation_obj = annotation_obj
