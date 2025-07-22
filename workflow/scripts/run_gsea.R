@@ -41,9 +41,13 @@ install_source <- enrichment_params$install_source
 org_db_pkg <- if (install_method == "local") {
   # When built locally, the package name is derived inside AnnotationForge.
   # We find the directory name it created to get the actual package name.
-  pkg_dirs <- base::list.dirs(path = install_source, full.names = FALSE, recursive = FALSE)
+  pkg_dirs <- base::list.dirs(
+    path = install_source, full.names = FALSE, recursive = FALSE
+  )
   pkg_name <- pkg_dirs[grepl("^org\\..+\\.db$", pkg_dirs)]
-  if (length(pkg_name) == 0) base::stop("Could not find locally built OrgDb package directory.")
+  if (length(pkg_name) == 0) {
+    base::stop("Could not find locally built OrgDb package directory.")
+  }
   pkg_name[1]
 } else {
   enrichment_params[["org_db_pkg"]]
@@ -58,14 +62,30 @@ base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
 res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
   dplyr::rename(feature_id = 1)
 
-base::message("Mapping feature IDs to Entrez IDs...")
-res_tb$entrez_id <- AnnotationDbi::mapIds(
-  base::get(org_db_pkg),
-  keys = res_tb$feature_id,
-  column = "ENTREZID",
-  keytype = "ENSEMBL",
-  multiVals = "first"
-)
+# Determine the keytype of the input feature IDs. ENSEMBL IDs start with
+# "ENS", whereas RefSeq-based IDs are expected to be ENTREZ IDs (numeric).
+keytype_input <- if (base::any(base::startsWith(res_tb$feature_id, "ENS"))) {
+  "ENSEMBL"
+} else {
+  "ENTREZID"
+}
+base::message("Inferred input keytype as: ", keytype_input)
+
+# Ensure we have Entrez IDs for clusterProfiler analysis
+if (keytype_input == "ENTREZID") {
+  # If the input is already Entrez, just use it.
+  res_tb$entrez_id <- as.character(res_tb$feature_id)
+} else {
+  # If the input is something else (assumed ENSEMBL), map to Entrez.
+  base::message("Mapping ", keytype_input, " IDs to Entrez IDs...")
+  res_tb$entrez_id <- AnnotationDbi::mapIds(
+    base::get(org_db_pkg),
+    keys = res_tb$feature_id,
+    column = "ENTREZID",
+    keytype = keytype_input,
+    multiVals = "first"
+  )
+}
 
 res_tb_filtered <- res_tb %>%
   dplyr::filter(!is.na(entrez_id) & !is.na(log2FoldChange)) %>%
@@ -80,7 +100,9 @@ base::message(base::paste(
 ))
 
 if (base::length(genelist_fc_sort) == 0) {
-  base::stop("The gene list for GSEA is empty. Check gene ID mapping and DGE results.")
+  base::stop(
+    "The gene list for GSEA is empty. Check gene ID mapping and DGE results."
+  )
 }
 
 # --- 4. Perform GSEA ---

@@ -59,14 +59,30 @@ base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
 res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
   dplyr::rename(feature_id = 1)
 
-base::message("Mapping feature IDs to Entrez IDs...")
-res_tb$entrez_id <- AnnotationDbi::mapIds(
-  base::get(org_db_pkg),
-  keys = res_tb$feature_id,
-  column = "ENTREZID",
-  keytype = "ENSEMBL",
-  multiVals = "first"
-)
+# Determine the keytype of the input feature IDs. ENSEMBL IDs start with
+# "ENS", whereas RefSeq-based IDs are expected to be ENTREZ IDs (numeric).
+keytype_input <- if (base::any(base::startsWith(res_tb$feature_id, "ENS"))) {
+  "ENSEMBL"
+} else {
+  "ENTREZID"
+}
+base::message("Inferred input keytype as: ", keytype_input)
+
+# Ensure we have Entrez IDs for clusterProfiler analysis
+if (keytype_input == "ENTREZID") {
+  # If the input is already Entrez, just use it.
+  res_tb$entrez_id <- as.character(res_tb$feature_id)
+} else {
+  # If the input is something else (assumed ENSEMBL), map to Entrez.
+  base::message("Mapping ", keytype_input, " IDs to Entrez IDs...")
+  res_tb$entrez_id <- AnnotationDbi::mapIds(
+    base::get(org_db_pkg),
+    keys = res_tb$feature_id,
+    column = "ENTREZID",
+    keytype = keytype_input,
+    multiVals = "first"
+  )
+}
 
 res_tb_filtered <- res_tb %>%
   dplyr::filter(!is.na(entrez_id)) %>%
@@ -85,7 +101,10 @@ base::message(base::paste(
 ))
 
 if (base::length(significant_genes) == 0) {
-  base::message("No significant genes found. ORA will not be performed. Creating empty output.")
+  base::message(
+    "No significant genes found. ORA will not be performed.",
+    "Creating empty output."
+  )
   base::saveRDS(base::list(), file = snakemake@output$ora_rds)
   base::quit(save = "no", status = 0)
 }
