@@ -231,34 +231,16 @@ if (base::require(org_db_pkg, character.only = TRUE)) {
       gene_id = dplyr::all_of(keytype),
       gene_name = dplyr::all_of(symbol_col)
     ) |>
-    dplyr::filter(!base::is.na(gene_name))
+    dplyr::filter(!base::is.na(gene_name)) |>
+    # The `pcaExplorer` app can fail if gene IDs or names are not unique.
+    # We first ensure each gene ID is unique, then remove any duplicated
+    # gene names, which can occur if different IDs map to the same name.
+    dplyr::distinct(gene_id, .keep_all = TRUE) |>
+    dplyr::distinct(gene_name, .keep_all = TRUE)
 } else {
   base::message(
     "OrgDb package could not be loaded. Please ensure the pipeline",
     "has run successfully and that you are in the correct R environment."
-  )
-}
-```
-
-## Compute pca2go
-This object pre-computes GO term enrichment for genes with high PCA loadings,
-which can then be explored in the interactive app. This can take a few minutes.
-```{r compute_pca2go}
-pca2go_obj <- NULL
-if (
-  !base::is.null(dst) && !base::is.null(org_db_pkg) &&
-    base::require(org_db_pkg, character.only = TRUE)
-) {
-  base::message("Computing pca2go object for GO term enrichment analysis...")
-
-  # The pca2go function requires the organism ID and gene ID type.
-  pca2go_obj <- pcaExplorer::pca2go(
-    dst,
-    pca_ngenes = 1000,
-    annopkg = org_db_pkg,
-    annotation = annotation_obj,
-    inputType = keytype, # from previous chunk
-    ensToGeneSymbol = (keytype == "ENSEMBL")
   )
 }
 ```
@@ -278,8 +260,7 @@ if (!base::is.null(dst) && !base::is.null(annotation_obj)) {
     dst = dst,
     countmatrix = countmatrix,
     coldata = coldata,
-    annotation = annotation_obj,
-    pca2go = pca2go_obj
+    annotation = annotation_obj
   )
 } else {
   base::message(
