@@ -35,9 +35,13 @@ install_source <- enrichment_params$install_source
 org_db_pkg <- if (install_method == "local") {
   # When built locally, the package name is derived inside AnnotationForge.
   # We find the directory name it created to get the actual package name.
-  pkg_dirs <- base::list.dirs(path = install_source, full.names = FALSE, recursive = FALSE)
+  pkg_dirs <- base::list.dirs(
+    path = install_source, full.names = FALSE, recursive = FALSE
+  )
   pkg_name <- pkg_dirs[grepl("^org\\..+\\.db$", pkg_dirs)]
-  if (length(pkg_name) == 0) base::stop("Could not find locally built OrgDb package directory.")
+  if (length(pkg_name) == 0) {
+    base::stop("Could not find locally built OrgDb package directory.")
+  }
   pkg_name[1]
 } else {
   enrichment_params$org_db_pkg
@@ -47,7 +51,9 @@ base::message("Target OrgDb package: ", org_db_pkg)
 # Install if necessary
 if (!base::require(org_db_pkg, character.only = TRUE)) {
   base::message(base::paste("Package", org_db_pkg, "not found, installing..."))
-  base::message(base::paste("Method:", install_method, "| Source:", install_source))
+  base::message(
+    base::paste("Method:", install_method, "| Source:", install_source)
+  )
 
   if (install_method == "local") {
     devtools::install(file.path(install_source, org_db_pkg), upgrade = "never")
