@@ -264,8 +264,8 @@ res_enrich_shaken <- NULL
 
 if (!base::is.null(res_enrich)) {
   if (inherits(res_enrich, "gseaResult")) {
-    base::message("Input is a gseaResult object, using shake_gseResult().")
-    res_enrich_shaken <- GeneTonic::shake_gseResult(res_enrich)
+    base::message("Input is a gseaResult object, using shake_gsenrichResult().")
+    res_enrich_shaken <- GeneTonic::shake_gsenrichResult(res_enrich)
   } else if (inherits(res_enrich, "enrichResult")) {
     base::message(
       "Input is an enrichResult object, using shake_enrichResult()."
