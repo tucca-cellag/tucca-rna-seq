@@ -642,6 +642,61 @@
       "Author": "Hervé Pagès [aut, cre], Patrick Aboyoun [aut], Robert Gentleman [aut], Saikat DebRoy [aut], Vince Carey [ctb], Nicolas Delhomme [ctb], Felix Ernst [ctb], Wolfgang Huber [ctb] ('matchprobes' vignette), Beryl Kanali [ctb] (Converted 'MultipleAlignments' vignette from Sweave to RMarkdown), Haleema Khan [ctb] (Converted 'matchprobes' vignette from Sweave to RMarkdown), Aidan Lakshman [ctb], Kieran O'Neill [ctb], Valerie Obenchain [ctb], Marcel Ramos [ctb], Albert Vill [ctb], Jen Wokaty [ctb] (Converted 'matchprobes' vignette from Sweave to RMarkdown), Erik Wright [ctb]",
       "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>"
     },
+    "Category": {
+      "Package": "Category",
+      "Version": "2.72.0",
+      "Source": "Bioconductor",
+      "Title": "Category Analysis",
+      "Authors@R": "c( person(\"Robert\", \"Gentleman\", role=\"aut\"), person(\"Seth\", \"Falcon\", role=\"ctb\"), person(\"Deepayan\", \"Sarkar\", role=\"ctb\"), person(\"Robert\", \"Castelo\", role=\"ctb\"), person(\"Bioconductor Package Maintainer\", email = \"maintainer@bioconductor.org\", role=\"cre\"))",
+      "Description": "A collection of tools for performing category (gene set enrichment) analysis.",
+      "License": "Artistic-2.0",
+      "Depends": [
+        "methods",
+        "stats4",
+        "BiocGenerics",
+        "AnnotationDbi",
+        "Biobase",
+        "Matrix"
+      ],
+      "Imports": [
+        "utils",
+        "stats",
+        "graph",
+        "RBGL",
+        "GSEABase",
+        "genefilter",
+        "annotate",
+        "DBI"
+      ],
+      "Suggests": [
+        "EBarrays",
+        "ALL",
+        "Rgraphviz",
+        "RColorBrewer",
+        "xtable (>= 1.4-6)",
+        "hgu95av2.db",
+        "KEGGREST",
+        "karyoploteR",
+        "geneplotter",
+        "limma",
+        "lattice",
+        "RUnit",
+        "org.Sc.sgd.db",
+        "GOstats",
+        "GO.db"
+      ],
+      "LazyLoad": "Yes",
+      "Collate": "AllClasses.R AllGenerics.R categoryToEntrezBuilder-methods.R categoryName-methods.R hyperg-methods.R hyperGTest-methods.R linearMTest-methods.R DatPkg-accessors.R ChrBandTree.R tree_visitor.R cb_test.R initialize-methods.R HyperGParams-accessors.R LinearMParams-accessors.R HyperGResult-accessors.R LinearMResult-accessors.R ChrMapHyperGResult-accessors.R ChrMapLinearMResult-accessors.R show-methods.R universeBuilder-methods.R utils.R MAPcode.R catcode.R cateGOryMatrix.R gseaperm.R summary-methods.R mouse.R",
+      "biocViews": "Annotation, GO, Pathways, GeneSetEnrichment",
+      "git_url": "https://git.bioconductor.org/packages/Category",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "343907a",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Author": "Robert Gentleman [aut], Seth Falcon [ctb], Deepayan Sarkar [ctb], Robert Castelo [ctb], Bioconductor Package Maintainer [cre]",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
+    },
     "ComplexHeatmap": {
       "Package": "ComplexHeatmap",
       "Version": "2.22.0",
@@ -1079,6 +1134,104 @@
       "Repository": "Bioconductor 3.20",
       "NeedsCompilation": "yes",
       "Author": "Guangchuang Yu [aut, cre], Alexey Stukalov [ctb], Pingfan Guo [ctb], Chuanle Xiao [ctb], Lluís Revilla Sancho [ctb]"
+    },
+    "GOstats": {
+      "Package": "GOstats",
+      "Version": "2.72.0",
+      "Source": "Bioconductor",
+      "Title": "Tools for manipulating GO and microarrays",
+      "Authors@R": "c( person(\"Robert\", \"Gentleman\", role=\"aut\"), person(\"Seth\", \"Falcon\", role=\"ctb\"), person(\"Robert\", \"Castelo\", role=\"ctb\"), person(\"Sonali\", \"Kumari\", role=\"ctb\", comment=\"Converted vignettes from Sweave to R Markdown / HTML.\"), person(\"Dennis\", \"Ndubi\", role=\"ctb\", comment=\"Converted GOstatsHyperG vignette from Sweave to R Markdown / HTML.\"), person(\"Bioconductor Package Maintainer\", role=\"cre\", email=\"maintainer@bioconductor.org\"))",
+      "Description": "A set of tools for interacting with GO and microarray data. A variety of basic manipulation tools for graphs, hypothesis testing and other simple calculations.",
+      "Depends": [
+        "R (>= 2.10)",
+        "Biobase (>= 1.15.29)",
+        "Category (>= 2.43.2)",
+        "graph"
+      ],
+      "Imports": [
+        "methods",
+        "stats",
+        "stats4",
+        "AnnotationDbi (>= 0.0.89)",
+        "GO.db (>= 1.13.0)",
+        "RBGL",
+        "annotate (>= 1.13.2)",
+        "AnnotationForge",
+        "Rgraphviz"
+      ],
+      "Suggests": [
+        "hgu95av2.db (>= 1.13.0)",
+        "ALL",
+        "multtest",
+        "genefilter",
+        "RColorBrewer",
+        "xtable",
+        "SparseM",
+        "GSEABase",
+        "geneplotter",
+        "org.Hs.eg.db",
+        "RUnit",
+        "BiocGenerics",
+        "BiocStyle",
+        "knitr"
+      ],
+      "License": "Artistic-2.0",
+      "Collate": "zzz.R AllClasses.R AllGenerics.R hyperGTest-methods.R GOHyperGResult-accessors.R GOgraph.R GOhyptest.R hyperGtable.R shortestPath.R triad.R OBOHyperGResult-accessors.R",
+      "biocViews": "Annotation, GO, MultipleComparison, GeneExpression, Microarray, Pathways, GeneSetEnrichment, GraphAndNetwork",
+      "VignetteBuilder": "knitr",
+      "git_url": "https://git.bioconductor.org/packages/GOstats",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "7306a7f",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Author": "Robert Gentleman [aut], Seth Falcon [ctb], Robert Castelo [ctb], Sonali Kumari [ctb] (Converted vignettes from Sweave to R Markdown / HTML.), Dennis Ndubi [ctb] (Converted GOstatsHyperG vignette from Sweave to R Markdown / HTML.), Bioconductor Package Maintainer [cre]",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
+    },
+    "GSEABase": {
+      "Package": "GSEABase",
+      "Version": "1.68.0",
+      "Source": "Bioconductor",
+      "Type": "Package",
+      "Title": "Gene set enrichment data structures and methods",
+      "Authors@R": "c( person(\"Martin\", \"Morgan\", role = \"aut\"), person(\"Seth\", \"Falcon\", role = \"aut\"), person(\"Robert\", \"Gentleman\", role = \"aut\"), person(\"Paul\", \"Villafuerte\", role = \"ctb\", comment = \"'GSEABase' vignette translation from Sweave to Rmarkdown / HTML\"), person(\"Bioconductor Package Maintainer\", role = \"cre\", email = \"maintainer@bioconductor.org\" ))",
+      "Description": "This package provides classes and methods to support Gene Set Enrichment Analysis (GSEA).",
+      "License": "Artistic-2.0",
+      "Depends": [
+        "R (>= 2.6.0)",
+        "BiocGenerics (>= 0.13.8)",
+        "Biobase (>= 2.17.8)",
+        "annotate (>= 1.45.3)",
+        "methods",
+        "graph (>= 1.37.2)"
+      ],
+      "Suggests": [
+        "hgu95av2.db",
+        "GO.db",
+        "org.Hs.eg.db",
+        "Rgraphviz",
+        "ReportingTools",
+        "testthat",
+        "BiocStyle",
+        "knitr",
+        "RUnit"
+      ],
+      "Imports": [
+        "AnnotationDbi",
+        "XML"
+      ],
+      "LazyLoad": "yes",
+      "Collate": "utilities.R AAA.R AllClasses.R AllGenerics.R getObjects.R methods-CollectionType.R methods-ExpressionSet.R methods-GeneColorSet.R methods-GeneIdentifierType.R methods-GeneSet.R methods-GeneSetCollection.R methods-OBOCollection.R",
+      "VignetteBuilder": "knitr",
+      "biocViews": "GeneExpression, GeneSetEnrichment, GraphAndNetwork, GO, KEGG",
+      "git_url": "https://git.bioconductor.org/packages/GSEABase",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "3766175",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Author": "Martin Morgan [aut], Seth Falcon [aut], Robert Gentleman [aut], Paul Villafuerte [ctb] ('GSEABase' vignette translation from Sweave to Rmarkdown / HTML), Bioconductor Package Maintainer [cre]",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
     },
     "GeneTonic": {
       "Package": "GeneTonic",
@@ -1717,6 +1870,64 @@
       "Author": "Constantin Ahlmann-Eltze [aut] (<https://orcid.org/0000-0002-3762-068X>), Peter Hickey [aut, cre] (<https://orcid.org/0000-0002-8153-6258>), Hervé Pagès [aut]",
       "Maintainer": "Peter Hickey <peter.hickey@gmail.com>"
     },
+    "NMF": {
+      "Package": "NMF",
+      "Version": "0.28",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Algorithms and Framework for Nonnegative Matrix Factorization (NMF)",
+      "Date": "2024-08-19",
+      "Authors@R": "c( person(\"Renaud\", \"Gaujoux\", role = c(\"aut\")), person(\"Cathal\", \"Seoighe\", role = c(\"aut\")), person(\"Nicolas\", \"Sauwen\", role = c(\"cre\"), email = \"nicolas.sauwen@openanalytics.eu\") )",
+      "Maintainer": "Nicolas Sauwen <nicolas.sauwen@openanalytics.eu>",
+      "Description": "Provides a framework to perform Non-negative Matrix Factorization (NMF). The package implements a set of already published algorithms and seeding methods, and provides a framework to test, develop and plug new/custom algorithms. Most of the built-in algorithms have been optimized in C++, and the main interface function provides an easy way of performing parallel computations on multicore machines.",
+      "License": "GPL (>= 2)",
+      "URL": "http://renozao.github.io/NMF/",
+      "LazyLoad": "yes",
+      "VignetteBuilder": "knitr",
+      "Depends": [
+        "R (>= 3.0.0)",
+        "methods",
+        "utils",
+        "registry",
+        "rngtools (>= 1.2.3)",
+        "cluster"
+      ],
+      "Imports": [
+        "graphics",
+        "stats",
+        "stringr (>= 1.0.0)",
+        "digest",
+        "grid",
+        "grDevices",
+        "gridBase",
+        "colorspace",
+        "RColorBrewer",
+        "foreach",
+        "doParallel",
+        "ggplot2",
+        "reshape2",
+        "Biobase",
+        "codetools",
+        "BiocManager"
+      ],
+      "Suggests": [
+        "fastICA",
+        "doMPI",
+        "bigmemory (>= 4.2)",
+        "synchronicity(>= 1.3.2)",
+        "corpcor",
+        "xtable",
+        "devtools",
+        "knitr",
+        "RUnit"
+      ],
+      "Collate": "'colorcode.R' 'options.R' 'grid.R' 'atracks.R' 'aheatmap.R' 'algorithmic.R' 'nmf-package.R' 'rmatrix.R' 'utils.R' 'versions.R' 'NMF-class.R' 'transforms.R' 'Bioc-layer.R' 'NMFstd-class.R' 'NMFOffset-class.R' 'heatmaps.R' 'NMFns-class.R' 'nmfModel.R' 'fixed-terms.R' 'NMFfit-class.R' 'NMFSet-class.R' 'NMFStrategy-class.R' 'registry.R' 'NMFSeed-class.R' 'NMFStrategyFunction-class.R' 'NMFStrategyIterative-class.R' 'NMFplots.R' 'registry-algorithms.R' 'algorithms-base.R' 'algorithms-lnmf.R' 'algorithms-lsnmf.R' 'algorithms-pe-nmf.R' 'algorithms-siNMF.R' 'algorithms-snmf.R' 'data.R' 'extractFeatures.R' 'parallel.R' 'registry-seed.R' 'nmf.R' 'rnmf.R' 'run.R' 'seed-base.R' 'seed-ica.R' 'seed-nndsvd.R' 'setNMFClass.R' 'simulation.R' 'tests.R' 'vignetteFunctions.R'",
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "RoxygenNote": "7.3.1",
+      "Author": "Renaud Gaujoux [aut], Cathal Seoighe [aut], Nicolas Sauwen [cre]",
+      "Encoding": "UTF-8"
+    },
     "ProtGenerics": {
       "Package": "ProtGenerics",
       "Version": "1.38.0",
@@ -1850,6 +2061,45 @@
       "Author": "Winston Chang [aut, cre], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Winston Chang <winston@posit.co>",
       "Repository": "CRAN"
+    },
+    "RBGL": {
+      "Package": "RBGL",
+      "Version": "1.82.0",
+      "Source": "Bioconductor",
+      "Title": "An interface to the BOOST graph library",
+      "Authors@R": "c( person(\"Vince\", \"Carey\", role = \"aut\", email = \"stvjc@channing.harvard.edu\"), person(\"Li\", \"Long\",  role = \"aut\", email = \"li.long@isb-sib.ch\"), person(\"R.\", \"Gentleman\", role = \"aut\"), person(\"Emmanuel\", \"Taiwo\", role = \"ctb\",  comment = \"Converted RBGL vignette from Sweave to RMarkdown / HTML.\"), person(\"Bioconductor Package Maintainer\", role = \"cre\", email = \"maintainer@bioconductor.org\"))",
+      "Depends": [
+        "graph",
+        "methods"
+      ],
+      "Imports": [
+        "methods"
+      ],
+      "Suggests": [
+        "Rgraphviz",
+        "XML",
+        "RUnit",
+        "BiocGenerics",
+        "BiocStyle",
+        "knitr"
+      ],
+      "Description": "A fairly extensive and comprehensive interface to the graph algorithms contained in the BOOST library.",
+      "License": "Artistic-2.0",
+      "URL": "http://www.bioconductor.org",
+      "LazyLoad": "yes",
+      "biocViews": "GraphAndNetwork, Network",
+      "LinkingTo": [
+        "BH"
+      ],
+      "VignetteBuilder": "knitr",
+      "git_url": "https://git.bioconductor.org/packages/RBGL",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "88aa55c",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "yes",
+      "Author": "Vince Carey [aut], Li Long [aut], R. Gentleman [aut], Emmanuel Taiwo [ctb] (Converted RBGL vignette from Sweave to RMarkdown / HTML.), Bioconductor Package Maintainer [cre]",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
     },
     "RColorBrewer": {
       "Package": "RColorBrewer",
@@ -2052,6 +2302,45 @@
       "Author": "Doug Bates [aut] (<https://orcid.org/0000-0001-8316-9503>), Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>), Romain Francois [aut] (<https://orcid.org/0000-0002-2444-4226>), Yixuan Qiu [aut] (<https://orcid.org/0000-0003-0109-6692>), Authors of Eigen [cph] (Authorship and copyright in included Eigen library as detailed in inst/COPYRIGHTS)",
       "Maintainer": "Dirk Eddelbuettel <edd@debian.org>",
       "Repository": "CRAN"
+    },
+    "Rgraphviz": {
+      "Package": "Rgraphviz",
+      "Version": "2.50.0",
+      "Source": "Bioconductor",
+      "Title": "Provides plotting capabilities for R graph objects",
+      "Description": "Interfaces R with the AT and T graphviz library for plotting R graph objects from the graph package.",
+      "Authors@R": "c(person(c(\"Kasper\", \"Daniel\"), \"Hansen\", role = c(\"cre\", \"aut\"), email = \"kasperdanielhansen@gmail.com\"), person(\"Jeff\", \"Gentry\", role = \"aut\"), person(\"Li\", \"Long\", role = \"aut\"), person(\"Robert\", \"Gentleman\", role = \"aut\"), person(\"Seth\", \"Falcon\", role = \"aut\"), person(\"Florian\", \"Hahne\", role = \"aut\"), person(\"Deepayan\", \"Sarkar\", role = \"aut\"))",
+      "Depends": [
+        "R (>= 2.6.0)",
+        "methods",
+        "utils",
+        "graph",
+        "grid"
+      ],
+      "Imports": [
+        "stats4",
+        "graphics",
+        "grDevices"
+      ],
+      "Suggests": [
+        "RUnit",
+        "BiocGenerics",
+        "XML"
+      ],
+      "SystemRequirements": "optionally Graphviz (>= 2.16)",
+      "GraphvizDetails": "Graphviz 2.28.0",
+      "License": "EPL",
+      "LazyLoad": "Yes",
+      "Collate": "AllGenerics.R AllClasses.R SimpleMethods.R graphvizVersion.R graphviz_build_version.R agfunctions.R attrs.R graphLayout.R plotGraph.R plotUtils.R layoutGraph.R renderGraph.R graph_methods.R writers.R zzz.R",
+      "biocViews": "GraphAndNetwork, Visualization",
+      "git_url": "https://git.bioconductor.org/packages/Rgraphviz",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "afcb63b",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "yes",
+      "Author": "Kasper Daniel Hansen [cre, aut], Jeff Gentry [aut], Li Long [aut], Robert Gentleman [aut], Seth Falcon [aut], Florian Hahne [aut], Deepayan Sarkar [aut]",
+      "Maintainer": "Kasper Daniel Hansen <kasperdanielhansen@gmail.com>"
     },
     "Rhtslib": {
       "Package": "Rhtslib",
@@ -2386,6 +2675,42 @@
       "Author": "Martin Morgan [aut], Valerie Obenchain [aut], Jim Hester [aut], Hervé Pagès [aut, cre]",
       "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>"
     },
+    "TSP": {
+      "Package": "TSP",
+      "Version": "1.2-4",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Traveling Salesperson Problem (TSP)",
+      "Date": "2023-04-03",
+      "Authors@R": "c(person(\"Michael\", \"Hahsler\",  role = c(\"aut\", \"cre\", \"cph\"), email = \"mhahsler@lyle.smu.edu\", comment = c(ORCID = \"0000-0003-2716-1405\")), person(\"Kurt\", \"Hornik\",  role = c(\"aut\", \"cph\"), comment = c(ORCID = \"0000-0003-4198-9911\")) )",
+      "Description": "Basic infrastructure and some algorithms for the traveling salesperson problem (also traveling salesman problem; TSP). The package provides some simple algorithms and an interface to the Concorde TSP solver and its implementation of the Chained-Lin-Kernighan heuristic. The code for Concorde itself is not included in the package and has to be obtained separately. Hahsler and Hornik (2007) <doi:10.18637/jss.v023.i02>.",
+      "Classification/ACM": "G.1.6, G.2.1, G.4",
+      "URL": "https://github.com/mhahsler/TSP",
+      "BugReports": "https://github.com/mhahsler/TSP/issues",
+      "Depends": [
+        "R (>= 3.5.0)"
+      ],
+      "Imports": [
+        "graphics",
+        "foreach",
+        "utils",
+        "stats",
+        "grDevices"
+      ],
+      "Suggests": [
+        "maps",
+        "doParallel",
+        "testthat"
+      ],
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.2.3",
+      "License": "GPL-3",
+      "Copyright": "All code is Copyright (C) Michael Hahsler and Kurt Hornik.",
+      "NeedsCompilation": "yes",
+      "Author": "Michael Hahsler [aut, cre, cph] (<https://orcid.org/0000-0003-2716-1405>), Kurt Hornik [aut, cph] (<https://orcid.org/0000-0003-4198-9911>)",
+      "Maintainer": "Michael Hahsler <mhahsler@lyle.smu.edu>",
+      "Repository": "CRAN"
+    },
     "UCSC.utils": {
       "Package": "UCSC.utils",
       "Version": "1.2.0",
@@ -2517,6 +2842,60 @@
       "Author": "Tony Plate [aut, cre], Richard Heiberger [aut]",
       "Repository": "CRAN"
     },
+    "annotate": {
+      "Package": "annotate",
+      "Version": "1.84.0",
+      "Source": "Bioconductor",
+      "Title": "Annotation for microarrays",
+      "Author": "R. Gentleman",
+      "Authors@R": "c( person(\"Jeff\", \"Gentry\", role = \"aut\"), person(\"Kritika\", \"Verma\", role = \"ctb\", comment = \"Converted chromLOC vignette from Sweave to RMarkdown / HTML.\"), person(\"Manvi\", \"Yaduvanshi\", role = \"ctb\", comment = \"Converted useDataPkgs vignette from Sweave to RMarkdown / HTML.\"), person(\"Bioconductor Package Maintainer\", email = \"maintainer@bioconductor.org\", role = \"cre\"))",
+      "Description": "Using R enviroments for annotation.",
+      "Depends": [
+        "R (>= 2.10)",
+        "AnnotationDbi (>= 1.27.5)",
+        "XML"
+      ],
+      "Imports": [
+        "Biobase",
+        "DBI",
+        "xtable",
+        "graphics",
+        "utils",
+        "stats",
+        "methods",
+        "BiocGenerics (>= 0.13.8)",
+        "httr"
+      ],
+      "Suggests": [
+        "hgu95av2.db",
+        "genefilter",
+        "Biostrings (>= 2.25.10)",
+        "IRanges",
+        "rae230a.db",
+        "rae230aprobe",
+        "tkWidgets",
+        "GO.db",
+        "org.Hs.eg.db",
+        "org.Mm.eg.db",
+        "humanCHRLOC",
+        "Rgraphviz",
+        "RUnit",
+        "BiocStyle",
+        "knitr"
+      ],
+      "VignetteBuilder": "knitr",
+      "License": "Artistic-2.0",
+      "LazyLoad": "yes",
+      "Collate": "AllGenerics.R ACCNUMStats.R Amat.R AnnMaps.R chromLocation.R compatipleVersions.R findNeighbors.R getData.R getPMInfo.R getSeq4ACC.R GOhelpers.R homoData.R html.R isValidKey.R LL2homology.R pmid2MIAME.R probesByLL.R pubMedAbst.R query.R readGEOAnn.R serializeEnv.R blastSequences.R zzz.R test_annotate_package.R",
+      "biocViews": "Annotation, Pathways, GO",
+      "git_url": "https://git.bioconductor.org/packages/annotate",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "6188ffb",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
+    },
     "ape": {
       "Package": "ape",
       "Version": "5.8-1",
@@ -2615,6 +2994,29 @@
       "Author": "Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>)",
       "Maintainer": "Jeroen Ooms <jeroenooms@gmail.com>",
       "Repository": "CRAN"
+    },
+    "assertthat": {
+      "Package": "assertthat",
+      "Version": "0.2.1",
+      "Source": "Repository",
+      "Title": "Easy Pre and Post Assertions",
+      "Authors@R": "person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", c(\"aut\", \"cre\"))",
+      "Description": "An extension to stopifnot() that makes it easy to declare  the pre and post conditions that you code should satisfy, while also  producing friendly error messages so that your users know what's gone wrong.",
+      "License": "GPL-3",
+      "Imports": [
+        "tools"
+      ],
+      "Suggests": [
+        "testthat",
+        "covr"
+      ],
+      "RoxygenNote": "6.0.1",
+      "Collate": "'assert-that.r' 'on-failure.r' 'assertions-file.r' 'assertions-scalar.R' 'assertions.r' 'base.r' 'base-comparison.r' 'base-is.r' 'base-logical.r' 'base-misc.r' 'utils.r' 'validate-that.R'",
+      "NeedsCompilation": "no",
+      "Author": "Hadley Wickham [aut, cre]",
+      "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
     },
     "backbone": {
       "Package": "backbone",
@@ -3126,6 +3528,31 @@
       "Author": "Carson Sievert [aut, cre] (<https://orcid.org/0000-0002-4958-2844>), Joe Cheng [aut], Garrick Aden-Buie [aut] (<https://orcid.org/0000-0002-7111-0077>), Posit Software, PBC [cph, fnd], Bootstrap contributors [ctb] (Bootstrap library), Twitter, Inc [cph] (Bootstrap library), Javi Aguilar [ctb, cph] (Bootstrap colorpicker library), Thomas Park [ctb, cph] (Bootswatch library), PayPal [ctb, cph] (Bootstrap accessibility plugin)",
       "Maintainer": "Carson Sievert <carson@posit.co>",
       "Repository": "CRAN"
+    },
+    "ca": {
+      "Package": "ca",
+      "Version": "0.71.1",
+      "Source": "Repository",
+      "Date": "2018-10-10",
+      "Title": "Simple, Multiple and Joint Correspondence Analysis",
+      "Authors@R": "c(person(given = \"Michael\", family = \"Greenacre\", role = \"aut\", email = \"michael.greenacre@upf.edu\"), person(given = \"Oleg\", family = \"Nenadic\", role = c(\"aut\", \"cre\"), email = \"onenadi@uni-goettingen.de\"), person(given = \"Michael\", family = \"Friendly\", role = \"ctb\"))",
+      "Author": "Michael Greenacre [aut], Oleg Nenadic [aut, cre], Michael Friendly [ctb]",
+      "Maintainer": "Oleg Nenadic <onenadi@uni-goettingen.de>",
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Suggests": [
+        "rgl (>= 0.64-10)",
+        "vcd"
+      ],
+      "Description": "Computation and visualization of simple, multiple and joint correspondence analysis.",
+      "LazyLoad": "yes",
+      "LazyData": "yes",
+      "License": "GPL",
+      "URL": "http://www.carme-n.org/",
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
     },
     "cachem": {
       "Package": "cachem",
@@ -4410,6 +4837,37 @@
       "NeedsCompilation": "no",
       "Repository": "CRAN"
     },
+    "egg": {
+      "Package": "egg",
+      "Version": "0.4.5",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Extensions for 'ggplot2': Custom Geom, Custom Themes, Plot Alignment, Labelled Panels, Symmetric Scales, and Fixed Panel Size",
+      "Authors@R": "c(person(\"Baptiste\", \"Auguie\", email = \"baptiste.auguie@gmail.com\", role = c(\"aut\", \"cre\")))",
+      "License": "GPL-3",
+      "Description": "Miscellaneous functions to help customise 'ggplot2' objects. High-level functions are provided to post-process 'ggplot2' layouts and allow alignment between plot panels, as well as setting panel sizes to fixed values. Other functions include a custom 'geom', and helper functions to enforce symmetric scales or add tags to facetted plots.",
+      "VignetteBuilder": "knitr",
+      "Depends": [
+        "gridExtra (>= 2.3)",
+        "ggplot2"
+      ],
+      "Imports": [
+        "gtable",
+        "grid",
+        "grDevices",
+        "utils"
+      ],
+      "Suggests": [
+        "knitr",
+        "png"
+      ],
+      "RoxygenNote": "6.1.1",
+      "NeedsCompilation": "no",
+      "Author": "Baptiste Auguie [aut, cre]",
+      "Maintainer": "Baptiste Auguie <baptiste.auguie@gmail.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "ellipsis": {
       "Package": "ellipsis",
       "Version": "0.3.2",
@@ -5133,6 +5591,31 @@
       "Maintainer": "Jennifer Bryan <jenny@posit.co>",
       "Repository": "https://packagemanager.posit.co/cran/latest"
     },
+    "gclus": {
+      "Package": "gclus",
+      "Version": "1.3.3",
+      "Source": "Repository",
+      "Authors@R": "person(given = \"Catherine\", family = \"Hurley\",  email = \"catherine.hurley@mu.ie\", role = c(\"aut\", \"cre\"))",
+      "Date": "2025-03-28",
+      "Maintainer": "Catherine Hurley <catherine.hurley@mu.ie>",
+      "Title": "Clustering Graphics",
+      "Description": "Orders panels in scatterplot matrices and parallel coordinate displays by some merit index. Package contains various indices of merit, ordering functions, and enhanced versions of pairs and parcoord which color panels according to their merit level.",
+      "Depends": [
+        "R (>= 2.10)",
+        "cluster"
+      ],
+      "License": "GPL (>= 2)",
+      "Suggests": [
+        "knitr",
+        "rmarkdown"
+      ],
+      "VignetteBuilder": "knitr",
+      "RoxygenNote": "7.3.2",
+      "NeedsCompilation": "no",
+      "Author": "Catherine Hurley [aut, cre]",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "geneLenDataBase": {
       "Package": "geneLenDataBase",
       "Version": "1.42.0",
@@ -5164,6 +5647,49 @@
       "NeedsCompilation": "no",
       "Author": "Matthew Young [aut], Nadia Davidson [aut], Federico Marini [ctb, cre] (<https://orcid.org/0000-0003-3252-7758>)",
       "Maintainer": "Federico Marini <marinif@uni-mainz.de>"
+    },
+    "genefilter": {
+      "Package": "genefilter",
+      "Version": "1.88.0",
+      "Source": "Bioconductor",
+      "Title": "genefilter: methods for filtering genes from high-throughput experiments",
+      "Authors@R": "c( person(\"Robert\", \"Gentleman\", role = \"aut\"), person(\"Vincent J.\", \"Carey\", role = \"aut\"), person(\"Wolfgang\", \"Huber\", role = \"aut\"), person(\"Florian\", \"Hahne\", role = \"aut\"), person(\"Emmanuel\", \"Taiwo\", role = \"ctb\", comment = \"'howtogenefinder' vignette translation from Sweave to RMarkdown / HTML.\"), person(\"Khadijah\", \"Amusat\", role = \"ctb\", comment = \"Converted genefilter vignette from Sweave to RMarkdown / HTML.\"), person(\"Bioconductor Package Maintainer\", role = \"cre\", email = \"maintainer@bioconductor.org\"))",
+      "Description": "Some basic functions for filtering genes.",
+      "Suggests": [
+        "class",
+        "hgu95av2.db",
+        "tkWidgets",
+        "ALL",
+        "ROC",
+        "RColorBrewer",
+        "BiocStyle",
+        "knitr"
+      ],
+      "Imports": [
+        "MatrixGenerics (>= 1.11.1)",
+        "AnnotationDbi",
+        "annotate",
+        "Biobase",
+        "graphics",
+        "methods",
+        "stats",
+        "survival",
+        "grDevices"
+      ],
+      "License": "Artistic-2.0",
+      "LazyLoad": "yes",
+      "LazyData": "yes",
+      "Collate": "AllClasses.R AllGenerics.R all.R dist2.R eSetFilter.R fastT.R filter_volcano.R filtered_p.R genefinder.R half.range.mode.R kappa_p.R nsFilter.R rejection_plot.R rowROC-accessors.R rowSds.R rowpAUCs-methods.R rowttests-methods.R shorth.R zzz.R",
+      "biocViews": "Microarray",
+      "VignetteBuilder": "knitr",
+      "git_url": "https://git.bioconductor.org/packages/genefilter",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "f0d698a",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "yes",
+      "Author": "Robert Gentleman [aut], Vincent J. Carey [aut], Wolfgang Huber [aut], Florian Hahne [aut], Emmanuel Taiwo [ctb] ('howtogenefinder' vignette translation from Sweave to RMarkdown / HTML.), Khadijah Amusat [ctb] (Converted genefilter vignette from Sweave to RMarkdown / HTML.), Bioconductor Package Maintainer [cre]",
+      "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
     },
     "generics": {
       "Package": "generics",
@@ -5957,6 +6483,29 @@
       "Author": "R Gentleman [aut], Elizabeth Whalen [aut], W Huber [aut], S Falcon [aut], Jeff Gentry [aut], Paul Shannon [aut], Halimat C. Atanda [ctb] (Converted 'MultiGraphClass' and 'GraphClass' vignettes from Sweave to RMarkdown / HTML.), Paul Villafuerte [ctb] (Converted vignettes from Sweave to RMarkdown / HTML.), Aliyu Atiku Mustapha [ctb] (Converted 'Graph' vignette from Sweave to RMarkdown / HTML.), Bioconductor Package Maintainer [cre]",
       "Maintainer": "Bioconductor Package Maintainer <maintainer@bioconductor.org>"
     },
+    "gridBase": {
+      "Package": "gridBase",
+      "Version": "0.4-7",
+      "Source": "Repository",
+      "Title": "Integration of base and grid graphics",
+      "Author": "Paul Murrell",
+      "Depends": [
+        "R (>= 2.3.0)"
+      ],
+      "Imports": [
+        "graphics",
+        "grid"
+      ],
+      "Suggests": [
+        "lattice"
+      ],
+      "Description": "Integration of base and grid graphics",
+      "Maintainer": "Paul Murrell <paul@stat.auckland.ac.nz>",
+      "License": "GPL",
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "gridExtra": {
       "Package": "gridExtra",
       "Version": "2.3",
@@ -6124,6 +6673,95 @@
       "Author": "Hadley Wickham [aut, cre], Evan Miller [aut, cph] (Author of included ReadStat code), Danny Smith [aut], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "https://packagemanager.posit.co/cran/latest"
+    },
+    "heatmaply": {
+      "Package": "heatmaply",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Interactive Cluster Heat Maps Using 'plotly' and 'ggplot2'",
+      "Date": "2023-10-06",
+      "Authors@R": "c( person(\"Tal\", \"Galili\", role = c(\"aut\", \"cre\", \"cph\"), email = \"tal.galili@gmail.com\", comment = \"https://www.r-statistics.com\"), person(\"Alan\", \"O'Callaghan\", comment = \"https://github.com/Alanocallaghan\",role = \"aut\"), person(\"Jonathan\", \"Sidi\", email = \"yonis@metrumrg.com\", comment = \"https://github.com/yonicd\",role = \"ctb\"), person(\"Jaehyun\", \"Joo\", comment = \"https://github.com/jaehyunjoo\",role = \"ctb\"), person(\"Yoav\", \"Benjamini\", email = \"ybenja@tau.ac.il\",role = \"ths\"))",
+      "Description": "Create interactive cluster 'heatmaps' that can be saved as a stand- alone HTML file, embedded in 'R Markdown' documents or in a 'Shiny' app, and available in the 'RStudio' viewer pane. Hover the mouse pointer over a cell to show details or drag a rectangle to zoom. A 'heatmap' is a popular graphical method for visualizing high-dimensional data, in which a table of numbers are encoded as a grid of colored cells. The rows and columns of the matrix are ordered to highlight patterns and are often accompanied by 'dendrograms'. 'Heatmaps' are used in many fields for visualizing observations, correlations, missing values patterns, and more. Interactive 'heatmaps' allow the inspection of specific value by hovering the mouse over a cell, as well as zooming into a region of the 'heatmap' by dragging a rectangle around the relevant area. This work is based on the 'ggplot2' and 'plotly.js' engine. It produces similar 'heatmaps' to 'heatmap.2' with the advantage of speed ('plotly.js' is able to handle larger size matrix), the ability to zoom from the 'dendrogram' panes, and the placing of factor variables in the sides of the 'heatmap'.",
+      "Depends": [
+        "R (>= 3.0.0)",
+        "plotly (>= 4.7.1)",
+        "viridis"
+      ],
+      "Imports": [
+        "ggplot2 (>= 2.2.0)",
+        "dendextend (>= 1.12.0)",
+        "magrittr (>= 1.0.1)",
+        "reshape2",
+        "scales",
+        "seriation",
+        "utils",
+        "stats",
+        "grDevices",
+        "methods",
+        "colorspace",
+        "RColorBrewer",
+        "htmlwidgets",
+        "webshot",
+        "assertthat",
+        "egg"
+      ],
+      "Suggests": [
+        "knitr",
+        "covr",
+        "gplots",
+        "tidyselect",
+        "rmarkdown",
+        "testthat"
+      ],
+      "VignetteBuilder": "knitr",
+      "License": "GPL-2 | GPL-3",
+      "URL": "https://talgalili.github.io/heatmaply/, https://cran.r-project.org/package=heatmaply, https://github.com/talgalili/heatmaply/, https://www.r-statistics.com/tag/heatmaply/",
+      "BugReports": "https://github.com/talgalili/heatmaply/issues",
+      "RoxygenNote": "7.2.3",
+      "Encoding": "UTF-8",
+      "NeedsCompilation": "no",
+      "Author": "Tal Galili [aut, cre, cph] (https://www.r-statistics.com), Alan O'Callaghan [aut] (https://github.com/Alanocallaghan), Jonathan Sidi [ctb] (https://github.com/yonicd), Jaehyun Joo [ctb] (https://github.com/jaehyunjoo), Yoav Benjamini [ths]",
+      "Maintainer": "Tal Galili <tal.galili@gmail.com>",
+      "Repository": "CRAN"
+    },
+    "here": {
+      "Package": "here",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Title": "A Simpler Way to Find Your Files",
+      "Date": "2020-12-13",
+      "Authors@R": "c(person(given = \"Kirill\", family = \"M\\u00fcller\", role = c(\"aut\", \"cre\"), email = \"krlmlr+r@mailbox.org\", comment = c(ORCID = \"0000-0002-1416-3412\")), person(given = \"Jennifer\", family = \"Bryan\", role = \"ctb\", email = \"jenny@rstudio.com\", comment = c(ORCID = \"0000-0002-6983-2759\")))",
+      "Description": "Constructs paths to your project's files. Declare the relative path of a file within your project with 'i_am()'. Use the 'here()' function as a drop-in replacement for 'file.path()', it will always locate the files relative to your project root.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://here.r-lib.org/, https://github.com/r-lib/here",
+      "BugReports": "https://github.com/r-lib/here/issues",
+      "Imports": [
+        "rprojroot (>= 2.0.2)"
+      ],
+      "Suggests": [
+        "conflicted",
+        "covr",
+        "fs",
+        "knitr",
+        "palmerpenguins",
+        "plyr",
+        "readr",
+        "rlang",
+        "rmarkdown",
+        "testthat",
+        "uuid",
+        "withr"
+      ],
+      "VignetteBuilder": "knitr",
+      "Encoding": "UTF-8",
+      "LazyData": "true",
+      "RoxygenNote": "7.1.1.9000",
+      "Config/testthat/edition": "3",
+      "NeedsCompilation": "no",
+      "Author": "Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>), Jennifer Bryan [ctb] (<https://orcid.org/0000-0002-6983-2759>)",
+      "Maintainer": "Kirill Müller <krlmlr+r@mailbox.org>",
+      "Repository": "CRAN"
     },
     "highr": {
       "Package": "highr",
@@ -6874,6 +7512,54 @@
       "Maintainer": "Lionel Henry <lionel@posit.co>",
       "Repository": "CRAN"
     },
+    "limma": {
+      "Package": "limma",
+      "Version": "3.62.2",
+      "Source": "Bioconductor",
+      "Date": "2025-01-09",
+      "Title": "Linear Models for Microarray and Omics Data",
+      "Description": "Data analysis, linear models and differential expression for omics data.",
+      "Author": "Gordon Smyth [cre,aut], Yifang Hu [ctb], Matthew Ritchie [ctb], Jeremy Silver [ctb], James Wettenhall [ctb], Davis McCarthy [ctb], Di Wu [ctb], Wei Shi [ctb], Belinda Phipson [ctb], Aaron Lun [ctb], Natalie Thorne [ctb], Alicia Oshlack [ctb], Carolyn de Graaf [ctb], Yunshun Chen [ctb], Goknur Giner [ctb], Mette Langaas [ctb], Egil Ferkingstad [ctb], Marcus Davy [ctb], Francois Pepin [ctb], Dongseok Choi [ctb], Charity Law [ctb], Mengbo Li [ctb], Lizhong Chen [ctb]",
+      "Maintainer": "Gordon Smyth <smyth@wehi.edu.au>",
+      "License": "GPL (>=2)",
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        "grDevices",
+        "graphics",
+        "stats",
+        "utils",
+        "methods",
+        "statmod"
+      ],
+      "Suggests": [
+        "BiasedUrn",
+        "ellipse",
+        "gplots",
+        "knitr",
+        "locfit",
+        "MASS",
+        "splines",
+        "affy",
+        "AnnotationDbi",
+        "Biobase",
+        "BiocStyle",
+        "GO.db",
+        "illuminaio",
+        "org.Hs.eg.db",
+        "vsn"
+      ],
+      "VignetteBuilder": "knitr",
+      "URL": "https://bioinf.wehi.edu.au/limma/",
+      "biocViews": "ExonArray, GeneExpression, Transcription, AlternativeSplicing, DifferentialExpression, DifferentialSplicing, GeneSetEnrichment, DataImport, Bayesian, Clustering, Regression, TimeCourse, Microarray, MicroRNAArray, mRNAMicroarray, OneChannel, ProprietaryPlatforms, TwoChannel, Sequencing, RNASeq, BatchEffect, MultipleComparison, Normalization, Preprocessing, QualityControl, BiomedicalInformatics, CellBiology, Cheminformatics, Epigenetics, FunctionalGenomics, Genetics, ImmunoOncology, Metabolomics, Proteomics, SystemsBiology, Transcriptomics",
+      "git_url": "https://git.bioconductor.org/packages/limma",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "5d5c76a",
+      "git_last_commit_date": "2025-01-09",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "yes"
+    },
     "locfit": {
       "Package": "locfit",
       "Version": "1.5-9.12",
@@ -7348,6 +8034,139 @@
       "NeedsCompilation": "no",
       "Author": "Thomas Lin Pedersen [cre, aut] (<https://orcid.org/0000-0002-5147-4711>)",
       "Repository": "CRAN"
+    },
+    "pcaExplorer": {
+      "Package": "pcaExplorer",
+      "Version": "3.0.0",
+      "Source": "Bioconductor",
+      "Type": "Package",
+      "Title": "Interactive Visualization of RNA-seq Data Using a Principal Components Approach",
+      "Date": "2024-09-25",
+      "Authors@R": "c(person(\"Federico\", \"Marini\", role = c(\"aut\", \"cre\"),  email =\"marinif@uni-mainz.de\",  comment = c(ORCID = '0000-0003-3252-7758')))",
+      "Description": "This package provides functionality for interactive visualization  of RNA-seq datasets based on Principal Components Analysis. The methods provided allow for quick information extraction and effective data exploration. A Shiny application encapsulates the whole analysis.",
+      "License": "MIT + file LICENSE",
+      "Imports": [
+        "DESeq2",
+        "SummarizedExperiment",
+        "mosdef (>= 1.1.0)",
+        "GenomicRanges",
+        "IRanges",
+        "S4Vectors",
+        "genefilter",
+        "ggplot2 (>= 2.0.0)",
+        "heatmaply",
+        "plotly",
+        "scales",
+        "NMF",
+        "plyr",
+        "topGO",
+        "limma",
+        "GOstats",
+        "GO.db",
+        "AnnotationDbi",
+        "shiny (>= 0.12.0)",
+        "shinydashboard",
+        "shinyBS",
+        "ggrepel",
+        "DT",
+        "shinyAce",
+        "threejs",
+        "biomaRt",
+        "pheatmap",
+        "knitr",
+        "rmarkdown",
+        "base64enc",
+        "tidyr",
+        "grDevices",
+        "methods"
+      ],
+      "Suggests": [
+        "testthat",
+        "BiocStyle",
+        "markdown",
+        "airway",
+        "org.Hs.eg.db",
+        "htmltools"
+      ],
+      "URL": "https://github.com/federicomarini/pcaExplorer, https://federicomarini.github.io/pcaExplorer/",
+      "BugReports": "https://github.com/federicomarini/pcaExplorer/issues",
+      "biocViews": "ImmunoOncology, Visualization, RNASeq, DimensionReduction, PrincipalComponent, QualityControl, GUI, ReportWriting, ShinyApps",
+      "VignetteBuilder": "knitr",
+      "RoxygenNote": "7.3.2",
+      "Encoding": "UTF-8",
+      "NeedsCompilation": "no",
+      "Roxygen": "list(markdown = TRUE)",
+      "git_url": "https://git.bioconductor.org/packages/pcaExplorer",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "9b24e2a",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "Author": "Federico Marini [aut, cre] (<https://orcid.org/0000-0003-3252-7758>)",
+      "Maintainer": "Federico Marini <marinif@uni-mainz.de>"
+    },
+    "permute": {
+      "Package": "permute",
+      "Version": "0.9-7",
+      "Source": "Repository",
+      "Title": "Functions for Generating Restricted Permutations of Data",
+      "Date": "2022-01-27",
+      "Authors@R": "c(person(given = \"Gavin L.\", family = \"Simpson\", email = \"ucfagls@gmail.com\", role = c(\"aut\", \"cph\", \"cre\"), comment = c(ORCID = \"0000-0002-9084-8413\")), person(given = \"R Core Team\", role = \"cph\"), person(given = \"Douglas M.\", family = \"Bates\", role = \"ctb\"), person(given = \"Jari\", family = \"Oksanen\", role = \"ctb\"))",
+      "Depends": [
+        "R (>= 2.14.0)"
+      ],
+      "Imports": [
+        "stats"
+      ],
+      "Suggests": [
+        "vegan (>= 2.0-0)",
+        "testthat (>= 0.5)",
+        "parallel",
+        "knitr",
+        "rmarkdown",
+        "bookdown",
+        "sessioninfo"
+      ],
+      "Description": "A set of restricted permutation designs for freely exchangeable, line transects (time series), and spatial grid designs plus permutation of blocks (groups of samples) is provided. 'permute' also allows split-plot designs, in which the whole-plots or split-plots or both can be freely-exchangeable or one of the restricted designs. The 'permute' package is modelled after the permutation schemes of 'Canoco 3.1' (and later) by Cajo ter Braak.",
+      "License": "GPL-2",
+      "ByteCompile": "true",
+      "URL": "https://github.com/gavinsimpson/permute",
+      "BugReports": "https://github.com/gavinsimpson/permute/issues",
+      "Copyright": "see file COPYRIGHTS",
+      "VignetteBuilder": "knitr",
+      "NeedsCompilation": "no",
+      "Author": "Gavin L. Simpson [aut, cph, cre] (<https://orcid.org/0000-0002-9084-8413>), R Core Team [cph], Douglas M. Bates [ctb], Jari Oksanen [ctb]",
+      "Maintainer": "Gavin L. Simpson <ucfagls@gmail.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
+    "pheatmap": {
+      "Package": "pheatmap",
+      "Version": "1.0.12",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Pretty Heatmaps",
+      "Date": "2018-12-26",
+      "Author": "Raivo Kolde",
+      "Maintainer": "Raivo Kolde <rkolde@gmail.com>",
+      "Depends": [
+        "R (>= 2.0)"
+      ],
+      "Description": "Implementation of heatmaps that offers more control over dimensions and appearance.",
+      "Imports": [
+        "grid",
+        "RColorBrewer",
+        "scales",
+        "gtable",
+        "stats",
+        "grDevices",
+        "graphics"
+      ],
+      "License": "GPL-2",
+      "LazyLoad": "yes",
+      "RoxygenNote": "6.0.1",
+      "NeedsCompilation": "no",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Encoding": "UTF-8"
     },
     "pillar": {
       "Package": "pillar",
@@ -8041,6 +8860,26 @@
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
     },
+    "qap": {
+      "Package": "qap",
+      "Version": "0.1-2",
+      "Source": "Repository",
+      "Title": "Heuristics for the Quadratic Assignment Problem (QAP)",
+      "Date": "2022-06-27",
+      "Authors@R": "c(person(\"Michael\", \"Hahsler\", role = c(\"aut\", \"cre\", \"cph\"), email = \"mhahsler@lyle.smu.edu\", comment = c(ORCID = \"0000-0003-2716-1405\")), person(\"Franz\", \"Rendl\", role = c(\"ctb\", \"cph\")))",
+      "Description": "Implements heuristics for the Quadratic Assignment Problem (QAP). Although, the QAP was introduced as a combinatorial optimization problem for the facility location problem in operations research, it also has many applications in data analysis. The problem is NP-hard and the package implements a simulated annealing heuristic.",
+      "Suggests": [
+        "testthat"
+      ],
+      "URL": "https://github.com/mhahsler/qap",
+      "BugReports": "https://github.com/mhahsler/qap/issues",
+      "License": "GPL-3",
+      "NeedsCompilation": "yes",
+      "Author": "Michael Hahsler [aut, cre, cph] (<https://orcid.org/0000-0003-2716-1405>), Franz Rendl [ctb, cph]",
+      "Maintainer": "Michael Hahsler <mhahsler@lyle.smu.edu>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "qvalue": {
       "Package": "qvalue",
       "Version": "2.38.0",
@@ -8280,6 +9119,26 @@
       "Author": "Hadley Wickham [aut] (<https://orcid.org/0000-0003-4757-117X>), Jennifer Bryan [aut, cre] (<https://orcid.org/0000-0002-6983-2759>), Posit, PBC [cph, fnd] (Copyright holder of all R code and all C/C++ code without explicit copyright attribution), Marcin Kalicinski [ctb, cph] (Author of included RapidXML code), Komarov Valery [ctb, cph] (Author of included libxls code), Christophe Leitienne [ctb, cph] (Author of included libxls code), Bob Colbert [ctb, cph] (Author of included libxls code), David Hoerl [ctb, cph] (Author of included libxls code), Evan Miller [ctb, cph] (Author of included libxls code)",
       "Maintainer": "Jennifer Bryan <jenny@posit.co>",
       "Repository": "CRAN"
+    },
+    "registry": {
+      "Package": "registry",
+      "Version": "0.5-1",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Infrastructure for R Package Registries",
+      "Author": "David Meyer",
+      "Maintainer": "David Meyer <David.Meyer@R-project.org>",
+      "Description": "Provides a generic infrastructure for creating and using registries.",
+      "Depends": [
+        "R (>= 2.6.0)"
+      ],
+      "Imports": [
+        "utils"
+      ],
+      "License": "GPL-2",
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
     },
     "rematch": {
       "Package": "rematch",
@@ -8696,6 +9555,38 @@
       "Maintainer": "Yihui Xie <xie@yihui.name>",
       "Repository": "CRAN"
     },
+    "rngtools": {
+      "Package": "rngtools",
+      "Version": "1.5.2",
+      "Source": "Repository",
+      "Authors@R": "c(person(\"Renaud\", \"Gaujoux\", email = \"renozao@protonmail.com\", role = c(\"aut\", \"cre\")), person(\"Max\", \"Kuhn\", role = \"ctb\"))",
+      "License": "GPL-3",
+      "Title": "Utility Functions for Working with Random Number Generators",
+      "Description": "Provides a set of functions for working with Random Number Generators (RNGs). In particular, a generic S4 framework is defined for getting/setting the current RNG, or RNG data that are embedded into objects for reproducibility. Notably, convenient default methods greatly facilitate the way current RNG settings can be changed.",
+      "URL": "https://renozao.github.io/rngtools/",
+      "BugReports": "https://github.com/renozao/rngtools/issues",
+      "Encoding": "UTF-8",
+      "Depends": [
+        "R (>= 3.2.0)",
+        "methods"
+      ],
+      "Imports": [
+        "digest",
+        "utils",
+        "stats",
+        "parallel"
+      ],
+      "Suggests": [
+        "covr",
+        "RUnit",
+        "testthat"
+      ],
+      "RoxygenNote": "7.0.2",
+      "NeedsCompilation": "no",
+      "Author": "Renaud Gaujoux [aut, cre], Max Kuhn [ctb]",
+      "Maintainer": "Renaud Gaujoux <renozao@protonmail.com>",
+      "Repository": "CRAN"
+    },
     "roxygen2": {
       "Package": "roxygen2",
       "Version": "7.3.2",
@@ -9090,6 +9981,61 @@
       "Repository": "https://packagemanager.posit.co/cran/latest",
       "Encoding": "UTF-8"
     },
+    "seriation": {
+      "Package": "seriation",
+      "Version": "1.5.7",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Infrastructure for Ordering Objects Using Seriation",
+      "Date": "2024-12-05",
+      "Authors@R": "c( person(\"Michael\", \"Hahsler\", role = c(\"aut\", \"cre\", \"cph\"), email = \"mhahsler@lyle.smu.edu\", comment = c(ORCID = \"0000-0003-2716-1405\")), person(\"Christian\", \"Buchta\", role = c(\"aut\", \"cph\")), person(\"Kurt\", \"Hornik\", role = c(\"aut\", \"cph\"), comment = c(ORCID = \"0000-0003-4198-9911\")), person(\"David\", \"Barnett\", role = c(\"ctb\")), person(\"Michael\", \"Brusco\", role = c(\"ctb\", \"cph\")), person(\"Michael\", \"Friendly\", role = c(\"ctb\")), person(\"Hans-Friedrich\", \"Koehn\", role = c(\"ctb\", \"cph\")), person(\"Fionn\", \"Murtagh\", role = c(\"ctb\", \"cph\")), person(\"Stephanie\", \"Stahl\", role = c(\"ctb\", \"cph\")))",
+      "Description": "Infrastructure for ordering objects with an implementation of several seriation/sequencing/ordination techniques to reorder matrices, dissimilarity matrices, and dendrograms. Also provides (optimally) reordered heatmaps, color images and clustering visualizations like dissimilarity plots, and visual assessment of cluster tendency plots (VAT and iVAT). Hahsler et al (2008) <doi:10.18637/jss.v025.i03>.",
+      "Classification/ACM": "G.1.6, G.2.1, G.4",
+      "URL": "https://github.com/mhahsler/seriation",
+      "BugReports": "https://github.com/mhahsler/seriation/issues",
+      "Depends": [
+        "R (>= 2.14.0)"
+      ],
+      "Imports": [
+        "ca",
+        "cluster",
+        "colorspace",
+        "foreach",
+        "gclus",
+        "grDevices",
+        "grid",
+        "MASS",
+        "qap",
+        "registry",
+        "stats",
+        "TSP",
+        "vegan"
+      ],
+      "Suggests": [
+        "dbscan",
+        "DendSer",
+        "dendextend",
+        "doParallel",
+        "GA",
+        "ggplot2",
+        "keras",
+        "Rtsne",
+        "scales",
+        "smacof",
+        "tensorflow",
+        "testthat",
+        "umap"
+      ],
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.3.2",
+      "License": "GPL-3",
+      "Copyright": "The code in src/bbwrcg.f, src/arsa.f and src/bburcg.f are Copyright (C) 2005 M. Brusco, H.F. Koehn, and S. Stahl. All other code is Copyright (C) Michael Hahsler, Christian Buchta, and Kurt Hornik.",
+      "Collate": "'AAA_check_installed.R' 'AAA_color_palette.R' 'AAA_defaults.R' 'AAA_map.R' 'AAA_parameters.R' 'AAA_registry_criterion.R' 'AAA_registry_seriate.R' 'AAA_seriation-package.R' 'Chameleon.R' 'Irish.R' 'Munsingen.R' 'Psych24.R' 'SupremeCourt.R' 'Townships.R' 'VAT.R' 'Wood.R' 'Zoo.R' 'bertinplot.R' 'criterion.R' 'criterion.array.R' 'criterion.dist.R' 'criterion.matrix.R' 'dissplot.R' 'get_order.R' 'ggVAT.R' 'ggbertinplot.R' 'ggdissplot.R' 'hmap.R' 'gghmap.R' 'pimage.R' 'ggpimage.R' 'grid_helpers.R' 'lines_and_ordered_data.R' 'lle.R' 'permute.R' 'register_DendSer.R' 'register_GA.R' 'register_optics.R' 'register_smacof.R' 'register_tsne.R' 'register_umap.R' 'reorder.hclust.R' 'robinson.R' 'ser_dist.R' 'ser_permutation.R' 'ser_permutation_vector.R' 'ser_permutation_vector2matrix.R' 'seriate.R' 'seriate.dist.R' 'seriate.matrix.R' 'seriate.array.R' 'seriate.data.frame.R' 'seriate.table.R' 'seriate_AOE.R' 'seriate_ARSA_Branch-Bound.R' 'seriate_TSP.R' 'seriate_BEA.R' 'seriate_BK.R' 'seriate_CA.R' 'seriate_GSA.R' 'seriate_HC.R' 'seriate_LLE.R' 'seriate_MDS.R' 'seriate_Mean.R' 'seriate_PCA.R' 'seriate_QAP.R' 'seriate_R2E.R' 'seriate_SGD.R' 'seriate_SPIN.R' 'seriate_VAT.R' 'seriate_best.R' 'seriate_enumerate.R' 'seriate_heatmap.R' 'seriate_identity.R' 'seriate_random.R' 'seriate_reverse.R' 'seriate_spectral.R' 'seriate_vegan.R' 'uniscale.R'",
+      "NeedsCompilation": "yes",
+      "Author": "Michael Hahsler [aut, cre, cph] (<https://orcid.org/0000-0003-2716-1405>), Christian Buchta [aut, cph], Kurt Hornik [aut, cph] (<https://orcid.org/0000-0003-4198-9911>), David Barnett [ctb], Michael Brusco [ctb, cph], Michael Friendly [ctb], Hans-Friedrich Koehn [ctb, cph], Fionn Murtagh [ctb, cph], Stephanie Stahl [ctb, cph]",
+      "Maintainer": "Michael Hahsler <mhahsler@lyle.smu.edu>",
+      "Repository": "CRAN"
+    },
     "sessioninfo": {
       "Package": "sessioninfo",
       "Version": "1.2.3",
@@ -9248,6 +10194,27 @@
       "Maintainer": "Vincent Nijs <radiant@rady.ucsd.edu>",
       "Repository": "CRAN"
     },
+    "shinyBS": {
+      "Package": "shinyBS",
+      "Version": "0.61.1",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Twitter Bootstrap Components for Shiny",
+      "Date": "2015-03-30",
+      "Author": "Eric Bailey",
+      "Maintainer": "Eric Bailey <ebailey@idem.in.gov>",
+      "Description": "Adds additional Twitter Bootstrap components to Shiny.",
+      "Imports": [
+        "shiny (>= 0.11)",
+        "htmltools"
+      ],
+      "URL": "https://ebailey78.github.io/shinyBS",
+      "BugReports": "https://github.com/ebailey78/shinyBS/issues",
+      "License": "GPL-3",
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "shinyWidgets": {
       "Package": "shinyWidgets",
       "Version": "0.9.0",
@@ -9318,6 +10285,32 @@
       "Author": "Dean Attali [aut, cre] (Maintainer/developer of shinycssloaders since 2019, <https://orcid.org/0000-0002-5645-3493>), Andras Sali [aut] (Original creator of shinycssloaders package), Luke Hass [ctb, cph] (Author of included CSS loader code)",
       "Maintainer": "Dean Attali <daattali@gmail.com>",
       "Repository": "CRAN"
+    },
+    "shinydashboard": {
+      "Package": "shinydashboard",
+      "Version": "0.7.2",
+      "Source": "Repository",
+      "Title": "Create Dashboards with 'Shiny'",
+      "Authors@R": "c( person(\"Winston\", \"Chang\", role = c(\"aut\", \"cre\"), email = \"winston@rstudio.com\"), person(\"Barbara\", \"Borges Ribeiro\", role = \"aut\", email = \"barbara@rstudio.com\"), person(family = \"RStudio\", role = \"cph\"), person(family = \"Almasaeed Studio\", role = c(\"ctb\", \"cph\"), comment = \"AdminLTE theme for Bootstrap\"), person(family = \"Adobe Systems Incorporated\", role = c(\"ctb\", \"cph\"), comment = \"Source Sans Pro font\") )",
+      "Description": "Create dashboards with 'Shiny'. This package provides a theme on top of 'Shiny', making it easy to create attractive dashboards.",
+      "URL": "http://rstudio.github.io/shinydashboard/",
+      "Depends": [
+        "R (>= 3.0)"
+      ],
+      "License": "GPL (>= 2) | file LICENSE",
+      "Imports": [
+        "utils",
+        "shiny (>= 1.0.0)",
+        "htmltools (>= 0.2.6)",
+        "promises"
+      ],
+      "BugReports": "https://github.com/rstudio/shinydashboard",
+      "RoxygenNote": "6.0.1.9000",
+      "NeedsCompilation": "no",
+      "Author": "Winston Chang [aut, cre], Barbara Borges Ribeiro [aut], RStudio [cph], Almasaeed Studio [ctb, cph] (AdminLTE theme for Bootstrap), Adobe Systems Incorporated [ctb, cph] (Source Sans Pro font)",
+      "Maintainer": "Winston Chang <winston@rstudio.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
     },
     "shinyjs": {
       "Package": "shinyjs",
@@ -9397,6 +10390,31 @@
       "NeedsCompilation": "yes",
       "Repository": "CRAN"
     },
+    "statmod": {
+      "Package": "statmod",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Date": "2022-12-28",
+      "Title": "Statistical Modeling",
+      "Author": "Gordon Smyth [cre, aut], Lizhong Chen [aut], Yifang Hu [ctb], Peter Dunn [ctb], Belinda Phipson [ctb], Yunshun Chen [ctb]",
+      "Maintainer": "Gordon Smyth <smyth@wehi.edu.au>",
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Imports": [
+        "stats",
+        "graphics"
+      ],
+      "Suggests": [
+        "MASS",
+        "tweedie"
+      ],
+      "Description": "A collection of algorithms and functions to aid statistical modeling. Includes limiting dilution analysis (aka ELDA), growth curve comparisons, mixed linear models, heteroscedastic regression, inverse-Gaussian probability calculations, Gauss quadrature and a secure convergence algorithm for nonlinear models. Also includes advanced generalized linear model functions including Tweedie and Digamma distributional families, secure convergence and exact distributional calculations for unit deviances.",
+      "License": "GPL-2 | GPL-3",
+      "NeedsCompilation": "yes",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Encoding": "UTF-8"
+    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.8.7",
@@ -9469,6 +10487,36 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut, cre, cph], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
+      "Repository": "CRAN"
+    },
+    "survival": {
+      "Package": "survival",
+      "Version": "3.8-3",
+      "Source": "Repository",
+      "Title": "Survival Analysis",
+      "Priority": "recommended",
+      "Date": "2024-12-17",
+      "Depends": [
+        "R (>= 3.5.0)"
+      ],
+      "Imports": [
+        "graphics",
+        "Matrix",
+        "methods",
+        "splines",
+        "stats",
+        "utils"
+      ],
+      "LazyData": "Yes",
+      "LazyDataCompression": "xz",
+      "ByteCompile": "Yes",
+      "Authors@R": "c(person(c(\"Terry\", \"M\"), \"Therneau\", email=\"therneau.terry@mayo.edu\", role=c(\"aut\", \"cre\")), person(\"Thomas\", \"Lumley\", role=c(\"ctb\", \"trl\"), comment=\"original S->R port and R maintainer until 2009\"), person(\"Atkinson\", \"Elizabeth\", role=\"ctb\"), person(\"Crowson\", \"Cynthia\", role=\"ctb\"))",
+      "Description": "Contains the core survival analysis routines, including definition of Surv objects,  Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models, and parametric accelerated failure time models.",
+      "License": "LGPL (>= 2)",
+      "URL": "https://github.com/therneau/survival",
+      "NeedsCompilation": "yes",
+      "Author": "Terry M Therneau [aut, cre], Thomas Lumley [ctb, trl] (original S->R port and R maintainer until 2009), Atkinson Elizabeth [ctb], Crowson Cynthia [ctb]",
+      "Maintainer": "Terry M Therneau <therneau.terry@mayo.edu>",
       "Repository": "CRAN"
     },
     "sys": {
@@ -9638,6 +10686,43 @@
       "NeedsCompilation": "yes",
       "Author": "Thomas Lin Pedersen [cre, aut] (<https://orcid.org/0000-0002-5147-4711>), Posit, PBC [cph, fnd]",
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
+      "Repository": "CRAN"
+    },
+    "threejs": {
+      "Package": "threejs",
+      "Version": "0.3.3",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Interactive 3D Scatter Plots, Networks and Globes",
+      "Description": "Create interactive 3D scatter plots, network plots, and globes using the 'three.js' visualization library (<https://threejs.org>).",
+      "Date": "2020-01-19",
+      "Authors@R": "c( person(\"B. W.\", \"Lewis\", role=c(\"aut\",\"cre\",\"cph\"), email=\"blewis@illposed.net\"), person(given=\"Three.js authors\", role=\"cph\", comment=\"three.js library\"), person(given=\"jQuery Foundation\", role=\"cph\", comment=\"jQuery library\"), person(\"Alexey\", \"Stukalov\", role=(\"ctb\"), email=\"astukalov@gmail.com\"), person(\"Yihui\",\"Xie\", role=(\"ctb\"), email=\"xie@yihui.name\"), person(\"Andreas\", \"Briese\", role=(\"ctb\"), email=\"ab@edutoolbox.de\"), person(\"B.\", \"Thieurmel\", role=(\"ctb\"), email=\"bthieurmel@gmail.com\") )",
+      "URL": "https://bwlewis.github.io/rthreejs",
+      "BugReports": "https://github.com/bwlewis/rthreejs/issues",
+      "License": "MIT + file LICENSE",
+      "Depends": [
+        "R (>= 3.0.0)",
+        "igraph (>= 1.0.0)"
+      ],
+      "Imports": [
+        "htmlwidgets (>= 0.3.2)",
+        "base64enc",
+        "crosstalk",
+        "methods",
+        "stats"
+      ],
+      "Suggests": [
+        "maps"
+      ],
+      "Enhances": [
+        "knitr",
+        "shiny"
+      ],
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.0.2",
+      "NeedsCompilation": "no",
+      "Author": "B. W. Lewis [aut, cre, cph], Three.js authors [cph] (three.js library), jQuery Foundation [cph] (jQuery library), Alexey Stukalov [ctb], Yihui Xie [ctb], Andreas Briese [ctb], B. Thieurmel [ctb]",
+      "Maintainer": "B. W. Lewis <blewis@illposed.net>",
       "Repository": "CRAN"
     },
     "tibble": {
@@ -10494,6 +11579,39 @@
       "Maintainer": "Davis Vaughan <davis@posit.co>",
       "Repository": "CRAN"
     },
+    "vegan": {
+      "Package": "vegan",
+      "Version": "2.6-10",
+      "Source": "Repository",
+      "Title": "Community Ecology Package",
+      "Authors@R": "c(person(\"Jari\", \"Oksanen\", role=c(\"aut\",\"cre\"), email=\"jhoksane@gmail.com\"), person(\"Gavin L.\", \"Simpson\", role=\"aut\", email=\"ucfagls@gmail.com\"), person(\"F. Guillaume\", \"Blanchet\", role=\"aut\"), person(\"Roeland\", \"Kindt\", role=\"aut\"), person(\"Pierre\", \"Legendre\", role=\"aut\"), person(\"Peter R.\", \"Minchin\", role=\"aut\"), person(\"R.B.\", \"O'Hara\", role=\"aut\"), person(\"Peter\", \"Solymos\", role=\"aut\"), person(\"M. Henry H.\", \"Stevens\", role=\"aut\"), person(\"Eduard\", \"Szoecs\", role=\"aut\"), person(\"Helene\", \"Wagner\", role=\"aut\"), person(\"Matt\", \"Barbour\", role=\"aut\"), person(\"Michael\", \"Bedward\", role=\"aut\"), person(\"Ben\", \"Bolker\", role=\"aut\"), person(\"Daniel\", \"Borcard\", role=\"aut\"), person(\"Gustavo\", \"Carvalho\", role=\"aut\"), person(\"Michael\", \"Chirico\", role=\"aut\"), person(\"Miquel\", \"De Caceres\", role=\"aut\"), person(\"Sebastien\", \"Durand\", role=\"aut\"), person(\"Heloisa Beatriz Antoniazi\", \"Evangelista\", role=\"aut\"), person(\"Rich\", \"FitzJohn\", role=\"aut\"), person(\"Michael\", \"Friendly\", role=\"aut\"), person(\"Brendan\",\"Furneaux\", role=\"aut\"), person(\"Geoffrey\", \"Hannigan\", role=\"aut\"), person(\"Mark O.\", \"Hill\", role=\"aut\"), person(\"Leo\", \"Lahti\", role=\"aut\"), person(\"Dan\", \"McGlinn\", role=\"aut\"), person(\"Marie-Helene\", \"Ouellette\", role=\"aut\"), person(\"Eduardo\", \"Ribeiro Cunha\", role=\"aut\"), person(\"Tyler\", \"Smith\", role=\"aut\"), person(\"Adrian\", \"Stier\", role=\"aut\"), person(\"Cajo J.F.\", \"Ter Braak\", role=\"aut\"), person(\"James\", \"Weedon\", role=\"aut\"), person(\"Tuomas\", \"Borman\", role=\"aut\"))",
+      "Depends": [
+        "permute (>= 0.9-0)",
+        "lattice",
+        "R (>= 4.1.0)"
+      ],
+      "Suggests": [
+        "parallel",
+        "tcltk",
+        "knitr",
+        "markdown"
+      ],
+      "Imports": [
+        "MASS",
+        "cluster",
+        "mgcv"
+      ],
+      "VignetteBuilder": "utils, knitr",
+      "Description": "Ordination methods, diversity analysis and other functions for community and vegetation ecologists.",
+      "License": "GPL-2",
+      "BugReports": "https://github.com/vegandevs/vegan/issues",
+      "URL": "https://github.com/vegandevs/vegan",
+      "NeedsCompilation": "yes",
+      "Author": "Jari Oksanen [aut, cre], Gavin L. Simpson [aut], F. Guillaume Blanchet [aut], Roeland Kindt [aut], Pierre Legendre [aut], Peter R. Minchin [aut], R.B. O'Hara [aut], Peter Solymos [aut], M. Henry H. Stevens [aut], Eduard Szoecs [aut], Helene Wagner [aut], Matt Barbour [aut], Michael Bedward [aut], Ben Bolker [aut], Daniel Borcard [aut], Gustavo Carvalho [aut], Michael Chirico [aut], Miquel De Caceres [aut], Sebastien Durand [aut], Heloisa Beatriz Antoniazi Evangelista [aut], Rich FitzJohn [aut], Michael Friendly [aut], Brendan Furneaux [aut], Geoffrey Hannigan [aut], Mark O. Hill [aut], Leo Lahti [aut], Dan McGlinn [aut], Marie-Helene Ouellette [aut], Eduardo Ribeiro Cunha [aut], Tyler Smith [aut], Adrian Stier [aut], Cajo J.F. Ter Braak [aut], James Weedon [aut], Tuomas Borman [aut]",
+      "Maintainer": "Jari Oksanen <jhoksane@gmail.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "viridis": {
       "Package": "viridis",
       "Version": "0.6.5",
@@ -10747,6 +11865,40 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut, cre], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
+      "Repository": "CRAN"
+    },
+    "webshot": {
+      "Package": "webshot",
+      "Version": "0.5.5",
+      "Source": "Repository",
+      "Title": "Take Screenshots of Web Pages",
+      "Authors@R": "c( person(\"Winston\", \"Chang\", email = \"winston@rstudio.com\", role = c(\"aut\", \"cre\")), person(\"Yihui\", \"Xie\", role = \"ctb\"), person(\"Francois\", \"Guillem\", role = \"ctb\"), person(\"Barret\", \"Schloerke\", role = \"ctb\"), person(\"Nicolas\", \"Perriault\", role = \"ctb\", comment = \"The CasperJS library\") )",
+      "Description": "Takes screenshots of web pages, including Shiny applications and R Markdown documents.",
+      "Depends": [
+        "R (>= 3.0)"
+      ],
+      "Imports": [
+        "magrittr",
+        "jsonlite",
+        "callr"
+      ],
+      "Suggests": [
+        "httpuv",
+        "knitr",
+        "rmarkdown",
+        "shiny",
+        "testthat (>= 3.0.0)"
+      ],
+      "License": "GPL-2",
+      "SystemRequirements": "PhantomJS for taking screenshots, ImageMagick or GraphicsMagick and OptiPNG for manipulating images.",
+      "RoxygenNote": "7.2.3",
+      "Encoding": "UTF-8",
+      "URL": "https://wch.github.io/webshot/, https://github.com/wch/webshot/",
+      "BugReports": "https://github.com/wch/webshot/issues",
+      "Config/testthat/edition": "3",
+      "NeedsCompilation": "no",
+      "Author": "Winston Chang [aut, cre], Yihui Xie [ctb], Francois Guillem [ctb], Barret Schloerke [ctb], Nicolas Perriault [ctb] (The CasperJS library)",
+      "Maintainer": "Winston Chang <winston@rstudio.com>",
       "Repository": "CRAN"
     },
     "whisker": {
