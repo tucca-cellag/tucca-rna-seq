@@ -228,6 +228,7 @@ if (!base::is.null(dst) && !base::is.null(annotation_obj)) {
   # Launch the app!
   # We pass the transformed data `dst` as the `dds` argument, as recommended
   # by the pcaExplorer documentation for optimal performance.
+  library(markdown)
   pcaExplorer::pcaExplorer(dds = dst, annotation = annotation_obj)
 } else {
   base::message(
