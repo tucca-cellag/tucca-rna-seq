@@ -78,7 +78,7 @@ base::message(
 # Ensure we have Entrez IDs for clusterProfiler analysis
 if (keytype_input == "ENTREZID") {
   # If the input is already Entrez, just use it.
-  res_tb$entrez_id <- as.character(res_tb$feature_id)
+  res_tb$entrez_id <- res_tb$feature_id
 } else {
   # If the input is something else (assumed ENSEMBL), map to Entrez.
   base::message("Mapping ", keytype_input, " IDs to Entrez IDs...")
