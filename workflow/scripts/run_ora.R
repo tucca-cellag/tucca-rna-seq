@@ -59,37 +59,14 @@ base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
 res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
   dplyr::rename(feature_id = 1)
 
-ref_source <- snakemake@config$ref_assembly$source
-keytype_input <- if (ref_source %in% c("Ensembl", "GENCODE")) {
-  "ENSEMBL"
-} else if (ref_source == "RefSeq") {
-  "ENTREZID"
-} else {
-  base::stop(
-    "Invalid ref_assembly$source: '", ref_source,
-    "'. Must be one of 'Ensembl', 'GENCODE', or 'RefSeq'."
-  )
-}
-base::message(
-  "Using keytype '", keytype_input, "' based on assembly source '",
-  ref_source, "'."
+base::message("Mapping feature IDs to Entrez IDs...")
+res_tb$entrez_id <- AnnotationDbi::mapIds(
+  base::get(org_db_pkg),
+  keys = res_tb$feature_id,
+  column = "ENTREZID",
+  keytype = "ENSEMBL",
+  multiVals = "first"
 )
-
-# Ensure we have Entrez IDs for clusterProfiler analysis
-if (keytype_input == "ENTREZID") {
-  # If the input is already Entrez, just use it.
-  res_tb$entrez_id <- res_tb$feature_id
-} else {
-  # If the input is something else (assumed ENSEMBL), map to Entrez.
-  base::message("Mapping ", keytype_input, " IDs to Entrez IDs...")
-  res_tb$entrez_id <- AnnotationDbi::mapIds(
-    base::get(org_db_pkg),
-    keys = res_tb$feature_id,
-    column = "ENTREZID",
-    keytype = keytype_input,
-    multiVals = "first"
-  )
-}
 
 res_tb_filtered <- res_tb %>%
   dplyr::filter(!is.na(entrez_id)) %>%
