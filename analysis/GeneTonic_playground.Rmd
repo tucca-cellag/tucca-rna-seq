@@ -211,23 +211,26 @@ if (base::require(org_db_pkg, character.only = TRUE)) {
   base::message(base::paste("Using", org_db_pkg, "for annotation."))
 
   # Determine the correct column for gene symbols, which can vary between OrgDb
-  # packages (e.g., 'SYMBOL' vs. 'GENENAME').
+  # packages. We create a prioritized list of candidates to check.
   all_cols <- AnnotationDbi::columns(base::get(org_db_pkg))
-  symbol_col <- "SYMBOL"
-  if (!symbol_col %in% all_cols) {
-    base::message(
-      "'SYMBOL' column not found. Searching for 'GENENAME' as an alternative."
-    )
-    if ("GENENAME" %in% all_cols) {
-      symbol_col <- "GENENAME"
-      base::message("Found 'GENENAME' as the gene symbol column.")
-    } else {
-      base::stop(
-        "Could not find a 'SYMBOL' or 'GENENAME' column in this OrgDb.",
-        " Please inspect `AnnotationDbi::columns(base::get(org_db_pkg))`",
-        " and manually set the `symbol_col` variable in this script."
-      )
+  symbol_col_candidates <- c("SYMBOL", "GENENAME")
+  symbol_col <- NULL
+
+  for (candidate in symbol_col_candidates) {
+    if (candidate %in% all_cols) {
+      symbol_col <- candidate
+      base::message("Found '", symbol_col, "' as the gene symbol column.")
+      break
     }
+  }
+
+  if (base::is.null(symbol_col)) {
+    base::stop(
+      "Could not find a suitable gene symbol column in this OrgDb.",
+      " Checked for: ", base::paste(symbol_col_candidates, collapse = ", "),
+      ". Please inspect `AnnotationDbi::columns(base::get(org_db_pkg))`",
+      " and add a valid candidate to `symbol_col_candidates`."
+    )
   }
 
   annotation_obj <- AnnotationDbi::select(
@@ -255,9 +258,27 @@ if (base::require(org_db_pkg, character.only = TRUE)) {
 objects into the required `data.frame` format.
 
 ```{r shake_results}
-# We will use the 'shaken' version of the enrichment results
-# This function is smart enough to handle both gseaResult and enrichResult
-res_enrich_shaken <- GeneTonic::shake_topGOtableResult(res_enrich)
+# We need to use the correct 'shake' function depending on the class of the
+# enrichment object (e.g., from ORA vs. GSEA).
+res_enrich_shaken <- NULL
+
+if (!base::is.null(res_enrich)) {
+  if (inherits(res_enrich, "gseaResult")) {
+    base::message("Input is a gseaResult object, using shake_gseResult().")
+    res_enrich_shaken <- GeneTonic::shake_gseResult(res_enrich)
+  } else if (inherits(res_enrich, "enrichResult")) {
+    base::message(
+      "Input is an enrichResult object, using shake_enrichResult()."
+    )
+    res_enrich_shaken <- GeneTonic::shake_enrichResult(res_enrich)
+  } else {
+    base::warning(paste0(
+      "The enrichment result object is not of a recognized type ",
+      "(gseaResult, enrichResult). Class: '", class(res_enrich)[1],
+      "'. GeneTonic may not work correctly."
+    ))
+  }
+}
 ```
 
 # Launch GeneTonic
