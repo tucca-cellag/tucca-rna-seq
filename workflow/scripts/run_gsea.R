@@ -62,14 +62,21 @@ base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
 res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
   dplyr::rename(feature_id = 1)
 
-# Determine the keytype of the input feature IDs. ENSEMBL IDs start with
-# "ENS", whereas RefSeq-based IDs are expected to be ENTREZ IDs (numeric).
-keytype_input <- if (base::any(base::startsWith(res_tb$feature_id, "ENS"))) {
+ref_source <- snakemake@config$ref_assembly$source
+keytype_input <- if (ref_source %in% c("Ensembl", "GENCODE")) {
   "ENSEMBL"
-} else {
+} else if (ref_source == "RefSeq") {
   "ENTREZID"
+} else {
+  base::stop(
+    "Invalid ref_assembly$source: '", ref_source,
+    "'. Must be one of 'Ensembl', 'GENCODE', or 'RefSeq'."
+  )
 }
-base::message("Inferred input keytype as: ", keytype_input)
+base::message(
+  "Using keytype '", keytype_input, "' based on assembly source '",
+  ref_source, "'."
+)
 
 # Ensure we have Entrez IDs for clusterProfiler analysis
 if (keytype_input == "ENTREZID") {
