@@ -1,5 +1,5 @@
 ---
-title: "Interactive Analysis with PCAExplorer"
+title: "Interactive Analysis with pcaExplorer"
 author: "tucca-rna-seq"
 date: "`r Sys.Date()`"
 output:
@@ -12,7 +12,7 @@ output:
 # Introduction
 
 This RMarkdown document is a playground for interactive exploration of RNA-seq
-analysis results from the `tucca-rna-seq` pipeline. It uses the `PCAExplorer`
+analysis results from the `tucca-rna-seq` pipeline. It uses the `pcaExplorer`
 package to visualize and interpret the results of a principal component
 analysis.
 
@@ -33,10 +33,10 @@ if (!requireNamespace("here", quietly = TRUE)) {
 }
 
 # The `here` package helps us build file paths relative to the project root.
-# We'll establish the root by finding the `PCAExplorer_playground.Rmd` file
+# We'll establish the root by finding the `pcaExplorer_playground.Rmd` file
 # within the `tucca-rna-seq/analysis` directory. This makes the script
 # robust to the current working directory.
-here::i_am("tucca-rna-seq/analysis/PCAExplorer_playground.Rmd")
+here::i_am("tucca-rna-seq/analysis/pcaExplorer_playground.Rmd")
 
 # We explicitly tell renv where its project directory is.
 # The renv project is in the `tucca-rna-seq` subdirectory.
@@ -45,7 +45,7 @@ renv::restore(
 )
 
 # All functions in this notebook will be called with explicit package namespaces
-# (e.g., `PCAExplorer::PCAExplorer()`) to ensure clarity and avoid conflicts.
+# (e.g., `pcaExplorer::pcaExplorer()`) to ensure clarity and avoid conflicts.
 # This makes `library()` calls unnecessary.
 ```
 
@@ -93,9 +93,9 @@ dst_path <- here::here(
 dst <- base::readRDS(dst_path)
 ```
 
-# Prepare Inputs for PCAExplorer
+# Prepare Inputs for pcaExplorer
 
-`PCAExplorer` requires an annotation object to map gene IDs to gene names. We
+`pcaExplorer` requires an annotation object to map gene IDs to gene names. We
 will create it using the same logic as the main pipeline.
 
 ## Create `annotation_obj`
@@ -219,19 +219,19 @@ if (base::require(org_db_pkg, character.only = TRUE)) {
 }
 ```
 
-# Launch PCAExplorer
+# Launch pcaExplorer
 
 With all the ingredients ready, we can now launch the interactive application.
 
-```{r launch_pcaexplorer, eval=interactive()}
+```{r launch_pcaExplorer, eval=interactive()}
 if (!base::is.null(dst) && !base::is.null(annotation_obj)) {
   # Launch the app!
   # We pass the transformed data `dst` as the `dds` argument, as recommended
-  # by the PCAExplorer documentation for optimal performance.
-  PCAExplorer::PCAExplorer(dds = dst, annotation = annotation_obj)
+  # by the pcaExplorer documentation for optimal performance.
+  pcaExplorer::pcaExplorer(dds = dst, annotation = annotation_obj)
 } else {
   base::message(
-    "Could not launch PCAExplorer because the data or annotation objects are",
+    "Could not launch pcaExplorer because the data or annotation objects are",
     "missing."
   )
 }
@@ -239,16 +239,16 @@ if (!base::is.null(dst) && !base::is.null(annotation_obj)) {
 
 # Reporting with `report`
 
-`PCAExplorer` also provides a function called `report()` to create a
+`pcaExplorer` also provides a function called `report()` to create a
 non-interactive HTML report summarizing key results. This is useful for sharing
 your findings.
 
 ```{r report, eval=FALSE}
 # Example of how to generate a report - uncomment and customize to run
 #
-# PCAExplorer::report(
+# pcaExplorer::report(
 #   dds = dst,
 #   annotation = annotation_obj,
-#   report_dir = "PCAExplorer_report" # A directory to save the report
+#   report_dir = "pcaExplorer_report" # A directory to save the report
 # )
 ``` 
