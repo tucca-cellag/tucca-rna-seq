@@ -24,6 +24,10 @@ devtools::session_info()
 
 # --- 2. Determine Package Name and Install if Necessary ---
 enrichment_params <- snakemake@params[["enrichment"]]
+
+# Save the parameters to an RDS file for later use in interactive analysis
+base::saveRDS(enrichment_params, file = snakemake@output[["params_rds"]])
+
 install_method <- enrichment_params$install_method
 install_source <- enrichment_params$install_source
 

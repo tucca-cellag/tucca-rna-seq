@@ -52,7 +52,8 @@ rule build_local_orgdb:
 # Rule to install the appropriate OrgDb package
 rule install_orgdb:
     output:
-        touch(get_orgdb_install_flag(config)),
+        flag=touch(get_orgdb_install_flag(config)),
+        params_rds="resources/enrichment/enrichment_params.RDS",
     params:
         enrichment=get_enrichment_params,
     log:

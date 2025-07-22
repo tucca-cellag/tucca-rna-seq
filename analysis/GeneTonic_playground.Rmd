@@ -121,10 +121,13 @@ The `annotation_obj` is a data frame that maps gene IDs to gene names. We'll
 create it using the correct organism annotation package.
 
 ```{r create_annotation_obj}
-# Get OrgDb package name from config.
+# Load the enrichment parameters that were used in the Snakemake run
+enrichment_params_path <- here::here("tucca-rna-seq", "resources", "enrichment", "enrichment_params.RDS")
+enrichment_params <- base::readRDS(enrichment_params_path)
+
+# Get OrgDb package name from the loaded parameters.
 # This logic mirrors the pipeline scripts to correctly identify the package
 # name, whether it was installed from Bioconductor or built locally.
-enrichment_params <- config$enrichment
 install_method <- enrichment_params$install_method
 install_source <- enrichment_params$install_source
 
