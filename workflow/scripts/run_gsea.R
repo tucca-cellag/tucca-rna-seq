@@ -153,8 +153,7 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
   } else {
     base::message("Running GSEA for WikiPathways...")
     gsewp_defaults <- base::paste0(
-      "geneList = genelist_fc_sort, organism = '", wp_species,
-      "', keyType = 'ncbi-geneid'"
+      "geneList = genelist_fc_sort, organism = '", wp_species, "'"
     )
     gsewp_final_args <- base::paste(
       gsewp_defaults,
