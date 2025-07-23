@@ -108,7 +108,12 @@ enrichgo_cmd <- base::paste0(
   "clusterProfiler::enrichGO(", enrichgo_final_args, ")"
 )
 base::message("Command: ", enrichgo_cmd)
-ora_results$GO <- base::eval(base::parse(text = enrichgo_cmd))
+go_res <- base::eval(base::parse(text = enrichgo_cmd))
+ora_results$GO <- clusterProfiler::setReadable(
+  go_res,
+  OrgDb = base::get(org_db_pkg),
+  keyType = "auto"
+)
 
 # ORA for KEGG Pathways
 base::message("Running ORA for KEGG...")
@@ -124,7 +129,12 @@ enrichkegg_cmd <- base::paste0(
   "clusterProfiler::enrichKEGG(", enrichkegg_final_args, ")"
 )
 base::message("Command: ", enrichkegg_cmd)
-ora_results$KEGG <- base::eval(base::parse(text = enrichkegg_cmd))
+kegg_res <- base::eval(base::parse(text = enrichkegg_cmd))
+ora_results$KEGG <- clusterProfiler::setReadable(
+  kegg_res,
+  OrgDb = base::get(org_db_pkg),
+  keyType = "auto"
+)
 
 # ORA for KEGG Modules (MKEGG)
 if (enrichment_params$clusterprofiler$kegg_module$enabled) {
@@ -141,7 +151,12 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
     "clusterProfiler::enrichMKEGG(", enrichmkegg_final_args, ")"
   )
   base::message("Command: ", enrichmkegg_cmd)
-  ora_results$MKEGG <- base::eval(base::parse(text = enrichmkegg_cmd))
+  mkegg_res <- base::eval(base::parse(text = enrichmkegg_cmd))
+  ora_results$MKEGG <- clusterProfiler::setReadable(
+    mkegg_res,
+    OrgDb = base::get(org_db_pkg),
+    keyType = "auto"
+  )
 }
 
 # ORA for WikiPathways
@@ -170,7 +185,12 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
       "clusterProfiler::enrichWP(", enrichwp_final_args, ")"
     )
     base::message("Command: ", enrichwp_cmd)
-    ora_results$WP <- base::eval(base::parse(text = enrichwp_cmd))
+    wp_res <- base::eval(base::parse(text = enrichwp_cmd))
+    ora_results$WP <- clusterProfiler::setReadable(
+      wp_res,
+      OrgDb = base::get(org_db_pkg),
+      keyType = "auto"
+    )
   }
 }
 

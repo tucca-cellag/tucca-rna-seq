@@ -102,7 +102,12 @@ gsego_final_args <- base::paste(
 )
 gsego_cmd <- base::paste0("clusterProfiler::gseGO(", gsego_final_args, ")")
 base::message("Command: ", gsego_cmd)
-gsea_results$GO <- base::eval(base::parse(text = gsego_cmd))
+go_res <- base::eval(base::parse(text = gsego_cmd))
+gsea_results$GO <- clusterProfiler::setReadable(
+  go_res,
+  OrgDb = base::get(org_db_pkg),
+  keyType = "auto"
+)
 
 
 # GSEA for KEGG Pathways
@@ -119,7 +124,12 @@ gsekegg_cmd <- base::paste0(
   "clusterProfiler::gseKEGG(", gsekegg_final_args, ")"
 )
 base::message("Command: ", gsekegg_cmd)
-gsea_results$KEGG <- base::eval(base::parse(text = gsekegg_cmd))
+kegg_res <- base::eval(base::parse(text = gsekegg_cmd))
+gsea_results$KEGG <- clusterProfiler::setReadable(
+  kegg_res,
+  OrgDb = base::get(org_db_pkg),
+  keyType = "auto"
+)
 
 # GSEA for KEGG Modules (MKEGG)
 if (enrichment_params$clusterprofiler$kegg_module$enabled) {
@@ -136,7 +146,12 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
     "clusterProfiler::gseMKEGG(", gsemkegg_final_args, ")"
   )
   base::message("Command: ", gsemkegg_cmd)
-  gsea_results$MKEGG <- base::eval(base::parse(text = gsemkegg_cmd))
+  mkegg_res <- base::eval(base::parse(text = gsemkegg_cmd))
+  gsea_results$MKEGG <- clusterProfiler::setReadable(
+    mkegg_res,
+    OrgDb = base::get(org_db_pkg),
+    keyType = "auto"
+  )
 }
 
 # GSEA for WikiPathways
@@ -164,7 +179,12 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
       "clusterProfiler::gseWP(", gsewp_final_args, ")"
     )
     base::message("Command: ", gsewp_cmd)
-    gsea_results$WP <- base::eval(base::parse(text = gsewp_cmd))
+    wp_res <- base::eval(base::parse(text = gsewp_cmd))
+    gsea_results$WP <- clusterProfiler::setReadable(
+      wp_res,
+      OrgDb = base::get(org_db_pkg),
+      keyType = "auto"
+    )
   }
 }
 
