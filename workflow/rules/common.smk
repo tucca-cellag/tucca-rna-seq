@@ -500,24 +500,26 @@ def get_enrichment_deps(wildcards):
 
 # Helper function to get dynamic params
 def get_enrichment_params(wildcards):
+    """
+    Constructs a dictionary of parameters for enrichment analysis rules.
+    This function combines static configuration from config.yaml with
+    dynamically generated values (like package names and install methods).
+    """
+    # Start with a copy of the enrichment section from config
+    params = config["enrichment"].copy()
+
+    # Get dynamic info for OrgDb installation
     info = get_orgdb_install_info(config)
-    params = {
-        "install_method": info["method"],
-        "install_source": info["source"],
-        "org_db_pkg": info["pkg_name"],  # Will be the real name or a placeholder
-        "kegg_organism": get_kegg_organism_code(config),
-        "padj_cutoff": config["enrichment"]["padj_cutoff"],
-        "gsego_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseGO"]["extra"],
-        "gsekegg_extra": config["enrichment"]["clusterprofiler"]["gsea"]["gseKEGG"][
-            "extra"
-        ],
-        "enrichgo_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichGO"][
-            "extra"
-        ],
-        "enrichkegg_extra": config["enrichment"]["clusterprofiler"]["ora"]["enrichKEGG"][
-            "extra"
-        ],
-    }
+    params["install_method"] = info["method"]
+    params["install_source"] = info["source"]
+    params["org_db_pkg"] = info["pkg_name"]
+
+    # Get dynamic info for KEGG
+    params["kegg_organism"] = get_kegg_organism_code(config)
+
+    # Get species name for WikiPathways
+    params["species"] = config["ref_assembly"]["species"]
+
     return params
 
 
