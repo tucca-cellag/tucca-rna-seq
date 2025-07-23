@@ -359,6 +359,9 @@ jobs:
         with:
           submodules: true
 
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -f .Rprofile
+
       - name: Download Snakemake results
         uses: actions/download-artifact@v4
         with:
