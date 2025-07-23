@@ -71,7 +71,6 @@ ora_results <- base::list()
 orgdb_obj <- base::get(org_db_pkg)
 has_symbol_support <- "SYMBOL" %in% AnnotationDbi::columns(orgdb_obj)
 
-
 # ORA for Gene Ontology (GO)
 base::message("Running ORA for GO (BP)...")
 enrichgo_defaults <- "gene = significant_genes, universe = universe_genes, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID'"
@@ -117,7 +116,8 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
     enrichment_params$kegg_organism, "'"
   )
   enrichmkegg_final_args <- base::paste(
-    enrichmkegg_defaults, enrichment_params$clusterprofiler$kegg_module$enrichMKEGG$extra,
+    enrichmkegg_defaults,
+    enrichment_params$clusterprofiler$kegg_module$enrichMKEGG$extra,
     sep = ", "
   )
   enrichmkegg_cmd <- base::paste0(

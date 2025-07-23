@@ -78,7 +78,6 @@ gsea_results$GO <- safely_set_readable(
   has_symbol_support
 )
 
-
 # GSEA for KEGG Pathways
 base::message("Running GSEA for KEGG...")
 gsekegg_defaults <- base::paste0(
@@ -107,7 +106,8 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
     enrichment_params$kegg_organism, "', keyType = 'ncbi-geneid'"
   )
   gsemkegg_final_args <- base::paste(
-    gsemkegg_defaults, enrichment_params$clusterprofiler$kegg_module$gseMKEGG$extra,
+    gsemkegg_defaults,
+    enrichment_params$clusterprofiler$kegg_module$gseMKEGG$extra,
     sep = ", "
   )
   gsemkegg_cmd <- base::paste0(
