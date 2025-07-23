@@ -153,10 +153,13 @@ properties:
                 type: object
                 properties:
                   extra: { type: string }
+                required: [extra]
               gseKEGG:
                 type: object
                 properties:
                   extra: { type: string }
+                required: [extra]
+            required: [gseGO, gseKEGG]
           ora:
             type: object
             properties:
@@ -168,6 +171,23 @@ properties:
                 type: object
                 properties:
                   extra: { type: string }
+                required: [extra]
+            required: [enrichGO, enrichKEGG]
+          kegg_module:
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              enrichMKEGG:
+                type: object
+                properties:
+                  extra: { type: string }
+              gseMKEGG:
+                type: object
+                properties:
+                  extra: { type: string }
+            required: [enabled]
+        required: [gsea, ora, kegg_module]
       annotationforge:
         type: object
         properties:
@@ -177,6 +197,7 @@ properties:
             type: string
           extra:
             type: string
+    required: [padj_cutoff, clusterprofiler]
 
   params:
     type: object

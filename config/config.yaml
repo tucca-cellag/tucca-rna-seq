@@ -41,86 +41,12 @@ ref_assembly:
   species: "Saccharomyces_cerevisiae"
 
 # ----------------------------------------------------------
-# API Key Section:
-# If you are running this workflow too frequently, NCBI's datasets software may
-# throttle your API calls without an API key.
-# ----------------------------------------------------------
-api_keys:
-  ncbi: ""
-
-# ----------------------------------------------------------
-# Differential Expression Section:
-# ----------------------------------------------------------
-diffexp:
-  tximeta:
-    factors:
-      - name: "treatment1"
-        reference_level: "untreated"
-      - name: "treatment2"
-        reference_level: "untreated"
-    extra: ""
-  deseq2:
-    analyses:
-      - name: "treatment1_treatment2"
-        deseqdataset:
-          formula: "~ treatment1 + treatment2"
-          min_counts: 10
-          extra: ""
-          threads: 1
-        wald:
-          deseq_extra: ""
-          shrink_extra: "type = 'apeglm'"
-          results_extra: "alpha = 0.005"
-          threads: 1
-        contrasts:
-          - name: "treatment1_treated_vs_untreated"
-            elements: ["treatment1", "treated", "untreated"]
-          - name: "treatment2_treated_vs_untreated"
-            elements: ["treatment2", "treated", "untreated"]
-    transform:
-      method: "rlog"
-      extra: ""
-
-  # For min_counts
-  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
-  # Alternatively rely on results()
-  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
-
-# ----------------------------------------------------------
-# Pathway Enrichment Section:
-# ----------------------------------------------------------
-# ----------------------------------------------------------
-# Pathway Enrichment Section:
-# ----------------------------------------------------------
-enrichment:
-  # Adjusted p-value cutoff to define significant genes for ORA
-  padj_cutoff: 0.05
-  # TODO: Not yet implemented; List of target gene symbols to search for in enriched pathways
-  targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
-  clusterprofiler:
-    gsea:
-      gseGO:
-        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
-      gseKEGG:
-        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
-    ora:
-      enrichGO:
-        extra: "pvalueCutoff = 0.05"
-      enrichKEGG:
-        extra: "pvalueCutoff = 0.05"
-    kegg_module:
-      enabled: true
-      enrichMKEGG:
-        extra: "pvalueCutoff = 0.05"
-      gseMKEGG:
-        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
-  annotationforge:
-    version: "0.1.0"
-    author: "tucca-rna-seq <benjamin.bromberg@tufts.edu>"
-    extra: "useSynonyms = TRUE"
-
-# ----------------------------------------------------------
 # Sample and Unit Sheet Section
+#
+# These file paths are essential for the workflow's operation and should not
+# be altered. The workflow's internal scripts rely on these specific paths to
+# correctly locate and process your sample and unit data. Modifying them will
+# disrupt the pipeline and cause execution errors.
 # ----------------------------------------------------------
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
 samples: "config/samples.tsv"
@@ -130,15 +56,25 @@ samples: "config/samples.tsv"
 units: "config/units.tsv"
 
 # ----------------------------------------------------------
-# Params Section: Configurable Settings for the Software
+# NCBI API Key
 #
-# This section contains all the adjustable parameters for the various
-# software tools used in the workflow. Update these settings to customize
-# the analysis to match your experimental setup.
+# To avoid potential rate-limiting issues when downloading data from NCBI,
+# you can provide an API key here. The key will be used by the 'ncbi-datasets-cli'
+# tool, which is used for fetching genomes and SRA datasets.
 #
-# Each sub-section (e.g., fastqc, star, salmon_quant) provides tool-specific
-# options. Modify these as needed to fine-tune the performance and behavior
-# of the pipeline.
+# For instructions on how to obtain an API key, please visit:
+# https://account.ncbi.nlm.nih.gov/settings/
+# ----------------------------------------------------------
+api_keys:
+  ncbi: ""
+
+# ----------------------------------------------------------
+# Read Quality Control and Quantification
+#
+# This section configures the initial stages of the workflow, from quality
+# control (QC) of raw sequencing reads to the generation of feature counts.
+# The parameters below for each tool allow for fine-tuning the pipeline's
+# performance and behavior.
 # ----------------------------------------------------------
 params:
   fastqc:
@@ -170,3 +106,84 @@ params:
     extra: "--verbose --force"
   sra_tools:
     vdb_config_ra_path: "/repository/user/main/remote_access=true"
+
+# ----------------------------------------------------------
+# Differential Expression Section:
+#
+# This section defines the parameters for the differential gene expression
+# analysis. It allows you to specify the experimental design, including the
+# factors and contrasts to be analyzed with DESeq2. You can configure multiple
+# analyses, each with its own formula and settings, to explore different
+# aspects of your data.
+# ----------------------------------------------------------
+diffexp:
+  tximeta:
+    factors:
+      - name: "treatment1"
+        reference_level: "untreated"
+      - name: "treatment2"
+        reference_level: "untreated"
+    extra: ""
+  deseq2:
+    analyses:
+      - name: "treatment1_treatment2"
+        deseqdataset:
+          formula: "~ treatment1 + treatment2"
+          # For more information on pre-filtering via `min_counts`, see:
+          # https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
+          # https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
+          min_counts: 10
+          extra: ""
+          threads: 1
+        wald:
+          deseq_extra: ""
+          shrink_extra: "type = 'apeglm'"
+          results_extra: "alpha = 0.005"
+          threads: 1
+        contrasts:
+          - name: "treatment1_treated_vs_untreated"
+            elements: ["treatment1", "treated", "untreated"]
+          - name: "treatment2_treated_vs_untreated"
+            elements: ["treatment2", "treated", "untreated"]
+    transform:
+      method: "rlog"
+      extra: ""
+
+# ----------------------------------------------------------
+# Pathway Enrichment Section:
+#
+# This section configures the pathway enrichment analysis, which helps to
+# interpret the biological meaning of the differentially expressed genes.
+# It uses the 'clusterProfiler' R package to perform Over-Representation
+# Analysis (ORA) and Gene Set Enrichment Analysis (GSEA) on gene sets from
+# GO and KEGG databases.
+#
+# For more details on 'clusterProfiler', see:
+# https://yulab-smu.top/biomedical-knowledge-mining-book/
+# ----------------------------------------------------------
+enrichment:
+  # Adjusted p-value cutoff to define significant genes for ORA
+  padj_cutoff: 0.05
+  # TODO: Not yet implemented; List of target gene symbols to search for in enriched pathways
+  targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
+  clusterprofiler:
+    gsea:
+      gseGO:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+      gseKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    ora:
+      enrichGO:
+        extra: "pvalueCutoff = 0.05"
+      enrichKEGG:
+        extra: "pvalueCutoff = 0.05"
+    kegg_module:
+      enabled: true
+      enrichMKEGG:
+        extra: "pvalueCutoff = 0.05"
+      gseMKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  annotationforge:
+    version: "0.1.0"
+    author: "tucca-rna-seq <benjamin.bromberg@tufts.edu>"
+    extra: "useSynonyms = TRUE"
