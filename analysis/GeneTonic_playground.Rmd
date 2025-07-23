@@ -2,11 +2,22 @@
 title: "Interactive Analysis with GeneTonic"
 author: "tucca-rna-seq"
 date: "`r Sys.Date()`"
+bibliography:
+  - grateful-refs.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/nature.csl
+link-citations: true
 output:
-  html_document:
-    toc: true
-    toc_float: true
-    theme: united
+  rmdformats::readthedown:
+    code_folding: hide
+    self_contained: true
+    number_sections: true
+    DT: datatable
+    toc_depth: 3
+    collapsed: true
+    css: css/doc.css
+    fig_width: 15
+    fig_height: 15
+    classoption: landscape
 ---
 
 # Introduction
@@ -338,4 +349,46 @@ You can select genes and gene sets of interest to focus the report.
 #   mygenes = my_genes,
 #   open_after_creating = TRUE
 # )
-``` 
+```
+
+# R Session Information
+
+Below is the output of the R session used to generate this report. Included is
+information on R version, OS, and versions of packages installed and used.
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+# References
+
+```{r citation-reports, message=FALSE, warning=FALSE, echo=TRUE}
+# Packages to cite
+dependencies <- renv::dependencies()
+pkgs <- unique(dependencies$Package)
+
+# Create grateful citation report
+grateful::cite_packages(
+  output = "file",
+  out.format = "html",
+  citation.style = "nature",
+  out.dir = here::here("tucca-rna-seq", "analysis"),
+  pkgs = pkgs,
+  cite.tidyverse = FALSE,
+  include.RStudio = TRUE,
+  passive.voice = TRUE
+)
+```
+
+```{r citation-table, message=FALSE, warning=FALSE, echo = TRUE}
+pkgs_tbl <- grateful::cite_packages(
+  output = "table",
+  citation.style = "nature",
+  out.dir = here::here("tucca-rna-seq"),
+  pkgs = pkgs,
+  cite.tidyverse = FALSE,
+  include.RStudio = TRUE
+)
+pkgs_tbl$Citation <- gsub("\\.\\.\\.\\.", "", pkgs_tbl$Citation)
+knitr::kable(pkgs_tbl)
+```
