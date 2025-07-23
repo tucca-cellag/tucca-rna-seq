@@ -97,7 +97,7 @@ gsea_results <- base::list()
 base::message("Running GSEA for GO (BP)...")
 gsego_defaults <- "geneList = genelist_fc_sort, OrgDb = get(org_db_pkg), keyType = 'ENTREZID'"
 gsego_final_args <- base::paste(
-  gsego_defaults, enrichment_params$gsego_extra,
+  gsego_defaults, enrichment_params$clusterprofiler$gsea$gseGO$extra,
   sep = ", "
 )
 gsego_cmd <- base::paste0("clusterProfiler::gseGO(", gsego_final_args, ")")
@@ -112,7 +112,7 @@ gsekegg_defaults <- base::paste0(
   "', keyType = 'ncbi-geneid'"
 )
 gsekegg_final_args <- base::paste(
-  gsekegg_defaults, enrichment_params$gsekegg_extra,
+  gsekegg_defaults, enrichment_params$clusterprofiler$gsea$gseKEGG$extra,
   sep = ", "
 )
 gsekegg_cmd <- base::paste0(
@@ -122,14 +122,14 @@ base::message("Command: ", gsekegg_cmd)
 gsea_results$KEGG <- base::eval(base::parse(text = gsekegg_cmd))
 
 # GSEA for KEGG Modules (MKEGG)
-if (enrichment_params$kegg_module$enabled) {
+if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   base::message("Running GSEA for KEGG Modules (MKEGG)...")
   gsemkegg_defaults <- base::paste0(
     "geneList = genelist_fc_sort, organism = '",
     enrichment_params$kegg_organism, "', keyType = 'ncbi-geneid'"
   )
   gsemkegg_final_args <- base::paste(
-    gsemkegg_defaults, enrichment_params$kegg_module$gseMKEGG$extra,
+    gsemkegg_defaults, enrichment_params$clusterprofiler$kegg_module$gseMKEGG$extra,
     sep = ", "
   )
   gsemkegg_cmd <- base::paste0(
@@ -137,6 +137,36 @@ if (enrichment_params$kegg_module$enabled) {
   )
   base::message("Command: ", gsemkegg_cmd)
   gsea_results$MKEGG <- base::eval(base::parse(text = gsemkegg_cmd))
+}
+
+# GSEA for WikiPathways
+if (enrichment_params$clusterprofiler$wikipathways$enabled) {
+  # Replaces underscores with spaces in species name for matching
+  wp_species <- base::gsub("_", " ", enrichment_params$species)
+  supported_wp_species <- clusterProfiler::get_wp_organisms()
+
+  if (!wp_species %in% supported_wp_species) {
+    base::message(
+      "Skipping WikiPathways GSEA: species '", wp_species,
+      "' not found in clusterProfiler::get_wp_organisms()."
+    )
+  } else {
+    base::message("Running GSEA for WikiPathways...")
+    gsewp_defaults <- base::paste0(
+      "geneList = genelist_fc_sort, organism = '", wp_species,
+      "', keyType = 'ncbi-geneid'"
+    )
+    gsewp_final_args <- base::paste(
+      gsewp_defaults,
+      enrichment_params$clusterprofiler$wikipathways$gseWP$extra,
+      sep = ", "
+    )
+    gsewp_cmd <- base::paste0(
+      "clusterProfiler::gseWP(", gsewp_final_args, ")"
+    )
+    base::message("Command: ", gsewp_cmd)
+    gsea_results$WP <- base::eval(base::parse(text = gsewp_cmd))
+  }
 }
 
 # --- 5. Save Results ---

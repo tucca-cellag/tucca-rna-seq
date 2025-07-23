@@ -101,7 +101,7 @@ ora_results <- base::list()
 base::message("Running ORA for GO (BP)...")
 enrichgo_defaults <- "gene = significant_genes, universe = universe_genes, OrgDb = get(org_db_pkg), ont = 'BP', keyType = 'ENTREZID'"
 enrichgo_final_args <- base::paste(
-  enrichgo_defaults, enrichment_params$enrichgo_extra,
+  enrichgo_defaults, enrichment_params$clusterprofiler$ora$enrichGO$extra,
   sep = ", "
 )
 enrichgo_cmd <- base::paste0(
@@ -117,7 +117,7 @@ enrichkegg_defaults <- base::paste0(
   enrichment_params$kegg_organism, "'"
 )
 enrichkegg_final_args <- base::paste(
-  enrichkegg_defaults, enrichment_params$enrichkegg_extra,
+  enrichkegg_defaults, enrichment_params$clusterprofiler$ora$enrichKEGG$extra,
   sep = ", "
 )
 enrichkegg_cmd <- base::paste0(
@@ -127,14 +127,14 @@ base::message("Command: ", enrichkegg_cmd)
 ora_results$KEGG <- base::eval(base::parse(text = enrichkegg_cmd))
 
 # ORA for KEGG Modules (MKEGG)
-if (enrichment_params$kegg_module$enabled) {
+if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   base::message("Running ORA for KEGG Modules (MKEGG)...")
   enrichmkegg_defaults <- base::paste0(
     "gene = significant_genes, universe = universe_genes, organism = '",
     enrichment_params$kegg_organism, "'"
   )
   enrichmkegg_final_args <- base::paste(
-    enrichmkegg_defaults, enrichment_params$kegg_module$enrichMKEGG$extra,
+    enrichmkegg_defaults, enrichment_params$clusterprofiler$kegg_module$enrichMKEGG$extra,
     sep = ", "
   )
   enrichmkegg_cmd <- base::paste0(
@@ -142,6 +142,36 @@ if (enrichment_params$kegg_module$enabled) {
   )
   base::message("Command: ", enrichmkegg_cmd)
   ora_results$MKEGG <- base::eval(base::parse(text = enrichmkegg_cmd))
+}
+
+# ORA for WikiPathways
+if (enrichment_params$clusterprofiler$wikipathways$enabled) {
+  # Replaces underscores with spaces in species name for matching
+  wp_species <- base::gsub("_", " ", enrichment_params$species)
+  supported_wp_species <- clusterProfiler::get_wp_organisms()
+
+  if (!wp_species %in% supported_wp_species) {
+    base::message(
+      "Skipping WikiPathways ORA: species '", wp_species,
+      "' not found in clusterProfiler::get_wp_organisms()."
+    )
+  } else {
+    base::message("Running ORA for WikiPathways...")
+    enrichwp_defaults <- base::paste0(
+      "gene = significant_genes, universe = universe_genes, organism = '",
+      wp_species, "'"
+    )
+    enrichwp_final_args <- base::paste(
+      enrichwp_defaults,
+      enrichment_params$clusterprofiler$wikipathways$enrichWP$extra,
+      sep = ", "
+    )
+    enrichwp_cmd <- base::paste0(
+      "clusterProfiler::enrichWP(", enrichwp_final_args, ")"
+    )
+    base::message("Command: ", enrichwp_cmd)
+    ora_results$WP <- base::eval(base::parse(text = enrichwp_cmd))
+  }
 }
 
 # --- 5. Save Results ---

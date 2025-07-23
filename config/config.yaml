@@ -177,6 +177,12 @@ enrichment:
         extra: "pvalueCutoff = 0.05"
       enrichKEGG:
         extra: "pvalueCutoff = 0.05"
+    wikipathways:
+      enabled: true
+      enrichWP:
+        extra: "pvalueCutoff = 0.05"
+      gseWP:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
     kegg_module:
       enabled: true
       enrichMKEGG:
