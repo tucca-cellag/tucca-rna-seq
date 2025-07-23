@@ -18,55 +18,25 @@
 #   - alpha_pathway: The significance threshold for pathway enrichment.
 #   - padj_cutoff: The adjusted p-value cutoff to define significant genes.
 
-# --- 1. Setup, Logging, and Library Loading ---
-log <- base::file(snakemake@log[[1]], open = "wt")
-base::sink(log)
-base::sink(log, type = "message")
-base::date()
+# --- 1. Setup ---
+# Source the helper functions
+print(snakemake)
+source(base::file.path(snakemake@scriptdir, "enrichment_utils.R"))
 
-base::library(package = "devtools", character.only = TRUE)
-devtools::session_info()
-
-base::library(package = "clusterProfiler", character.only = TRUE)
-base::library(package = "AnnotationDbi", character.only = TRUE)
-base::library(package = "magrittr", character.only = TRUE) # For the %>% pipe
-base::library(package = "dplyr", character.only = TRUE)
-base::library(package = "readr", character.only = TRUE)
-
-# --- 2. Load Organism-Specific Database ---
+# Unpack snakemake object
+log_file <- snakemake@log[[1]]
+dge_path <- snakemake@input$dge_tsv
+output_path <- snakemake@output$ora_rds
 enrichment_params <- snakemake@params[["enrichment"]]
-install_method <- enrichment_params$install_method
-install_source <- enrichment_params$install_source
 
-# Determine the actual package name
-org_db_pkg <- if (install_method == "local") {
-  # When built locally, the package name is derived inside AnnotationForge.
-  # We find the directory name it created to get the actual package name.
-  pkg_dirs <- base::list.dirs(path = install_source, full.names = FALSE, recursive = FALSE)
-  pkg_name <- pkg_dirs[grepl("^org\\..+\\.db$", pkg_dirs)]
-  if (length(pkg_name) == 0) base::stop("Could not find locally built OrgDb package directory.")
-  pkg_name[1]
-} else {
-  enrichment_params$org_db_pkg
-}
-base::message("Target OrgDb package: ", org_db_pkg)
+# --- 2. Logging and Library Loading ---
+setup_logging_and_libs(log_file)
 
-# Load the package (it should be pre-installed by the 'install_orgdb' rule)
-base::library(org_db_pkg, character.only = TRUE)
+# --- 3. Load Organism-Specific Database ---
+org_db_pkg <- get_and_load_orgdb(enrichment_params)
 
-# --- 3. Load Data and Prepare Gene Lists ---
-base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
-res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
-  dplyr::rename(feature_id = 1)
-
-base::message("Mapping feature IDs to Entrez IDs...")
-res_tb$entrez_id <- AnnotationDbi::mapIds(
-  base::get(org_db_pkg),
-  keys = res_tb$feature_id,
-  column = "ENTREZID",
-  keytype = "ENSEMBL",
-  multiVals = "first"
-)
+# --- 4. Load Data and Prepare Gene Lists ---
+res_tb <- load_and_map_dge_results(dge_path, org_db_pkg)
 
 res_tb_filtered <- res_tb %>%
   dplyr::filter(!is.na(entrez_id)) %>%
@@ -89,13 +59,18 @@ if (base::length(significant_genes) == 0) {
     "No significant genes found. ORA will not be performed.",
     "Creating empty output."
   )
-  base::saveRDS(base::list(), file = snakemake@output$ora_rds)
+  base::saveRDS(base::list(), file = output_path)
   base::quit(save = "no", status = 0)
 }
 
-# --- 4. Perform ORA ---
+# --- 5. Perform ORA ---
 base::set.seed(123)
 ora_results <- base::list()
+
+# Check once if the OrgDb has SYMBOL mappings to avoid repeated lookups
+orgdb_obj <- base::get(org_db_pkg)
+has_symbol_support <- "SYMBOL" %in% AnnotationDbi::columns(orgdb_obj)
+
 
 # ORA for Gene Ontology (GO)
 base::message("Running ORA for GO (BP)...")
@@ -109,10 +84,9 @@ enrichgo_cmd <- base::paste0(
 )
 base::message("Command: ", enrichgo_cmd)
 go_res <- base::eval(base::parse(text = enrichgo_cmd))
-ora_results$GO <- clusterProfiler::setReadable(
-  go_res,
-  OrgDb = base::get(org_db_pkg),
-  keyType = "ENTREZID"
+ora_results$GO <- safely_set_readable(
+  go_res, orgdb_obj,
+  has_symbol_support
 )
 
 # ORA for KEGG Pathways
@@ -130,10 +104,9 @@ enrichkegg_cmd <- base::paste0(
 )
 base::message("Command: ", enrichkegg_cmd)
 kegg_res <- base::eval(base::parse(text = enrichkegg_cmd))
-ora_results$KEGG <- clusterProfiler::setReadable(
-  kegg_res,
-  OrgDb = base::get(org_db_pkg),
-  keyType = "ENTREZID"
+ora_results$KEGG <- safely_set_readable(
+  kegg_res, orgdb_obj,
+  has_symbol_support
 )
 
 # ORA for KEGG Modules (MKEGG)
@@ -152,10 +125,9 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   )
   base::message("Command: ", enrichmkegg_cmd)
   mkegg_res <- base::eval(base::parse(text = enrichmkegg_cmd))
-  ora_results$MKEGG <- clusterProfiler::setReadable(
-    mkegg_res,
-    OrgDb = base::get(org_db_pkg),
-    keyType = "ENTREZID"
+  ora_results$MKEGG <- safely_set_readable(
+    mkegg_res, orgdb_obj,
+    has_symbol_support
   )
 }
 
@@ -186,17 +158,15 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
     )
     base::message("Command: ", enrichwp_cmd)
     wp_res <- base::eval(base::parse(text = enrichwp_cmd))
-    ora_results$WP <- clusterProfiler::setReadable(
-      wp_res,
-      OrgDb = base::get(org_db_pkg),
-      keyType = "ENTREZID"
+    ora_results$WP <- safely_set_readable(
+      wp_res, orgdb_obj,
+      has_symbol_support
     )
   }
 }
 
-# --- 5. Save Results ---
-base::message("Saving ORA results to: ", snakemake@output$ora_rds)
-base::saveRDS(ora_results, file = snakemake@output$ora_rds)
+# --- 6. Save Results ---
+base::message("Saving ORA results to: ", output_path)
+base::saveRDS(ora_results, file = output_path)
 
-base::message("ORA script finished successfully.")
-base::date()
+log_script_completion("ORA script")

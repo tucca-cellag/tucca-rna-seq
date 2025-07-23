@@ -17,59 +17,25 @@
 #   - kegg_organism: The 3-letter KEGG organism code (e.g., "sce" for yeast).
 #   - alpha_pathway: The significance threshold for pathway enrichment.
 
-# --- 1. Setup, Logging, and Library Loading ---
-log <- base::file(snakemake@log[[1]], open = "wt")
-base::sink(log)
-base::sink(log, type = "message")
-base::date()
+# --- 1. Setup ---
+# Source the helper functions
+print(snakemake)
+source(base::file.path(snakemake@scriptdir, "enrichment_utils.R"))
 
-base::library(package = "devtools", character.only = TRUE)
-devtools::session_info()
-
-base::library(package = "clusterProfiler", character.only = TRUE)
-base::library(package = "AnnotationDbi", character.only = TRUE)
-base::library(package = "magrittr", character.only = TRUE) # For the %>% pipe
-base::library(package = "dplyr", character.only = TRUE)
-base::library(package = "readr", character.only = TRUE)
-
-# --- 2. Load Organism-Specific Database ---
+# Unpack snakemake object
+log_file <- snakemake@log[[1]]
+dge_path <- snakemake@input$dge_tsv
+output_path <- snakemake@output$gsea_rds
 enrichment_params <- snakemake@params[["enrichment"]]
-install_method <- enrichment_params$install_method
-install_source <- enrichment_params$install_source
 
-# Determine the actual package name
-org_db_pkg <- if (install_method == "local") {
-  # When built locally, the package name is derived inside AnnotationForge.
-  # We find the directory name it created to get the actual package name.
-  pkg_dirs <- base::list.dirs(
-    path = install_source, full.names = FALSE, recursive = FALSE
-  )
-  pkg_name <- pkg_dirs[grepl("^org\\..+\\.db$", pkg_dirs)]
-  if (length(pkg_name) == 0) {
-    base::stop("Could not find locally built OrgDb package directory.")
-  }
-  pkg_name[1]
-} else {
-  enrichment_params[["org_db_pkg"]]
-}
-base::message("Target OrgDb package: ", org_db_pkg)
+# --- 2. Logging and Library Loading ---
+setup_logging_and_libs(log_file)
 
-# Load the package (it should be pre-installed by the 'install_orgdb' rule)
-base::library(org_db_pkg, character.only = TRUE)
+# --- 3. Load Organism-Specific Database ---
+org_db_pkg <- get_and_load_orgdb(enrichment_params)
 
-# --- 3. Load Data and Prepare Gene List ---
-base::message("Loading DGE results from: ", snakemake@input$dge_tsv)
-res_tb <- readr::read_tsv(snakemake@input$dge_tsv, show_col_types = FALSE) %>%
-  dplyr::rename(feature_id = 1)
-
-base::message("Mapping feature IDs to Entrez IDs...")
-res_tb$entrez_id <- AnnotationDbi::mapIds(
-  base::get(org_db_pkg),
-  keys = res_tb$feature_id,
-  column = "ENTREZID",
-  keytype = "ENSEMBL",
-  multiVals = "first"
-)
+# --- 4. Load Data and Prepare Gene List ---
+res_tb <- load_and_map_dge_results(dge_path, org_db_pkg)
 
 res_tb_filtered <- res_tb %>%
   dplyr::filter(!is.na(entrez_id) & !is.na(log2FoldChange)) %>%
@@ -89,9 +55,13 @@ if (base::length(genelist_fc_sort) == 0) {
   )
 }
 
-# --- 4. Perform GSEA ---
+# --- 5. Perform GSEA ---
 base::set.seed(123)
 gsea_results <- base::list()
+
+# Check once if the OrgDb has SYMBOL mappings to avoid repeated lookups
+orgdb_obj <- base::get(org_db_pkg)
+has_symbol_support <- "SYMBOL" %in% AnnotationDbi::columns(orgdb_obj)
 
 # GSEA for Gene Ontology (GO)
 base::message("Running GSEA for GO (BP)...")
@@ -103,10 +73,9 @@ gsego_final_args <- base::paste(
 gsego_cmd <- base::paste0("clusterProfiler::gseGO(", gsego_final_args, ")")
 base::message("Command: ", gsego_cmd)
 go_res <- base::eval(base::parse(text = gsego_cmd))
-gsea_results$GO <- clusterProfiler::setReadable(
-  go_res,
-  OrgDb = base::get(org_db_pkg),
-  keyType = "ENTREZID"
+gsea_results$GO <- safely_set_readable(
+  go_res, orgdb_obj,
+  has_symbol_support
 )
 
 
@@ -125,10 +94,9 @@ gsekegg_cmd <- base::paste0(
 )
 base::message("Command: ", gsekegg_cmd)
 kegg_res <- base::eval(base::parse(text = gsekegg_cmd))
-gsea_results$KEGG <- clusterProfiler::setReadable(
-  kegg_res,
-  OrgDb = base::get(org_db_pkg),
-  keyType = "ENTREZID"
+gsea_results$KEGG <- safely_set_readable(
+  kegg_res, orgdb_obj,
+  has_symbol_support
 )
 
 # GSEA for KEGG Modules (MKEGG)
@@ -147,10 +115,9 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   )
   base::message("Command: ", gsemkegg_cmd)
   mkegg_res <- base::eval(base::parse(text = gsemkegg_cmd))
-  gsea_results$MKEGG <- clusterProfiler::setReadable(
-    mkegg_res,
-    OrgDb = base::get(org_db_pkg),
-    keyType = "ENTREZID"
+  gsea_results$MKEGG <- safely_set_readable(
+    mkegg_res, orgdb_obj,
+    has_symbol_support
   )
 }
 
@@ -180,17 +147,15 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
     )
     base::message("Command: ", gsewp_cmd)
     wp_res <- base::eval(base::parse(text = gsewp_cmd))
-    gsea_results$WP <- clusterProfiler::setReadable(
-      wp_res,
-      OrgDb = base::get(org_db_pkg),
-      keyType = "ENTREZID"
+    gsea_results$WP <- safely_set_readable(
+      wp_res, orgdb_obj,
+      has_symbol_support
     )
   }
 }
 
-# --- 5. Save Results ---
-base::message("Saving GSEA results to: ", snakemake@output$gsea_rds)
-base::saveRDS(gsea_results, file = snakemake@output$gsea_rds)
+# --- 6. Save Results ---
+base::message("Saving GSEA results to: ", output_path)
+base::saveRDS(gsea_results, file = output_path)
 
-base::message("GSEA script finished successfully.")
-base::date()
+log_script_completion("GSEA script")
