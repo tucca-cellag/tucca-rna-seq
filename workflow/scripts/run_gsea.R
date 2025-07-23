@@ -106,7 +106,7 @@ go_res <- base::eval(base::parse(text = gsego_cmd))
 gsea_results$GO <- clusterProfiler::setReadable(
   go_res,
   OrgDb = base::get(org_db_pkg),
-  keyType = "auto"
+  keyType = "ENTREZID"
 )
 
 
@@ -128,7 +128,7 @@ kegg_res <- base::eval(base::parse(text = gsekegg_cmd))
 gsea_results$KEGG <- clusterProfiler::setReadable(
   kegg_res,
   OrgDb = base::get(org_db_pkg),
-  keyType = "auto"
+  keyType = "ENTREZID"
 )
 
 # GSEA for KEGG Modules (MKEGG)
@@ -150,7 +150,7 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   gsea_results$MKEGG <- clusterProfiler::setReadable(
     mkegg_res,
     OrgDb = base::get(org_db_pkg),
-    keyType = "auto"
+    keyType = "ENTREZID"
   )
 }
 
@@ -183,7 +183,7 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
     gsea_results$WP <- clusterProfiler::setReadable(
       wp_res,
       OrgDb = base::get(org_db_pkg),
-      keyType = "auto"
+      keyType = "ENTREZID"
     )
   }
 }

@@ -112,7 +112,7 @@ go_res <- base::eval(base::parse(text = enrichgo_cmd))
 ora_results$GO <- clusterProfiler::setReadable(
   go_res,
   OrgDb = base::get(org_db_pkg),
-  keyType = "auto"
+  keyType = "ENTREZID"
 )
 
 # ORA for KEGG Pathways
@@ -133,7 +133,7 @@ kegg_res <- base::eval(base::parse(text = enrichkegg_cmd))
 ora_results$KEGG <- clusterProfiler::setReadable(
   kegg_res,
   OrgDb = base::get(org_db_pkg),
-  keyType = "auto"
+  keyType = "ENTREZID"
 )
 
 # ORA for KEGG Modules (MKEGG)
@@ -155,7 +155,7 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
   ora_results$MKEGG <- clusterProfiler::setReadable(
     mkegg_res,
     OrgDb = base::get(org_db_pkg),
-    keyType = "auto"
+    keyType = "ENTREZID"
   )
 }
 
@@ -189,7 +189,7 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
     ora_results$WP <- clusterProfiler::setReadable(
       wp_res,
       OrgDb = base::get(org_db_pkg),
-      keyType = "auto"
+      keyType = "ENTREZID"
     )
   }
 }
