@@ -127,7 +127,7 @@ base::message("Command: ", enrichkegg_cmd)
 ora_results$KEGG <- base::eval(base::parse(text = enrichkegg_cmd))
 
 # ORA for KEGG Modules (MKEGG)
-if (!is.null(enrichment_params$kegg_module) && enrichment_params$kegg_module$enabled) {
+if (enrichment_params$kegg_module$enabled) {
   base::message("Running ORA for KEGG Modules (MKEGG)...")
   enrichmkegg_defaults <- base::paste0(
     "gene = significant_genes, universe = universe_genes, organism = '",

@@ -122,7 +122,7 @@ base::message("Command: ", gsekegg_cmd)
 gsea_results$KEGG <- base::eval(base::parse(text = gsekegg_cmd))
 
 # GSEA for KEGG Modules (MKEGG)
-if (!is.null(enrichment_params$kegg_module) && enrichment_params$kegg_module$enabled) {
+if (enrichment_params$kegg_module$enabled) {
   base::message("Running GSEA for KEGG Modules (MKEGG)...")
   gsemkegg_defaults <- base::paste0(
     "geneList = genelist_fc_sort, organism = '",
