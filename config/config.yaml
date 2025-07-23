@@ -95,7 +95,7 @@ diffexp:
 enrichment:
   # Adjusted p-value cutoff to define significant genes for ORA
   padj_cutoff: 0.05
-  # List of target gene symbols to search for in enriched pathways (Not yet implemented)
+  # TODO: Not yet implemented; List of target gene symbols to search for in enriched pathways
   targets: ["ACTB", "GAPDH", "PAX3", "PAX7", "MYOD1"]
   clusterprofiler:
     gsea:
@@ -105,9 +105,15 @@ enrichment:
         extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
     ora:
       enrichGO:
-        extra: "pvalueCutoff = 0.05, qvalueCutoff = 0.2"
+        extra: "pvalueCutoff = 0.05"
       enrichKEGG:
         extra: "pvalueCutoff = 0.05"
+    kegg_module:
+      enabled: true
+      enrichMKEGG:
+        extra: "pvalueCutoff = 0.05"
+      gseMKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
   annotationforge:
     version: "0.1.0"
     author: "tucca-rna-seq <benjamin.bromberg@tufts.edu>"

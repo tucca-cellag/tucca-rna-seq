@@ -121,6 +121,24 @@ gsekegg_cmd <- base::paste0(
 base::message("Command: ", gsekegg_cmd)
 gsea_results$KEGG <- base::eval(base::parse(text = gsekegg_cmd))
 
+# GSEA for KEGG Modules (MKEGG)
+if (!is.null(enrichment_params$kegg_module) && enrichment_params$kegg_module$enabled) {
+  base::message("Running GSEA for KEGG Modules (MKEGG)...")
+  gsemkegg_defaults <- base::paste0(
+    "geneList = genelist_fc_sort, organism = '",
+    enrichment_params$kegg_organism, "', keyType = 'ncbi-geneid'"
+  )
+  gsemkegg_final_args <- base::paste(
+    gsemkegg_defaults, enrichment_params$kegg_module$gseMKEGG$extra,
+    sep = ", "
+  )
+  gsemkegg_cmd <- base::paste0(
+    "clusterProfiler::gseMKEGG(", gsemkegg_final_args, ")"
+  )
+  base::message("Command: ", gsemkegg_cmd)
+  gsea_results$MKEGG <- base::eval(base::parse(text = gsemkegg_cmd))
+}
+
 # --- 5. Save Results ---
 base::message("Saving GSEA results to: ", snakemake@output$gsea_rds)
 base::saveRDS(gsea_results, file = snakemake@output$gsea_rds)
