@@ -11,6 +11,8 @@ system. `tucca-rna-seq` is a standardized usage Snakemake workflow that follows
 the [best practices][2.5] laid out in the Snakemake documentation (as of
 Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 
+---
+
 [![Snakemake](https://img.shields.io/badge/snakemake-≥8.27.1-3EB049)](https://snakemake.github.io)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity_≥3.8.4-1d355c)](https://sylabs.io/docs/)
