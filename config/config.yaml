@@ -199,6 +199,16 @@ enrichment:
   # Note: The kegg_organism parameter should be a three-letter KEGG organism code.
   # For a full list of supported organisms, see:
   # ftp://ftp.genome.jp/pub/kegg/xml/organisms
+  #
+  # IMPORTANT: SPIA uses the KEGG REST API (rest.kegg.jp) which is made available
+  # only for academic use by academic users. Non-academic users are requested to
+  # follow the guidelines shown in "Non-academic use of KEGG" at the KEGG website.
+  # See: https://www.kegg.jp/kegg/rest/ for API usage restrictions and
+  # https://www.kegg.jp/kegg/legal.html for legal information.
+  #
+  # Rate limiting: The workflow automatically limits API calls to ~2.5 calls per
+  # second (well within the KEGG limit of 3 calls per second) to avoid being
+  # blocked by the KEGG server.
   spia:
     enabled: true
     extra: "beta = NULL, verbose = TRUE, plots = FALSE"

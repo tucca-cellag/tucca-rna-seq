@@ -119,7 +119,7 @@ rule clusterprofiler_ora:
 # SPIA analysis rule is conditionally executed based on config setting
 if config["enrichment"]["spia"]["enabled"]:
 
-    rule clusterprofiler_spia:
+    rule spia:
         input:
             unpack(get_enrichment_deps),
             spia_data="resources/enrichment/spia_data",
