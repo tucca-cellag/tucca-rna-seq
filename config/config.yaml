@@ -189,6 +189,40 @@ enrichment:
         extra: "pvalueCutoff = 0.05"
       gseMKEGG:
         extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  # MSigDB (Molecular Signatures Database) configuration
+  # MSigDB provides gene sets for enrichment analysis using clusterProfiler's
+  # universal enrichment functions (enricher() and GSEA()). The workflow supports
+  # both built-in MSigDB collections and custom GMT files.
+  #
+  # Available collections:
+  # - H: Hallmark gene sets (50 gene sets)
+  # - C1: Positional gene sets (299 gene sets)
+  # - C2: Curated gene sets (5,922 gene sets)
+  # - C3: Regulatory target gene sets (3,738 gene sets)
+  # - C4: Computational gene sets (858 gene sets)
+  # - C5: Ontology gene sets (10,922 gene sets)
+  # - C6: Oncogenic signatures (189 gene sets)
+  # - C7: Immunologic signatures (4,872 gene sets)
+  # - C8: Cell type signature gene sets (746 gene sets)
+  #
+  # For more information, see: https://www.gsea-msigdb.org/gsea/msigdb/
+  msigdb:
+    enabled: true
+    # List of MSigDB collections to analyze (H, C1, C2, C3, C4, C5, C6, C7, C8)
+    collections:
+      - "H" # Hallmark gene sets
+      - "C2" # Curated gene sets
+      - "C5" # Ontology gene sets
+    # Custom GMT files (optional)
+    # Place your GMT files in resources/gmt/ and reference them here
+    custom_gmt_files:
+      - "resources/gmt/muscle_genesets.gmt"
+    # Parameters for ORA analysis
+    ora:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    # Parameters for GSEA analysis
+    gsea:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
   # SPIA (Signaling Pathway Impact Analysis) configuration
   # SPIA performs topology-based pathway analysis considering both gene expression
   # changes and pathway structure. It identifies pathways that are significantly

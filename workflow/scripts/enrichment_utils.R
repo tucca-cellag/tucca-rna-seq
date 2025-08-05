@@ -62,6 +62,7 @@ setup_logging_and_libs <- function(log_file) {
   base::library(package = "magrittr", character.only = TRUE)
   base::library(package = "dplyr", character.only = TRUE)
   base::library(package = "readr", character.only = TRUE)
+  base::library(package = "msigdbr", character.only = TRUE)
   base::message("--- Library loading complete ---")
 }
 
@@ -137,6 +138,141 @@ load_and_map_dge_results <- function(dge_path, orgdb_pkg_name) {
 log_script_completion <- function(script_name) {
   base::message(script_name, " finished successfully.")
   base::date()
+}
+
+#' Validate MSigDB species support
+#'
+#' This function checks if the specified species is supported by MSigDB
+#' using msigdbr::msigdbr_show_species().
+#'
+#' @param species The species name in format "Genus_species"
+#'
+#' @return A logical indicating if the species is supported
+validate_msigdb_species <- function(species) {
+  base::message("Validating MSigDB species support for: ", species)
+
+  # Convert underscore to space for MSigDB format
+  species_formatted <- base::gsub("_", " ", species)
+
+  # Get supported species from MSigDB
+  supported_species <- msigdbr::msigdbr_show_species()
+
+  is_supported <- species_formatted %in% supported_species$species_name
+
+  if (is_supported) {
+    base::message("Species '", species_formatted, "' is supported by MSigDB.")
+  } else {
+    base::message(
+      "Species '", species_formatted, "' is not supported by MSigDB. ",
+      "Available species: ", base::paste(supported_species$species_name[1:5], collapse = ", "), "..."
+    )
+  }
+
+  return(is_supported)
+}
+
+#' Load MSigDB gene sets for specified collections
+#'
+#' This function loads gene sets from MSigDB collections using msigdbr.
+#'
+#' @param species The species name in format "Genus_species"
+#' @param collections Vector of MSigDB collection codes (H, C1, C2, etc.)
+#'
+#' @return A data.frame with columns: gs_name, gs_description, entrez_gene
+load_msigdb_genesets <- function(species, collections) {
+  base::message("Loading MSigDB gene sets for collections: ", base::paste(collections, collapse = ", "))
+
+  # Convert underscore to space for MSigDB format
+  species_formatted <- base::gsub("_", " ", species)
+
+  # Load gene sets for each collection
+  all_genesets <- base::list()
+
+  for (collection in collections) {
+    base::message("Loading collection: ", collection)
+    genesets <- msigdbr::msigdbr(species = species_formatted, category = collection)
+    all_genesets[[collection]] <- genesets
+  }
+
+  # Combine all collections
+  combined_genesets <- base::do.call(rbind, all_genesets)
+
+  base::message(
+    "Loaded ", base::nrow(combined_genesets), " gene sets from ",
+    base::length(collections), " collections."
+  )
+
+  return(combined_genesets)
+}
+
+#' Load custom GMT files
+#'
+#' This function loads custom gene set files in GMT format using clusterProfiler.
+#'
+#' @param gmt_files Vector of paths to GMT files
+#'
+#' @return A list of gene set data.frames, one per file
+load_custom_gmt_files <- function(gmt_files) {
+  base::message("Loading custom GMT files: ", base::paste(gmt_files, collapse = ", "))
+
+  gmt_results <- base::list()
+
+  for (gmt_file in gmt_files) {
+    if (base::file.exists(gmt_file)) {
+      base::message("Loading GMT file: ", gmt_file)
+      gmt_data <- clusterProfiler::read.gmt(gmt_file)
+      gmt_results[[gmt_file]] <- gmt_data
+      base::message("Loaded ", base::length(gmt_data), " gene sets from ", gmt_file)
+    } else {
+      base::message("Warning: GMT file not found: ", gmt_file)
+    }
+  }
+
+  return(gmt_results)
+}
+
+#' Prepare TERM2GENE and TERM2NAME for universal enrichment analysis
+#'
+#' This function prepares the TERM2GENE and TERM2NAME data.frames required
+#' for clusterProfiler's enricher() and GSEA() functions.
+#'
+#' @param genesets_data Data.frame from load_msigdb_genesets or load_custom_gmt_files
+#' @param source_type Either "msigdb" or "gmt" to indicate the data source
+#'
+#' @return A list with TERM2GENE and TERM2NAME data.frames
+prepare_enrichment_data <- function(genesets_data, source_type = "msigdb") {
+  if (source_type == "msigdb") {
+    # For MSigDB data
+    term2gene <- genesets_data[, c("gs_name", "entrez_gene")]
+    term2name <- genesets_data[, c("gs_name", "gs_description")]
+    # Remove duplicates
+    term2gene <- base::unique(term2gene)
+    term2name <- base::unique(term2name)
+  } else if (source_type == "gmt") {
+    # For GMT data - convert list of gene sets to data.frame
+    term2gene_list <- base::list()
+    term2name_list <- base::list()
+
+    for (geneset_name in base::names(genesets_data)) {
+      genes <- genesets_data[[geneset_name]]
+      term2gene_list[[geneset_name]] <- base::data.frame(
+        term = geneset_name,
+        gene = genes
+      )
+      term2name_list[[geneset_name]] <- base::data.frame(
+        term = geneset_name,
+        name = geneset_name # Use name as description for GMT files
+      )
+    }
+
+    term2gene <- base::do.call(rbind, term2gene_list)
+    term2name <- base::do.call(rbind, term2name_list)
+  }
+
+  return(base::list(
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name
+  ))
 }
 
 #' Process KEGGLINK and convert to human-readable gene symbols

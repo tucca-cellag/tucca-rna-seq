@@ -165,6 +165,117 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
   }
 }
 
+# ORA for MSigDB
+if (enrichment_params$msigdb$enabled) {
+  base::message("Running ORA for MSigDB...")
+
+  # Validate species support
+  species_supported <- validate_msigdb_species(enrichment_params$species)
+
+  if (!species_supported) {
+    base::message(
+      "Skipping MSigDB ORA: species '", enrichment_params$species,
+      "' not supported by MSigDB."
+    )
+  } else {
+    # Load MSigDB gene sets
+    msigdb_genesets <- load_msigdb_genesets(
+      enrichment_params$species,
+      enrichment_params$msigdb$collections
+    )
+
+    # Prepare enrichment data
+    msigdb_data <- prepare_enrichment_data(msigdb_genesets, "msigdb")
+
+    # Run ORA for each collection
+    for (collection in enrichment_params$msigdb$collections) {
+      base::message("Running ORA for MSigDB collection: ", collection)
+
+      # Filter for this collection
+      collection_genesets <- msigdb_genesets[msigdb_genesets$gs_cat == collection, ]
+      collection_data <- prepare_enrichment_data(collection_genesets, "msigdb")
+
+      # Run enricher
+      enricher_defaults <- "gene = significant_genes, universe = universe_genes"
+      enricher_final_args <- base::paste(
+        enricher_defaults,
+        "TERM2GENE = collection_data$TERM2GENE",
+        "TERM2NAME = collection_data$TERM2NAME",
+        enrichment_params$msigdb$ora$extra,
+        sep = ", "
+      )
+      enricher_cmd <- base::paste0(
+        "clusterProfiler::enricher(", enricher_final_args, ")"
+      )
+      base::message("Command: ", enricher_cmd)
+
+      collection_res <- base::eval(base::parse(text = enricher_cmd))
+      ora_results[[paste0("MSigDB_", collection)]] <- safely_set_readable(
+        collection_res, orgdb_obj,
+        has_symbol_support
+      )
+    }
+
+    # Load and process custom GMT files if specified
+    if (base::length(enrichment_params$msigdb$custom_gmt_files) > 0) {
+      base::message("Processing custom GMT files for ORA...")
+
+      for (gmt_file in enrichment_params$msigdb$custom_gmt_files) {
+        if (base::file.exists(gmt_file)) {
+          base::message("Running ORA for custom GMT file: ", gmt_file)
+
+          # Load GMT file
+          gmt_data <- clusterProfiler::read.gmt(gmt_file)
+
+          # Convert to TERM2GENE format
+          term2gene_list <- base::list()
+          term2name_list <- base::list()
+
+          for (geneset_name in base::names(gmt_data)) {
+            genes <- gmt_data[[geneset_name]]
+            term2gene_list[[geneset_name]] <- base::data.frame(
+              term = geneset_name,
+              gene = genes
+            )
+            term2name_list[[geneset_name]] <- base::data.frame(
+              term = geneset_name,
+              name = geneset_name
+            )
+          }
+
+          term2gene <- base::do.call(rbind, term2gene_list)
+          term2name <- base::do.call(rbind, term2name_list)
+
+          # Run enricher
+          enricher_defaults <- "gene = significant_genes, universe = universe_genes"
+          enricher_final_args <- base::paste(
+            enricher_defaults,
+            "TERM2GENE = term2gene",
+            "TERM2NAME = term2name",
+            enrichment_params$msigdb$ora$extra,
+            sep = ", "
+          )
+          enricher_cmd <- base::paste0(
+            "clusterProfiler::enricher(", enricher_final_args, ")"
+          )
+          base::message("Command: ", enricher_cmd)
+
+          gmt_res <- base::eval(base::parse(text = enricher_cmd))
+
+          # Create a safe name for the result
+          gmt_name <- base::gsub("^.*/", "", base::gsub("\\.gmt$", "", gmt_file))
+          ora_results[[paste0("CustomGMT_", gmt_name)]] <- safely_set_readable(
+            gmt_res, orgdb_obj,
+            has_symbol_support
+          )
+        } else {
+          base::message("Warning: Custom GMT file not found: ", gmt_file)
+        }
+      }
+    }
+  }
+}
+
 # --- 6. Save Results ---
 base::message("Saving ORA results to: ", output_path)
 base::saveRDS(ora_results, file = output_path)
