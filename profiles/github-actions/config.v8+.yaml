@@ -10,7 +10,9 @@
 use-conda: true
 conda-cleanup-pkgs: tarballs
 verbose: true
-all-temp: true
+# all-temp: true  # Commented out to allow artifact uploads for Rmd testing
+# Note: If disk space becomes an issue, consider creating a separate profile
+# for Singularity runs that includes all-temp: true
 show-failed-logs: true
 retries: 3
 rerun-incomplete: true

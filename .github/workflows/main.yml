@@ -231,7 +231,7 @@ jobs:
           # Usage of --bind required for success of rule make_linked_txome
           # on GitHub runners
           args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
             --use-singularity
             --singularity-args "--bind ${{ github.workspace }}/.host_R_config_singularity:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
@@ -323,7 +323,7 @@ jobs:
           # Usage of --bind required for success of rule make_linked_txome
           # on GitHub runners
           args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
             --use-singularity
             --singularity-args "--bind ${{ github.workspace }}/.host_R_config_apptainer:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
