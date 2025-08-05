@@ -195,6 +195,10 @@ enrichment:
   # perturbed based on the impact of differentially expressed genes on pathway
   # topology. The workflow automatically generates required SPIA data files
   # using makeSPIAdata() before running the analysis.
+  #
+  # Note: The kegg_organism parameter should be a three-letter KEGG organism code.
+  # For a full list of supported organisms, see:
+  # ftp://ftp.genome.jp/pub/kegg/xml/organisms
   spia:
     enabled: true
     extra: "beta = NULL, verbose = TRUE, plots = FALSE"

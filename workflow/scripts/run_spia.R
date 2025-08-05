@@ -67,39 +67,48 @@ if (base::length(genelist_fc) == 0) {
 base::set.seed(123)
 base::message("Running SPIA analysis...")
 
+# Initialize spia_results
+spia_results <- base::list()
+
 # Check if SPIA data directory exists and contains required files
 if (!base::dir.exists(spia_data_path)) {
   base::message("SPIA data directory does not exist: ", spia_data_path)
   base::message("Creating empty results.")
-  spia_results <- base::list()
 } else {
   kegg_organism <- enrichment_params$kegg_organism
   base::message("Running SPIA for organism: ", kegg_organism)
   base::message("Using SPIA data from: ", spia_data_path)
 
-  # Run SPIA analysis with pre-generated data
-  spia_defaults <- base::paste0(
-    "de = genelist_fc, all = names(genelist_fc), organism = '",
-    kegg_organism, "', data.dir = '", spia_data_path, "'"
-  )
-  spia_final_args <- base::paste(
-    spia_defaults, enrichment_params$spia$extra,
-    sep = ", "
-  )
-  spia_cmd <- base::paste0("SPIA::spia(", spia_final_args, ")")
-  base::message("Command: ", spia_cmd)
+  # Check if the required SPIA data file exists
+  spia_data_file <- base::file.path(spia_data_path, base::paste0(kegg_organism, "SPIA.RData"))
+  if (!base::file.exists(spia_data_file)) {
+    base::message("SPIA data file does not exist: ", spia_data_file)
+    base::message("Creating empty results.")
+  } else {
+    # Run SPIA analysis with pre-generated data
+    spia_defaults <- base::paste0(
+      "de = genelist_fc, all = names(genelist_fc), organism = '",
+      kegg_organism, "', data.dir = '", spia_data_path, "'"
+    )
+    spia_final_args <- base::paste(
+      spia_defaults, enrichment_params$spia$extra,
+      sep = ", "
+    )
+    spia_cmd <- base::paste0("SPIA::spia(", spia_final_args, ")")
+    base::message("Command: ", spia_cmd)
 
-  tryCatch(
-    {
-      spia_results <- base::eval(base::parse(text = spia_cmd))
-      base::message("SPIA analysis completed successfully.")
-    },
-    error = function(e) {
-      base::message("SPIA analysis failed: ", e$message)
-      base::message("Creating empty results.")
-      spia_results <- base::list()
-    }
-  )
+    tryCatch(
+      {
+        spia_results <- base::eval(base::parse(text = spia_cmd))
+        base::message("SPIA analysis completed successfully.")
+      },
+      error = function(e) {
+        base::message("SPIA analysis failed: ", e$message)
+        base::message("Creating empty results.")
+        spia_results <<- base::list()
+      }
+    )
+  }
 }
 
 # --- 6. Save Results ---
