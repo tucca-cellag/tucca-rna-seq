@@ -35,43 +35,32 @@ base::message("--- SPIA library loaded ---")
 kegg_organism <- enrichment_params$kegg_organism
 base::message("Generating SPIA data for organism: ", kegg_organism)
 
-# Check if the organism is supported by SPIA
-supported_organisms <- SPIA::getSPIAOrganisms()
+# Run makeSPIAdata - it will handle organism validation internally
+base::message("Running makeSPIAdata for organism: ", kegg_organism)
 
-if (!kegg_organism %in% supported_organisms) {
-  base::message(
-    "Organism '", kegg_organism, "' not found in SPIA supported organisms. ",
-    "Available organisms: ", base::paste(supported_organisms, collapse = ", ")
-  )
-  base::message("Creating empty data directory.")
-  base::dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-} else {
-  base::message("Running makeSPIAdata for organism: ", kegg_organism)
+# Create output directory
+base::dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
-  # Create output directory
-  base::dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+# Set working directory to output directory for makeSPIAdata
+original_wd <- base::getwd()
+base::setwd(output_dir)
 
-  # Set working directory to output directory for makeSPIAdata
-  original_wd <- base::getwd()
-  base::setwd(output_dir)
+tryCatch(
+  {
+    # Run makeSPIAdata
+    SPIA::makeSPIAdata(
+      organism = kegg_organism,
+      out.path = "."
+    )
+    base::message("SPIA data generation completed successfully.")
+  },
+  error = function(e) {
+    base::message("SPIA data generation failed: ", e$message)
+    base::message("Creating empty data directory.")
+  }
+)
 
-  tryCatch(
-    {
-      # Run makeSPIAdata
-      SPIA::makeSPIAdata(
-        organism = kegg_organism,
-        out.path = "."
-      )
-      base::message("SPIA data generation completed successfully.")
-    },
-    error = function(e) {
-      base::message("SPIA data generation failed: ", e$message)
-      base::message("Creating empty data directory.")
-    }
-  )
-
-  # Restore original working directory
-  base::setwd(original_wd)
-}
+# Restore original working directory
+base::setwd(original_wd)
 
 log_script_completion("SPIA data generation script")
