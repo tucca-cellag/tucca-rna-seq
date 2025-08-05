@@ -482,7 +482,7 @@ def get_enrichment_outputs():
         outputs.append(
             f"resources/enrichment/{analysis_name}/{contrast_name}/ora_results.RDS"
         )
-        # SPIA outputs are conditionally included based on rule definition
+        # Only include SPIA outputs if SPIA is enabled
         if config["enrichment"]["spia"]["enabled"]:
             outputs.append(
                 f"resources/enrichment/{analysis_name}/{contrast_name}/spia_results.RDS"
