@@ -375,7 +375,7 @@ grateful::cite_packages(
   out.dir = here::here("tucca-rna-seq", "analysis"),
   pkgs = pkgs,
   cite.tidyverse = FALSE,
-  include.RStudio = TRUE,
+  include.RStudio = FALSE, # Set to FALSE for automated testing (CI/CD). Set to TRUE for interactive use.
   passive.voice = TRUE
 )
 ```
@@ -387,7 +387,7 @@ pkgs_tbl <- grateful::cite_packages(
   out.dir = here::here("tucca-rna-seq"),
   pkgs = pkgs,
   cite.tidyverse = FALSE,
-  include.RStudio = TRUE
+  include.RStudio = FALSE # Set to FALSE for automated testing (CI/CD). Set to TRUE for interactive use.
 )
 pkgs_tbl$Citation <- gsub("\\.\\.\\.\\.", "", pkgs_tbl$Citation)
 knitr::kable(pkgs_tbl)
