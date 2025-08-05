@@ -90,7 +90,7 @@ tryCatch(
       )
 
       # Add a small delay to be respectful to the KEGG server
-      base::Sys.sleep(0.1)
+      base::Sys.sleep(0.4)
     }
 
     base::message("Successfully downloaded ", successful_downloads, " out of ", base::length(pathway_list), " pathways")
