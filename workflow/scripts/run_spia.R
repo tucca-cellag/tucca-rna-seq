@@ -11,7 +11,8 @@
 #   - spia_data: Directory containing pre-generated SPIA data files.
 #
 # Outputs:
-#   - spia_rds: An RDS file containing SPIA analysis results.
+#   - spia_rds: An RDS file containing raw SPIA analysis results.
+#   - spia_readable_rds: An RDS file containing SPIA results with human-readable gene symbols.
 #
 # Parameters:
 #   - org_db_pkg: The name of the organism-specific annotation package.
@@ -29,6 +30,7 @@ log_file <- snakemake@log[[1]]
 dge_path <- snakemake@input$dge_tsv
 spia_data_path <- snakemake@input$spia_data
 output_path <- snakemake@output$spia_rds
+output_readable_path <- snakemake@output$spia_readable_rds
 enrichment_params <- snakemake@params[["enrichment"]]
 
 # --- 2. Logging and Library Loading ---
@@ -113,6 +115,55 @@ if (!base::dir.exists(spia_data_path)) {
 
 # --- 6. Save Results ---
 base::message("Saving SPIA results to: ", output_path)
+
+# Save raw results
 base::saveRDS(spia_results, file = output_path)
+
+# Create human-readable version if we have results
+if (base::length(spia_results) > 0 && base::is.data.frame(spia_results)) {
+  base::message("Creating human-readable version with gene symbols...")
+
+  # Load the SPIA data to get organism info
+  spia_data_file <- base::file.path(spia_data_path, base::paste0(kegg_organism, "SPIA.RData"))
+  if (base::file.exists(spia_data_file)) {
+    base::load(spia_data_file)
+
+    # Add gene symbols column to significant results
+    spia_results_readable <- spia_results
+
+    # Only process if we have KEGGLINK column
+    if ("KEGGLINK" %in% base::colnames(spia_results_readable)) {
+      base::message("Processing KEGGLINK to add gene symbols...")
+
+      # Add the deGenes column with gene symbols
+      spia_results_readable$deGenes <- base::sapply(
+        spia_results_readable$KEGGLINK,
+        processKEGGLINK,
+        orgdb_obj = base::get(org_db_pkg)
+      )
+
+      # Reorder columns to put deGenes after Status if it exists
+      if ("Status" %in% base::colnames(spia_results_readable)) {
+        status_col_idx <- base::which(base::colnames(spia_results_readable) == "Status")
+        deGenes_col_idx <- base::which(base::colnames(spia_results_readable) == "deGenes")
+
+        # Reorder columns: everything before Status, Status, deGenes, everything after Status except deGenes
+        before_status <- 1:(status_col_idx)
+        after_status <- base::setdiff((status_col_idx + 1):base::ncol(spia_results_readable), deGenes_col_idx)
+
+        spia_results_readable <- spia_results_readable[, c(before_status, deGenes_col_idx, after_status)]
+      }
+    }
+
+    base::saveRDS(spia_results_readable, file = output_readable_path)
+    base::message("Saved human-readable SPIA results to: ", output_readable_path)
+  } else {
+    base::message("SPIA data file not found, saving raw results only")
+    base::saveRDS(spia_results, file = output_readable_path)
+  }
+} else {
+  base::message("No SPIA results to process, saving empty results")
+  base::saveRDS(base::list(), file = output_readable_path)
+}
 
 log_script_completion("SPIA script")

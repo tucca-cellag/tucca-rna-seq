@@ -125,6 +125,7 @@ if config["enrichment"]["spia"]["enabled"]:
             spia_data="resources/enrichment/spia_data",
         output:
             spia_rds="resources/enrichment/{analysis}/{contrast}/spia_results.RDS",
+            spia_readable_rds="resources/enrichment/{analysis}/{contrast}/spia_results_readable.RDS",
         params:
             enrichment=get_enrichment_params,
         log:

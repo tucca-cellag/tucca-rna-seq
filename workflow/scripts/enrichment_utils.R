@@ -138,3 +138,64 @@ log_script_completion <- function(script_name) {
   base::message(script_name, " finished successfully.")
   base::date()
 }
+
+#' Process KEGGLINK and convert to human-readable gene symbols
+#'
+#' This function processes KEGGLINK URLs from SPIA results and converts
+#' ENTREZ gene IDs to human-readable gene symbols. It handles cases where
+#' the OrgDb doesn't have SYMBOL mappings by falling back to ENTREZ IDs.
+#'
+#' @param link A KEGGLINK URL string from SPIA results.
+#' @param orgdb_obj The OrgDb annotation package object (e.g., org.Hs.eg.db).
+#'
+#' @return A string containing gene symbols (or ENTREZ IDs if symbols unavailable)
+#'         separated by '/'.
+processKEGGLINK <- function(link, orgdb_obj) {
+  if (base::is.na(link) || link == "") {
+    return("")
+  }
+
+  # Extract the part of the URL after the last "?" character
+  queryString <- stringr::str_remove(link, ".*\\?")
+
+  # Split the string by '+' into parts
+  parts <- base::strsplit(queryString, "\\+")[[1]]
+
+  # Assuming the first elem is always the pathway ID, we skip it for gene IDs
+  deGenes <- parts[-1] # Extract gene IDs
+
+  if (base::length(deGenes) == 0) {
+    return("")
+  }
+
+  # Check if the OrgDb has SYMBOL mappings
+  has_symbol_support <- "SYMBOL" %in% AnnotationDbi::columns(orgdb_obj)
+
+  if (has_symbol_support) {
+    # Convert ENTREZ IDs to gene symbols
+    deGenesSym <- AnnotationDbi::select(
+      orgdb_obj,
+      keys = deGenes,
+      columns = "SYMBOL",
+      keytype = "ENTREZID"
+    )
+
+    # Filter out NA symbols and combine
+    valid_symbols <- deGenesSym$SYMBOL[!base::is.na(deGenesSym$SYMBOL)]
+    if (base::length(valid_symbols) == 0) {
+      return("")
+    }
+
+    # Combine gene symbols into a single string separated by '/'
+    geneString <- base::paste(valid_symbols, collapse = "/")
+
+    return(geneString)
+  } else {
+    # If no SYMBOL support, return the original ENTREZ IDs
+    base::message(
+      "The OrgDb package does not contain SYMBOL mappings. ",
+      "Using ENTREZ IDs for gene names."
+    )
+    return(base::paste(deGenes, collapse = "/"))
+  }
+}
