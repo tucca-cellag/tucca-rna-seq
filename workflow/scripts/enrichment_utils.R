@@ -143,7 +143,7 @@ log_script_completion <- function(script_name) {
 #' Validate MSigDB species support
 #'
 #' This function checks if the specified species is supported by MSigDB
-#' using msigdbr::msigdbr_show_species().
+#' using msigdbr::msigdbr_species().
 #'
 #' @param species The species name in format "Genus_species"
 #'
@@ -155,7 +155,7 @@ validate_msigdb_species <- function(species) {
   species_formatted <- base::gsub("_", " ", species)
 
   # Get supported species from MSigDB
-  supported_species <- msigdbr::msigdbr_show_species()
+  supported_species <- msigdbr::msigdbr_species()
 
   is_supported <- species_formatted %in% supported_species$species_name
 
