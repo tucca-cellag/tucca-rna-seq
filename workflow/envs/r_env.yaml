@@ -14,3 +14,4 @@ dependencies:
   - bioconda::bioconductor-deseq2 =1.46
   - bioconda::bioconductor-clusterprofiler =4.14
   - bioconda::bioconductor-annotationdbi =1.68
+  - bioconda::bioconductor-spia =2.58

@@ -189,6 +189,15 @@ enrichment:
         extra: "pvalueCutoff = 0.05"
       gseMKEGG:
         extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  # SPIA (Signaling Pathway Impact Analysis) configuration
+  # SPIA performs topology-based pathway analysis considering both gene expression
+  # changes and pathway structure. It identifies pathways that are significantly
+  # perturbed based on the impact of differentially expressed genes on pathway
+  # topology. The workflow automatically generates required SPIA data files
+  # using makeSPIAdata() before running the analysis.
+  spia:
+    enabled: true
+    extra: "beta = NULL, verbose = TRUE, plots = FALSE"
   annotationforge:
     version: "0.1.0"
     author: "tucca-rna-seq <benjamin.bromberg@tufts.edu>"

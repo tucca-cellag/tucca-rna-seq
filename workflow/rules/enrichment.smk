@@ -64,6 +64,22 @@ rule install_orgdb:
         "../scripts/install_orgdb.R"
 
 
+# SPIA rules are conditionally executed based on config setting
+if config["enrichment"]["spia"]["enabled"]:
+
+    rule make_spia_data:
+        output:
+            spia_data_dir=directory("resources/enrichment/spia_data"),
+        params:
+            enrichment=get_enrichment_params,
+        log:
+            "logs/enrichment/make_spia_data.log",
+        conda:
+            "../envs/r_env.yaml"
+        script:
+            "../scripts/make_spia_data.R"
+
+
 rule clusterprofiler_gsea:
     input:
         unpack(get_enrichment_deps),
@@ -98,6 +114,28 @@ rule clusterprofiler_ora:
         contrast="[^/]+",
     script:
         "../scripts/run_ora.R"
+
+
+# SPIA analysis rule is conditionally executed based on config setting
+if config["enrichment"]["spia"]["enabled"]:
+
+    rule clusterprofiler_spia:
+        input:
+            unpack(get_enrichment_deps),
+            spia_data="resources/enrichment/spia_data",
+        output:
+            spia_rds="resources/enrichment/{analysis}/{contrast}/spia_results.RDS",
+        params:
+            enrichment=get_enrichment_params,
+        log:
+            "logs/enrichment/{analysis}/{contrast}/spia.log",
+        conda:
+            "../envs/r_env.yaml"
+        wildcard_constraints:
+            analysis="[^/]+",
+            contrast="[^/]+",
+        script:
+            "../scripts/run_spia.R"
 
 
 rule all_enrichment_analyses:

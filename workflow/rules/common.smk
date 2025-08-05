@@ -470,7 +470,7 @@ def get_kegg_organism_code(config):
 
 
 def get_enrichment_outputs():
-    """Generates a list of all clusterProfiler output files."""
+    """Generates a list of all enrichment analysis output files."""
     outputs = []
     # CONTRAST_JOBS is defined earlier in common.smk
     for job in CONTRAST_JOBS:
@@ -482,6 +482,16 @@ def get_enrichment_outputs():
         outputs.append(
             f"resources/enrichment/{analysis_name}/{contrast_name}/ora_results.RDS"
         )
+        # Only include SPIA outputs if SPIA is enabled
+        if config["enrichment"]["spia"]["enabled"]:
+            outputs.append(
+                f"resources/enrichment/{analysis_name}/{contrast_name}/spia_results.RDS"
+            )
+
+    # Include SPIA data directory if SPIA is enabled
+    if config["enrichment"]["spia"]["enabled"]:
+        outputs.append("resources/enrichment/spia_data")
+
     return outputs
 
 
