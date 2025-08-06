@@ -87,6 +87,12 @@ jobs:
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
             cleanup: false
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Conda
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
+            extra_args: ""
+            cleanup: false
           # Local Reads - RefSeq (complex config)
           - name: LR_Ref_Comp_Conda
             rules: all
@@ -174,6 +180,12 @@ jobs:
           - name: LR_Ens_Comp_Singularity
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+            cleanup: true
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Singularity
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - RefSeq (complex config)
@@ -268,6 +280,12 @@ jobs:
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
             extra_args: ""
             cleanup: true
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Apptainer
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
+            extra_args: ""
+            cleanup: true
           # Local Reads - RefSeq (complex config)
           - name: LR_Ref_Comp_Apptainer
             rules: all
@@ -348,6 +366,7 @@ jobs:
         scenario:
           - name: LR_Ens_Comp_Conda
           - name: LR_Ref_Comp_Conda
+          - name: LR_Ens_GMT_Conda
         version:
           - name: stable
             snakemake: 8.27.1

@@ -1,0 +1,40 @@
+# .test/local_reads/ensembl/config_gmt_test/config.yaml
+
+# Path to your SAMPLE SHEET which keeps track of your biological replicates
+samples: ".test/local_reads/ensembl/config_gmt_test/samples.tsv"
+
+# Path to your sequencing UNIT SHEET which keeps track of your technical
+# replicates (e.g. sequencer lanes or resequencing of the same biological
+# sample)
+units: ".test/local_reads/ensembl/config_gmt_test/units.tsv"
+
+# Minimal enrichment configuration for GMT testing
+enrichment:
+  padj_cutoff: 0.05
+  clusterprofiler:
+    gsea:
+      gseGO:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+      gseKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    ora:
+      enrichGO:
+        extra: "pvalueCutoff = 0.05"
+      enrichKEGG:
+        extra: "pvalueCutoff = 0.05"
+    wikipathways:
+      enabled: false # Disable to save time
+    kegg_module:
+      enabled: false # Disable to save time
+  msigdb:
+    enabled: true
+    collections:
+      - "H" # Only test Hallmark (smallest collection)
+    custom_gmt_files:
+      - ".test/local_reads/ensembl/config_gmt_test/test_yeast_genesets.gmt"
+    ora:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    gsea:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  spia:
+    enabled: false # Disable to save time
