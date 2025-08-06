@@ -187,7 +187,55 @@ properties:
                 properties:
                   extra: { type: string }
             required: [enabled]
-        required: [gsea, ora, kegg_module]
+          harmonizome:
+            type: object
+            description: "Harmonizome database configuration for tissue-specific gene sets"
+            properties:
+              enabled:
+                type: boolean
+                description: "Enable Harmonizome analysis"
+                default: false
+              use_mock_data:
+                type: boolean
+                description: "Use mock data for testing (uses MSigDB gene sets)"
+                default: false
+              mock_species:
+                type: string
+                description: "Species for mock data (e.g., 'Bos taurus', 'Homo sapiens')"
+                default: "Bos taurus"
+              datasets:
+                type: array
+                description: "List of Harmonizome datasets and gene sets to analyze"
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: "Name of the Harmonizome dataset (e.g., 'GTEx Tissue Gene Expression Profiles')"
+                    gene_sets:
+                      type: array
+                      description: "List of gene set names to download from this dataset"
+                      items:
+                        type: string
+                        description: "Name of the gene set (e.g., 'muscle', 'adipocyte')"
+                  required:
+                    - name
+                    - gene_sets
+              ora:
+                type: object
+                properties:
+                  extra:
+                    type: string
+                    description: "Extra parameters for ORA analysis"
+                    default: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+              gsea:
+                type: object
+                properties:
+                  extra:
+                    type: string
+                    description: "Extra parameters for GSEA analysis"
+                    default: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+        required: [gsea, ora, kegg_module, harmonizome]
       annotationforge:
         type: object
         properties:

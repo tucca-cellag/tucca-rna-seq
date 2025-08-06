@@ -21,6 +21,7 @@
 # Source the helper functions
 print(snakemake)
 source(base::file.path(snakemake@scriptdir, "enrichment_utils.R"))
+source(base::file.path(snakemake@scriptdir, "harmonizome_utils.R"))
 
 # Unpack snakemake object
 log_file <- snakemake@log[[1]]
@@ -247,6 +248,38 @@ if (enrichment_params$msigdb$enabled) {
         )
       }
     }
+  }
+}
+
+# GSEA for Harmonizome
+if (enrichment_params$harmonizome$enabled) {
+  base::message("Running GSEA for Harmonizome...")
+
+  # Load Harmonizome gene sets
+  harmonizome_data <- load_harmonizome_gene_sets(enrichment_params$harmonizome, org_db_pkg)
+
+  if (!base::is.null(harmonizome_data)) {
+    # Run GSEA for Harmonizome gene sets
+    gsea_defaults <- "geneList = genelist_fc_sort"
+    gsea_final_args <- base::paste(
+      gsea_defaults,
+      "TERM2GENE = harmonizome_data$TERM2GENE",
+      "TERM2NAME = harmonizome_data$TERM2NAME",
+      enrichment_params$harmonizome$gsea$extra,
+      sep = ", "
+    )
+    gsea_cmd <- base::paste0(
+      "clusterProfiler::GSEA(", gsea_final_args, ")"
+    )
+    base::message("Command: ", gsea_cmd)
+
+    harmonizome_res <- base::eval(base::parse(text = gsea_cmd))
+    gsea_results$Harmonizome <- safely_set_readable(
+      harmonizome_res, orgdb_obj,
+      has_symbol_support
+    )
+  } else {
+    base::message("Warning: No valid Harmonizome gene sets found. Skipping GSEA.")
   }
 }
 

@@ -22,6 +22,7 @@
 # Source the helper functions
 print(snakemake)
 source(base::file.path(snakemake@scriptdir, "enrichment_utils.R"))
+source(base::file.path(snakemake@scriptdir, "harmonizome_utils.R"))
 
 # Unpack snakemake object
 log_file <- snakemake@log[[1]]
@@ -261,6 +262,38 @@ if (enrichment_params$msigdb$enabled) {
         )
       }
     }
+  }
+}
+
+# ORA for Harmonizome
+if (enrichment_params$harmonizome$enabled) {
+  base::message("Running ORA for Harmonizome...")
+
+  # Load Harmonizome gene sets
+  harmonizome_data <- load_harmonizome_gene_sets(enrichment_params$harmonizome, org_db_pkg)
+
+  if (!base::is.null(harmonizome_data)) {
+    # Run enricher for Harmonizome gene sets
+    enricher_defaults <- "gene = significant_genes, universe = universe_genes"
+    enricher_final_args <- base::paste(
+      enricher_defaults,
+      "TERM2GENE = harmonizome_data$TERM2GENE",
+      "TERM2NAME = harmonizome_data$TERM2NAME",
+      enrichment_params$harmonizome$ora$extra,
+      sep = ", "
+    )
+    enricher_cmd <- base::paste0(
+      "clusterProfiler::enricher(", enricher_final_args, ")"
+    )
+    base::message("Command: ", enricher_cmd)
+
+    harmonizome_res <- base::eval(base::parse(text = enricher_cmd))
+    ora_results$Harmonizome <- safely_set_readable(
+      harmonizome_res, orgdb_obj,
+      has_symbol_support
+    )
+  } else {
+    base::message("Warning: No valid Harmonizome gene sets found. Skipping ORA.")
   }
 }
 
