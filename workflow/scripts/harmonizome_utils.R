@@ -23,7 +23,7 @@ globalVariables(c("process_gene_set", "is_symbol_like", "convert_genes_to_entrez
 
 # Wrapper to suppress linting warnings for functions from enrichment_utils.R
 process_gene_set_wrapper <- function(genes, set_name, orgdb_pkg_name) {
-  utils::get("process_gene_set", envir = .GlobalEnv)(genes, set_name, orgdb_pkg_name)
+  base::get("process_gene_set", envir = .GlobalEnv)(genes, set_name, orgdb_pkg_name)
 }
 
 #' Create mock Harmonizome data for testing
