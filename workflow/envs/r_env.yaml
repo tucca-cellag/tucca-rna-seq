@@ -12,7 +12,7 @@ dependencies:
   - conda-forge::r-biocmanager =1.30
   - conda-forge::r-msigdbr =25.1
   - conda-forge::r-httr =1.4
-  - conda-forge::r-reticulate =1.35
+  - conda-forge::r-reticulate =1.43
   - bioconda::bioconductor-tximeta =1.24
   - bioconda::bioconductor-deseq2 =1.46
   - bioconda::bioconductor-clusterprofiler =4.14
