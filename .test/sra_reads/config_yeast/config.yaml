@@ -1,4 +1,5 @@
-# .test/singularity/sra_reads/config/config.yaml
+# .test/sra_reads/config/config.yaml
+# Configuration for testing with yeast RNA-Seq data from BioProject PRJNA1242481
 
 # Path to your SAMPLE SHEET which keeps track of your biological replicates
 samples: ".test/sra_reads/config/samples.tsv"

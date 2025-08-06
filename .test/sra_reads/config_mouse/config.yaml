@@ -1,0 +1,121 @@
+# .test/sra_reads/config/config.yaml
+# Configuration for testing with mouse C2C12 RNA-Seq data from BioProject PRJNA882114
+
+# Path to your SAMPLE SHEET which keeps track of your biological replicates
+samples: ".test/sra_reads/config/samples.tsv"
+
+# Path to your sequencing UNIT SHEET which keeps track of your technical
+# replicates (e.g. sequencer lanes or resequencing of the same biological
+# sample)
+units: ".test/sra_reads/config/units.tsv"
+
+# Reference genome configuration for mouse
+ref_assembly:
+  source: "Ensembl"
+  accession: "GCA_000001635.9"
+  name: "GRCm39"
+  release: "109"
+  species: "Mus_musculus"
+
+# Workflow parameters
+params:
+  sra_tools:
+    subsample:
+      # Enable subsampling for CI/CD testing on GitHub runners
+      enabled: true
+      # Number of reads to download (suitable for GitHub runner testing)
+      num_reads: 10000
+      # Number of reads to skip before starting download
+      skip_reads: 0
+
+# Differential expression analysis
+diffexp:
+  tximeta:
+    factors:
+      - name: "treatment"
+        reference_level: "control"
+    extra: ""
+  deseq2:
+    analyses:
+      - name: "scaffold_comparisons"
+        deseqdataset:
+          formula: "~ treatment"
+          min_counts: 10
+          extra: ""
+          threads: 1
+        wald:
+          deseq_extra: ""
+          shrink_extra: "type = 'apeglm'"
+          results_extra: "alpha = 0.005"
+          threads: 1
+        contrasts:
+          - name: "flat_vs_control"
+            elements: ["treatment", "flat", "control"]
+          - name: "microstructured_vs_control"
+            elements: ["treatment", "microstructured", "control"]
+          - name: "flat_vs_microstructured"
+            elements: ["treatment", "flat", "microstructured"]
+    transform:
+      method: "rlog"
+      extra: ""
+
+# Enrichment analysis
+enrichment:
+  padj_cutoff: 0.05
+  # Mouse muscle-specific genes for C2C12 cell culture analysis
+  targets: ["Actb", "Gapdh", "Myod1", "Myog", "Myf5", "Pax3", "Pax7"]
+  clusterprofiler:
+    gsea:
+      gseGO:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+      gseKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    ora:
+      enrichGO:
+        extra: "pvalueCutoff = 0.05"
+      enrichKEGG:
+        extra: "pvalueCutoff = 0.05"
+    wikipathways:
+      enabled: true
+      enrichWP:
+        extra: "pvalueCutoff = 0.05"
+      gseWP:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    kegg_module:
+      enabled: true
+      enrichMKEGG:
+        extra: "pvalueCutoff = 0.05"
+      gseMKEGG:
+        extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  msigdb:
+    enabled: true
+    collections:
+      - "H" # Hallmark gene sets
+      - "C2" # Curated gene sets
+      - "C5" # Ontology gene sets
+    custom_gmt_files: []
+    ora:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    gsea:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+  spia:
+    enabled: true
+    extra: "beta = NULL, verbose = TRUE, plots = FALSE"
+  harmonizome:
+    enabled: true
+    # List of Harmonizome datasets and gene sets to analyze
+    datasets:
+      - name: "GTEx Tissue Gene Expression Profiles"
+        gene_sets:
+          - "Muscle"
+          - "Adipose Tissue"
+          - "Skin"
+      - name: "BioGPS Human Cell Type and Tissue Gene Expression Profiles"
+        gene_sets:
+          - "Adipocyte"
+    # Parameters for ORA analysis
+    ora:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+    # Parameters for GSEA analysis
+    gsea:
+      extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
