@@ -271,11 +271,7 @@ enrichment:
   #
   # For more information, see: https://maayanlab.cloud/Harmonizome/
   harmonizome:
-    enabled: true
-    # Use mock data for testing (GitHub Actions, CI/CD)
-    # Set to true for testing with Bos taurus gene sets
-    use_mock_data: true # Set to true for testing
-    mock_species: "Saccharomyces cerevisiae" # Species for mock data (matches test data)
+    enabled: false
     # List of Harmonizome datasets and gene sets to analyze
     datasets:
       - name: "GTEx Tissue Gene Expression Profiles"

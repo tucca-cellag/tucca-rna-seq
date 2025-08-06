@@ -196,14 +196,6 @@ properties:
             type: boolean
             description: "Enable Harmonizome analysis"
             default: false
-          use_mock_data:
-            type: boolean
-            description: "Use mock data for testing (uses MSigDB gene sets)"
-            default: false
-          mock_species:
-            type: string
-            description: "Species for mock data (e.g., 'Bos taurus', 'Homo sapiens')"
-            default: "Bos taurus"
           datasets:
             type: array
             description: "List of Harmonizome datasets and gene sets to analyze"
@@ -318,6 +310,23 @@ properties:
         properties:
           vdb_config_ra_path:
             type: string
+          subsample:
+            type: object
+            description: "Configuration for subsampling SRA data for testing purposes"
+            properties:
+              enabled:
+                type: boolean
+                description: "Whether to use subsampling instead of full download"
+                default: false
+              num_reads:
+                type: integer
+                description: "Number of reads to download for subsampling"
+                default: 10000
+              skip_reads:
+                type: integer
+                description: "Number of reads to skip before starting download"
+                default: 0
+            required: [enabled, num_reads, skip_reads]
 
 required:
   - samples

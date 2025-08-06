@@ -26,123 +26,6 @@ process_gene_set_wrapper <- function(genes, set_name, orgdb_pkg_name) {
   base::get("process_gene_set", envir = .GlobalEnv)(genes, set_name, orgdb_pkg_name)
 }
 
-#' Create mock Harmonizome data for testing
-#'
-#' This function creates mock Harmonizome gene sets using MSigDB data
-#' for testing purposes, particularly useful for CI/CD pipelines.
-#'
-#' @param species The species name (e.g., "Bos taurus", "Homo sapiens")
-#' @param collections MSigDB collections to use (default: "H" for Hallmarks)
-#' @param max_genes_per_set Maximum genes per gene set (default: 50)
-#'
-#' @return A list of mock Harmonizome gene set data
-create_mock_harmonizome_data <- function(species = "Saccharomyces cerevisiae",
-                                         collections = "H",
-                                         max_genes_per_set = 50) {
-  base::message("Creating mock Harmonizome data for species: ", species)
-
-  # Check if msigdbr is available
-  if (!requireNamespace("msigdbr", quietly = TRUE)) {
-    base::stop("msigdbr package is required for mock Harmonizome data")
-  }
-
-  # Get MSigDB gene sets for the species
-  msig_data <- msigdbr::msigdbr(species = species, category = collections)
-
-  if (base::nrow(msig_data) == 0) {
-    base::stop("No MSigDB gene sets found for species: ", species)
-  }
-
-  # Create mock Harmonizome format
-  mock_data <- base::list()
-
-  # Get unique gene sets
-  unique_sets <- base::unique(msig_data$gs_name)
-
-  for (set_name in unique_sets[1:min(5, base::length(unique_sets))]) { # Limit to 5 sets for testing
-    set_genes <- msig_data$gene_symbol[msig_data$gs_name == set_name]
-
-    # Limit genes per set for testing
-    if (base::length(set_genes) > max_genes_per_set) {
-      set_genes <- set_genes[1:max_genes_per_set]
-    }
-
-    # Create mock Harmonizome format
-    mock_data[[set_name]] <- base::list(
-      dataset = "Mock MSigDB Dataset",
-      gene_set = set_name,
-      genes = set_genes,
-      count = base::length(set_genes),
-      url = "https://www.gsea-msigdb.org/",
-      timestamp = base::Sys.time()
-    )
-  }
-
-  base::message("Created ", base::length(mock_data), " mock gene sets")
-  return(mock_data)
-}
-
-#' Create custom yeast gene sets for testing
-#'
-#' This function creates custom gene sets using common yeast genes
-#' that are likely to be found in test data.
-#'
-#' @param max_genes_per_set Maximum genes per gene set (default: 20)
-#'
-#' @return A list of custom yeast gene set data
-create_custom_yeast_gene_sets <- function(max_genes_per_set = 20) {
-  base::message("Creating custom yeast gene sets for testing")
-
-  # Common yeast genes that are likely to be in test data
-  yeast_gene_sets <- base::list(
-    "HALLMARK_GLYCOLYSIS" = base::c(
-      "TEF1", "TEF2", "PGK1", "ENO1", "ENO2", "PYK1", "PYK2",
-      "TDH1", "TDH2", "TDH3", "GPM1", "GPM2", "GPM3", "CDC19"
-    ),
-    "HALLMARK_AMINO_ACID_METABOLISM" = base::c(
-      "HIS1", "HIS2", "HIS3", "HIS4", "HIS5", "HIS6", "HIS7",
-      "LEU1", "LEU2", "LEU4", "LEU9", "ARG1", "ARG3", "ARG4"
-    ),
-    "HALLMARK_RIBOSOME" = base::c(
-      "RPL1A", "RPL1B", "RPL2A", "RPL2B", "RPL3", "RPL4A", "RPL4B",
-      "RPS1A", "RPS1B", "RPS2", "RPS3", "RPS4A", "RPS4B", "RPS5"
-    ),
-    "HALLMARK_STRESS_RESPONSE" = base::c(
-      "HSP12", "HSP26", "HSP30", "HSP42", "HSP78", "HSP82", "HSP104",
-      "CTT1", "SOD1", "SOD2", "GPX1", "GPX2", "TRX1", "TRX2"
-    ),
-    "HALLMARK_CELL_CYCLE" = base::c(
-      "CLN1", "CLN2", "CLN3", "CLB1", "CLB2", "CLB3", "CLB4",
-      "CDC28", "CDC20", "CDC14", "SWI4", "SWI6", "MBP1", "SWE1"
-    )
-  )
-
-  # Create mock Harmonizome format
-  mock_data <- base::list()
-
-  for (set_name in base::names(yeast_gene_sets)) {
-    genes <- yeast_gene_sets[[set_name]]
-
-    # Limit genes per set for testing
-    if (base::length(genes) > max_genes_per_set) {
-      genes <- genes[1:max_genes_per_set]
-    }
-
-    # Create mock Harmonizome format
-    mock_data[[set_name]] <- base::list(
-      dataset = "Custom Yeast Gene Sets",
-      gene_set = set_name,
-      genes = genes,
-      count = base::length(genes),
-      url = "https://www.yeastgenome.org/",
-      timestamp = base::Sys.time()
-    )
-  }
-
-  base::message("Created ", base::length(mock_data), " custom yeast gene sets")
-  return(mock_data)
-}
-
 #' Setup Harmonizome Python API
 #'
 #' This function sets up the Harmonizome Python API using reticulate.
@@ -410,51 +293,36 @@ load_harmonizome_gene_sets <- function(harmonizome_config, orgdb_pkg_name) {
     return(NULL)
   }
 
-  # Check if we should use mock data for testing
-  use_mock_data <- harmonizome_config$use_mock_data %||% FALSE
+  harmonizome_data <- base::list()
 
-  if (use_mock_data) {
-    base::message("Using mock Harmonizome data for testing")
-    species <- harmonizome_config$mock_species %||% "Saccharomyces cerevisiae"
+  # Process each configured dataset and gene set
+  for (dataset_config in harmonizome_config$datasets) {
+    dataset_name <- dataset_config$name
+    gene_sets <- dataset_config$gene_sets
 
-    # Use custom yeast gene sets for better testing
-    if (species == "Saccharomyces cerevisiae") {
-      harmonizome_data <- create_custom_yeast_gene_sets()
-    } else {
-      harmonizome_data <- create_mock_harmonizome_data(species = species)
-    }
-  } else {
-    harmonizome_data <- base::list()
+    base::message("Processing dataset: ", dataset_name)
 
-    # Process each configured dataset and gene set
-    for (dataset_config in harmonizome_config$datasets) {
-      dataset_name <- dataset_config$name
-      gene_sets <- dataset_config$gene_sets
+    for (gene_set_name in gene_sets) {
+      base::message("Processing gene set: ", gene_set_name)
 
-      base::message("Processing dataset: ", dataset_name)
-
-      for (gene_set_name in gene_sets) {
-        base::message("Processing gene set: ", gene_set_name)
-
-        # Try to load from cache first
-        cache_file <- base::file.path(
-          "resources/harmonizome",
-          base::paste0(
-            gene_set_name, "_",
-            base::gsub(" ", "_", dataset_name), ".rds"
-          )
+      # Try to load from cache first
+      cache_file <- base::file.path(
+        "resources/harmonizome",
+        base::paste0(
+          gene_set_name, "_",
+          base::gsub(" ", "_", dataset_name), ".rds"
         )
+      )
 
-        if (base::file.exists(cache_file)) {
-          base::message("Loading from cache: ", cache_file)
-          gene_set_data <- base::readRDS(cache_file)
-        } else {
-          # Get the gene set using the official API
-          gene_set_data <- get_harmonizome_gene_set(dataset_name, gene_set_name)
-        }
-
-        harmonizome_data[[gene_set_name]] <- gene_set_data
+      if (base::file.exists(cache_file)) {
+        base::message("Loading from cache: ", cache_file)
+        gene_set_data <- base::readRDS(cache_file)
+      } else {
+        # Get the gene set using the official API
+        gene_set_data <- get_harmonizome_gene_set(dataset_name, gene_set_name)
       }
+
+      harmonizome_data[[gene_set_name]] <- gene_set_data
     }
   }
 
