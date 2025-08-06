@@ -1,4 +1,5 @@
 sample_name	unit_name	sra	fq1	fq2
-A_Sc	lane1		.test/data/ngs-test-data/reads/a.scerevisiae.1.fq	.test/data/ngs-test-data/reads/a.scerevisiae.2.fq
-A_Sc	lane2		.test/data/ngs-test-data/reads/a.scerevisiae.1.fq	.test/data/ngs-test-data/reads/a.scerevisiae.2.fq
-B_Sc	lane1		.test/data/ngs-test-data/reads/b.scerevisiae.1.fq	.test/data/ngs-test-data/reads/b.scerevisiae.2.fq
+etoh60_1	lane1		.test/data/snakemake_data/yeast/reads/etoh60_1_1.fq	.test/data/snakemake_data/yeast/reads/etoh60_1_2.fq
+etoh60_2	lane1		.test/data/snakemake_data/yeast/reads/etoh60_2_1.fq	.test/data/snakemake_data/yeast/reads/etoh60_2_2.fq
+ref1	lane1		.test/data/snakemake_data/yeast/reads/ref1_1.fq	.test/data/snakemake_data/yeast/reads/ref1_2.fq
+ref2	lane1		.test/data/snakemake_data/yeast/reads/ref2_1.fq	.test/data/snakemake_data/yeast/reads/ref2_2.fq
