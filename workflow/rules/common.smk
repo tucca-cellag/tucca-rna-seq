@@ -229,6 +229,40 @@ def get_sra_filepath(accession: str, read: str) -> Path:
     return Path(f"data/sra_reads/{accession}_{read_num}.fastq")
 
 
+def is_sra_subsampling_enabled() -> bool:
+    """
+    Determines if SRA subsampling is enabled in the configuration.
+
+    Returns:
+        bool: True if subsampling is enabled, False otherwise.
+    """
+    return config["params"]["sra_tools"]["subsample"]["enabled"]
+
+
+def get_sra_subsample_params() -> dict:
+    """
+    Returns the subsampling parameters from the configuration.
+
+    Returns:
+        dict: Dictionary containing num_reads and skip_reads parameters.
+    """
+    return config["params"]["sra_tools"]["subsample"]
+
+
+def get_sra_download_rule_name() -> str:
+    """
+    Returns the name of the SRA download rule to use based on configuration.
+
+    Returns:
+        str: Either 'download_sra_pe_reads' or 'subsample_sra_pe_reads'
+    """
+    return (
+        "subsample_sra_pe_reads"
+        if is_sra_subsampling_enabled()
+        else "download_sra_pe_reads"
+    )
+
+
 ################################################################################
 #                      DESEQ2 MULTI-ANALYSIS HELPERS                           #
 #          Parses and provides access to DESeq2 analysis configurations        #

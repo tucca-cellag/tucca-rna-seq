@@ -12,6 +12,8 @@ rule configure_sra_tools:
         "../envs/sra_tools.yaml"
     shell:
         """
+        # Check SRA-tools version for compatibility
+        (fastq-dump --version) &> {log}
         (vdb-config --set {params.vdb_config_ra_path} --verbose) &> {log}
         """
 
@@ -48,6 +50,37 @@ rule download_sra_pe_reads:
         """
         (fasterq-dump ./data/sra_cache/{wildcards.accession} \
         -O ./data/sra_reads -e {threads} --split-files --verbose) &> {log}
+        """
+
+
+rule subsample_sra_pe_reads:
+    input:
+        "resources/sra_tools/sra_config_completed.done",
+        "data/sra_cache/{accession}/{accession}.sra",
+    output:
+        "data/sra_reads/{accession}_1.fastq",
+        "data/sra_reads/{accession}_2.fastq",
+    params:
+        num_reads=lambda wildcards: get_sra_subsample_params()["num_reads"],
+        skip_reads=lambda wildcards: get_sra_subsample_params()["skip_reads"],
+    log:
+        "logs/sra_tools/subsample/subsample_{accession}.log",
+    threads: 2
+    conda:
+        "../envs/sra_tools.yaml"
+    shell:
+        """
+        (fastq-dump ./data/sra_cache/{wildcards.accession} \
+        --skip {params.skip_reads} \
+        --readids \
+        --read-filter pass \
+        --dumpbase \
+        --clip \
+        --split-files \
+        --outdir ./data/sra_reads \
+        -N {params.num_reads} \
+        --verbose \
+        --force) &> {log}
         """
 
 
