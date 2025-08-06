@@ -151,7 +151,7 @@ jobs:
           name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
       - name: Upload Snakemake results for Rmd tests
-        if: success() && (matrix.scenario.name == 'LR_Ens_Comp_Conda' || matrix.scenario.name == 'LR_Ref_Comp_Conda')
+        if: success() && (matrix.scenario.name == 'LR_Ens_Comp_Conda' || matrix.scenario.name == 'LR_Ref_Comp_Conda' || matrix.scenario.name == 'LR_Ens_GMT_Conda')
         uses: actions/upload-artifact@v4
         with:
           name: snakemake-results-${{ matrix.scenario.name }}-${{ matrix.version.name }}
