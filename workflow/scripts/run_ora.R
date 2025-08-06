@@ -69,7 +69,7 @@ ora_results <- base::list()
 
 # Check once if the OrgDb has SYMBOL mappings to avoid repeated lookups
 orgdb_obj <- base::get(org_db_pkg)
-has_symbol_support <- "SYMBOL" %in% AnnotationDbi::columns(orgdb_obj)
+has_symbol_support <- "SYMBOL" %in% AnnotationDbi::keytypes(orgdb_obj)
 
 # ORA for Gene Ontology (GO)
 base::message("Running ORA for GO (BP)...")
@@ -226,24 +226,16 @@ if (enrichment_params$msigdb$enabled) {
       for (gmt_file in base::names(gmt_data)) {
         base::message("Running ORA for custom GMT file: ", gmt_file)
 
-        # Convert to TERM2GENE format
-        term2gene_list <- base::list()
-        term2name_list <- base::list()
+        # Use prepare_enrichment_data function to create TERM2GENE and TERM2NAME
+        enrichment_data <- prepare_enrichment_data(gmt_data[[gmt_file]], "gmt")
+        term2gene <- enrichment_data$TERM2GENE
+        term2name <- enrichment_data$TERM2NAME
 
-        for (geneset_name in base::names(gmt_data[[gmt_file]])) {
-          genes <- gmt_data[[gmt_file]][[geneset_name]]
-          term2gene_list[[geneset_name]] <- base::data.frame(
-            term = geneset_name,
-            gene = genes
-          )
-          term2name_list[[geneset_name]] <- base::data.frame(
-            term = geneset_name,
-            name = geneset_name
-          )
+        # Check if we have valid data
+        if (base::nrow(term2gene) == 0) {
+          base::message("Warning: No valid gene sets found in ", gmt_file, ". Skipping ORA.")
+          next
         }
-
-        term2gene <- base::do.call(rbind, term2gene_list)
-        term2name <- base::do.call(rbind, term2name_list)
 
         # Run enricher
         enricher_defaults <- "gene = significant_genes, universe = universe_genes"
