@@ -206,57 +206,53 @@ if (enrichment_params$msigdb$enabled) {
     if (base::length(enrichment_params$msigdb$custom_gmt_files) > 0) {
       base::message("Processing custom GMT files for GSEA...")
 
-      for (gmt_file in enrichment_params$msigdb$custom_gmt_files) {
-        if (base::file.exists(gmt_file)) {
-          base::message("Running GSEA for custom GMT file: ", gmt_file)
+      # Load GMT files with gene symbol conversion
+      gmt_data <- load_custom_gmt_files(enrichment_params$msigdb$custom_gmt_files, org_db_pkg)
 
-          # Load GMT file
-          gmt_data <- clusterProfiler::read.gmt(gmt_file)
+      for (gmt_file in base::names(gmt_data)) {
+        base::message("Running GSEA for custom GMT file: ", gmt_file)
 
-          # Convert to TERM2GENE format
-          term2gene_list <- base::list()
-          term2name_list <- base::list()
+        # Convert to TERM2GENE format
+        term2gene_list <- base::list()
+        term2name_list <- base::list()
 
-          for (geneset_name in base::names(gmt_data)) {
-            genes <- gmt_data[[geneset_name]]
-            term2gene_list[[geneset_name]] <- base::data.frame(
-              term = geneset_name,
-              gene = genes
-            )
-            term2name_list[[geneset_name]] <- base::data.frame(
-              term = geneset_name,
-              name = geneset_name
-            )
-          }
-
-          term2gene <- base::do.call(rbind, term2gene_list)
-          term2name <- base::do.call(rbind, term2name_list)
-
-          # Run GSEA
-          gsea_defaults <- "geneList = genelist_fc_sort"
-          gsea_final_args <- base::paste(
-            gsea_defaults,
-            "TERM2GENE = term2gene",
-            "TERM2NAME = term2name",
-            enrichment_params$msigdb$gsea$extra,
-            sep = ", "
+        for (geneset_name in base::names(gmt_data[[gmt_file]])) {
+          genes <- gmt_data[[gmt_file]][[geneset_name]]
+          term2gene_list[[geneset_name]] <- base::data.frame(
+            term = geneset_name,
+            gene = genes
           )
-          gsea_cmd <- base::paste0(
-            "clusterProfiler::GSEA(", gsea_final_args, ")"
+          term2name_list[[geneset_name]] <- base::data.frame(
+            term = geneset_name,
+            name = geneset_name
           )
-          base::message("Command: ", gsea_cmd)
-
-          gmt_res <- base::eval(base::parse(text = gsea_cmd))
-
-          # Create a safe name for the result
-          gmt_name <- base::gsub("^.*/", "", base::gsub("\\.gmt$", "", gmt_file))
-          gsea_results[[paste0("CustomGMT_", gmt_name)]] <- safely_set_readable(
-            gmt_res, orgdb_obj,
-            has_symbol_support
-          )
-        } else {
-          base::message("Warning: Custom GMT file not found: ", gmt_file)
         }
+
+        term2gene <- base::do.call(rbind, term2gene_list)
+        term2name <- base::do.call(rbind, term2name_list)
+
+        # Run GSEA
+        gsea_defaults <- "geneList = genelist_fc_sort"
+        gsea_final_args <- base::paste(
+          gsea_defaults,
+          "TERM2GENE = term2gene",
+          "TERM2NAME = term2name",
+          enrichment_params$msigdb$gsea$extra,
+          sep = ", "
+        )
+        gsea_cmd <- base::paste0(
+          "clusterProfiler::GSEA(", gsea_final_args, ")"
+        )
+        base::message("Command: ", gsea_cmd)
+
+        gmt_res <- base::eval(base::parse(text = gsea_cmd))
+
+        # Create a safe name for the result
+        gmt_name <- base::gsub("^.*/", "", base::gsub("\\.gmt$", "", gmt_file))
+        gsea_results[[paste0("CustomGMT_", gmt_name)]] <- safely_set_readable(
+          gmt_res, orgdb_obj,
+          has_symbol_support
+        )
       }
     }
   }

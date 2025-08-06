@@ -220,57 +220,53 @@ if (enrichment_params$msigdb$enabled) {
     if (base::length(enrichment_params$msigdb$custom_gmt_files) > 0) {
       base::message("Processing custom GMT files for ORA...")
 
-      for (gmt_file in enrichment_params$msigdb$custom_gmt_files) {
-        if (base::file.exists(gmt_file)) {
-          base::message("Running ORA for custom GMT file: ", gmt_file)
+      # Load GMT files with gene symbol conversion
+      gmt_data <- load_custom_gmt_files(enrichment_params$msigdb$custom_gmt_files, org_db_pkg)
 
-          # Load GMT file
-          gmt_data <- clusterProfiler::read.gmt(gmt_file)
+      for (gmt_file in base::names(gmt_data)) {
+        base::message("Running ORA for custom GMT file: ", gmt_file)
 
-          # Convert to TERM2GENE format
-          term2gene_list <- base::list()
-          term2name_list <- base::list()
+        # Convert to TERM2GENE format
+        term2gene_list <- base::list()
+        term2name_list <- base::list()
 
-          for (geneset_name in base::names(gmt_data)) {
-            genes <- gmt_data[[geneset_name]]
-            term2gene_list[[geneset_name]] <- base::data.frame(
-              term = geneset_name,
-              gene = genes
-            )
-            term2name_list[[geneset_name]] <- base::data.frame(
-              term = geneset_name,
-              name = geneset_name
-            )
-          }
-
-          term2gene <- base::do.call(rbind, term2gene_list)
-          term2name <- base::do.call(rbind, term2name_list)
-
-          # Run enricher
-          enricher_defaults <- "gene = significant_genes, universe = universe_genes"
-          enricher_final_args <- base::paste(
-            enricher_defaults,
-            "TERM2GENE = term2gene",
-            "TERM2NAME = term2name",
-            enrichment_params$msigdb$ora$extra,
-            sep = ", "
+        for (geneset_name in base::names(gmt_data[[gmt_file]])) {
+          genes <- gmt_data[[gmt_file]][[geneset_name]]
+          term2gene_list[[geneset_name]] <- base::data.frame(
+            term = geneset_name,
+            gene = genes
           )
-          enricher_cmd <- base::paste0(
-            "clusterProfiler::enricher(", enricher_final_args, ")"
+          term2name_list[[geneset_name]] <- base::data.frame(
+            term = geneset_name,
+            name = geneset_name
           )
-          base::message("Command: ", enricher_cmd)
-
-          gmt_res <- base::eval(base::parse(text = enricher_cmd))
-
-          # Create a safe name for the result
-          gmt_name <- base::gsub("^.*/", "", base::gsub("\\.gmt$", "", gmt_file))
-          ora_results[[paste0("CustomGMT_", gmt_name)]] <- safely_set_readable(
-            gmt_res, orgdb_obj,
-            has_symbol_support
-          )
-        } else {
-          base::message("Warning: Custom GMT file not found: ", gmt_file)
         }
+
+        term2gene <- base::do.call(rbind, term2gene_list)
+        term2name <- base::do.call(rbind, term2name_list)
+
+        # Run enricher
+        enricher_defaults <- "gene = significant_genes, universe = universe_genes"
+        enricher_final_args <- base::paste(
+          enricher_defaults,
+          "TERM2GENE = term2gene",
+          "TERM2NAME = term2name",
+          enrichment_params$msigdb$ora$extra,
+          sep = ", "
+        )
+        enricher_cmd <- base::paste0(
+          "clusterProfiler::enricher(", enricher_final_args, ")"
+        )
+        base::message("Command: ", enricher_cmd)
+
+        gmt_res <- base::eval(base::parse(text = enricher_cmd))
+
+        # Create a safe name for the result
+        gmt_name <- base::gsub("^.*/", "", base::gsub("\\.gmt$", "", gmt_file))
+        ora_results[[paste0("CustomGMT_", gmt_name)]] <- safely_set_readable(
+          gmt_res, orgdb_obj,
+          has_symbol_support
+        )
       }
     }
   }

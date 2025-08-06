@@ -140,6 +140,145 @@ log_script_completion <- function(script_name) {
   base::date()
 }
 
+#' Check if genes appear to be symbols (contain letters)
+#'
+#' @param genes Vector of gene identifiers
+#' @return Logical indicating if genes look like symbols
+is_symbol_like <- function(genes) {
+  base::length(genes) > 0 && base::any(base::grepl("[A-Za-z]", genes))
+}
+
+#' Find the best alternative keytype for gene ID conversion
+#'
+#' @param orgdb_obj The OrgDb object
+#' @param genes Vector of gene identifiers to convert
+#' @return List with best conversion results or NULL if no conversion possible
+find_best_alternative_keytype <- function(orgdb_obj, genes) {
+  # Try alternative keytypes that might be equivalent to SYMBOL
+  alternative_keytypes <- c("GENENAME", "ORF", "GENE", "GENEID")
+  available_keytypes <- AnnotationDbi::keytypes(orgdb_obj)
+  available_alternatives <- alternative_keytypes[alternative_keytypes %in% available_keytypes]
+
+  if (base::length(available_alternatives) == 0) {
+    return(NULL)
+  }
+
+  base::message("Found alternative keytypes: ", base::paste(available_alternatives, collapse = ", "))
+
+  # Try all available alternatives and find the best one
+  best_conversion <- NULL
+  best_success_rate <- 0
+  best_keytype <- NULL
+
+  for (keytype in available_alternatives) {
+    base::message("Trying conversion with keytype: ", keytype)
+
+    tryCatch(
+      {
+        conversion <- clusterProfiler::bitr(genes,
+          fromType = keytype,
+          toType = "ENTREZID",
+          OrgDb = orgdb_obj
+        )
+
+        # Remove NA values and duplicates
+        conversion <- conversion[!base::is.na(conversion$ENTREZID), ]
+        conversion <- conversion[!base::duplicated(conversion[[keytype]]), ]
+
+        # Calculate success rate
+        success_rate <- base::length(conversion$ENTREZID) / base::length(genes)
+        base::message("Success rate for ", keytype, ": ", base::round(success_rate * 100, 1), "%")
+
+        # Keep the conversion with the highest success rate
+        if (success_rate > best_success_rate) {
+          best_conversion <- conversion$ENTREZID
+          best_success_rate <- success_rate
+          best_keytype <- keytype
+        }
+      },
+      error = function(e) {
+        base::message("Warning: Conversion failed for keytype ", keytype, ": ", e$message)
+      }
+    )
+  }
+
+  if (!base::is.null(best_conversion) && best_success_rate > 0) {
+    base::message(
+      "Using best conversion from keytype: ", best_keytype, " (",
+      base::round(best_success_rate * 100, 1), "% success rate)"
+    )
+    return(list(converted_genes = best_conversion, keytype = best_keytype))
+  }
+
+  return(NULL)
+}
+
+#' Convert gene symbols to Entrez IDs using the best available method
+#'
+#' @param genes Vector of gene identifiers
+#' @param orgdb_pkg_name Name of the OrgDb package
+#' @param set_name Name of the gene set (for logging)
+#' @return Vector of converted Entrez IDs or original genes if conversion fails
+convert_genes_to_entrez <- function(genes, orgdb_pkg_name, set_name) {
+  base::message("Converting gene symbols to Entrez IDs for set: ", set_name)
+
+  tryCatch(
+    {
+      # Use the OrgDb package that's already been determined by the workflow
+      orgdb_obj <- base::get(orgdb_pkg_name)
+
+      # Check if SYMBOL keytype is available in this OrgDb
+      available_keytypes <- AnnotationDbi::keytypes(orgdb_obj)
+      if (!"SYMBOL" %in% available_keytypes) {
+        base::message(
+          "Warning: SYMBOL keytype not available in ", orgdb_pkg_name,
+          ". Available keytypes: ", base::paste(available_keytypes, collapse = ", ")
+        )
+
+        # Try alternative keytypes
+        best_result <- find_best_alternative_keytype(orgdb_obj, genes)
+        if (!base::is.null(best_result)) {
+          return(best_result$converted_genes)
+        } else {
+          base::message("No successful conversions found. Skipping gene symbol conversion for set: ", set_name)
+          return(genes)
+        }
+      }
+
+      # Use bitr() for conversion with SYMBOL
+      conversion <- clusterProfiler::bitr(genes,
+        fromType = "SYMBOL",
+        toType = "ENTREZID",
+        OrgDb = orgdb_obj
+      )
+
+      # Remove NA values and duplicates
+      conversion <- conversion[!base::is.na(conversion$ENTREZID), ]
+      conversion <- conversion[!base::duplicated(conversion$SYMBOL), ]
+
+      conversion$ENTREZID
+    },
+    error = function(e) {
+      base::message("Warning: Could not convert gene symbols to Entrez IDs: ", e$message)
+      genes # Return original genes if conversion fails
+    }
+  )
+}
+
+#' Process a single gene set for ID conversion
+#'
+#' @param genes Vector of gene identifiers
+#' @param set_name Name of the gene set
+#' @param orgdb_pkg_name Name of the OrgDb package
+#' @return Vector of processed gene identifiers
+process_gene_set <- function(genes, set_name, orgdb_pkg_name) {
+  # Check if genes look like symbols (contain letters)
+  if (is_symbol_like(genes)) {
+    return(convert_genes_to_entrez(genes, orgdb_pkg_name, set_name))
+  }
+  return(genes)
+}
+
 #' Validate MSigDB species support
 #'
 #' This function checks if the specified species is supported by MSigDB
@@ -208,11 +347,13 @@ load_msigdb_genesets <- function(species, collections) {
 #' Load custom GMT files
 #'
 #' This function loads custom gene set files in GMT format using clusterProfiler.
+#' It handles gene symbol to Entrez ID conversion if needed.
 #'
 #' @param gmt_files Vector of paths to GMT files
+#' @param orgdb_pkg_name The name of the OrgDb package to use for ID conversion
 #'
 #' @return A list of gene set data.frames, one per file
-load_custom_gmt_files <- function(gmt_files) {
+load_custom_gmt_files <- function(gmt_files, orgdb_pkg_name) {
   base::message("Loading custom GMT files: ", base::paste(gmt_files, collapse = ", "))
 
   gmt_results <- base::list()
@@ -221,6 +362,13 @@ load_custom_gmt_files <- function(gmt_files) {
     if (base::file.exists(gmt_file)) {
       base::message("Loading GMT file: ", gmt_file)
       gmt_data <- clusterProfiler::read.gmt(gmt_file)
+
+      # Process each gene set for ID conversion
+      for (set_name in base::names(gmt_data)) {
+        genes <- gmt_data[[set_name]]
+        gmt_data[[set_name]] <- process_gene_set(genes, set_name, orgdb_pkg_name)
+      }
+
       gmt_results[[gmt_file]] <- gmt_data
       base::message("Loaded ", base::length(gmt_data), " gene sets from ", gmt_file)
     } else {
