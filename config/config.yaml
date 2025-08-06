@@ -215,8 +215,21 @@ enrichment:
       - "C5" # Ontology gene sets
     # Custom GMT files (optional)
     # Place your GMT files in resources/gmt/ and reference them here
+    #
+    # To use custom gene sets:
+    # 1. Place your GMT file in the resources/gmt/ directory
+    # 2. Uncomment the line below and replace "example_genesets.gmt" with your filename
+    # 3. Ensure your GMT file follows the standard format (see resources/gmt/README.md)
+    # 4. Make sure your gene IDs match the format used in your differential expression analysis
+    #
+    # Example GMT file format:
+    # GENE_SET_1  Description of gene set 1 GENE1 GENE2 GENE3
+    # GENE_SET_2  Description of gene set 2 GENE4 GENE5 GENE6 GENE7
+    #
+    # Available custom gene sets:
+    # - muscle_genesets.gmt: 1,517 muscle-related gene sets (see resources/gmt/README.md)
     custom_gmt_files:
-      - "resources/gmt/muscle_genesets.gmt"
+    #  - "resources/gmt/example_genesets.gmt"
     # Parameters for ORA analysis
     ora:
       extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
