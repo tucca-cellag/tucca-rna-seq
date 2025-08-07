@@ -84,7 +84,7 @@ rule subsample_sra_pe_reads:
         --split-files \
         --outdir ./data/sra_reads \
         -N {params.num_reads} \
-        --verbose \
+        -v \
         --force) &> {log}
         """
 
