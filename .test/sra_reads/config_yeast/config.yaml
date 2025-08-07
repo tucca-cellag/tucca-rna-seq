@@ -8,3 +8,14 @@ samples: ".test/sra_reads/config_yeast/samples.tsv"
 # replicates (e.g. sequencer lanes or resequencing of the same biological
 # sample)
 units: ".test/sra_reads/config_yeast/units.tsv"
+
+# Workflow parameters
+params:
+  sra_tools:
+    vdb_config_ra_path: "/repository/user/main/remote_access=true"
+    subsample:
+      # Disable subsampling for yeast (no subsampling needed)
+      enabled: false
+      # Default values (not used when enabled: false)
+      num_reads: 10000
+      skip_reads: 0
