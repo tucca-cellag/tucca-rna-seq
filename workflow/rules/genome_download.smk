@@ -77,21 +77,12 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
             )
         shell:
             """
-            # Check if chromosome filtering is requested
-            if [ -n "{params.chromosome}" ]; then
-                echo "Downloading single chromosome: {params.chromosome}"
-                (datasets download genome accession {params.genome_asc} \
-                    --include gtf,rna,genome,seq-report \
-                    --chromosomes {params.chromosome} \
-                    --api-key {params.api_key} \
-                    --filename {output}) &> {log}
-            else
-                echo "Downloading full genome"
-                (datasets download genome accession {params.genome_asc} \
-                    --include gtf,rna,genome,seq-report \
-                    --api-key {params.api_key} \
-                    --filename {output}) &> {log}
-            fi
+            # RefSeq downloads always get full genome (single chromosome not supported for alignment)
+            echo "Downloading full genome for RefSeq"
+            (datasets download genome accession {params.genome_asc} \
+                --include gtf,rna,genome,seq-report \
+                --api-key {params.api_key} \
+                --filename {output}) &> {log}
             """
 
     rule unzip_genome:
