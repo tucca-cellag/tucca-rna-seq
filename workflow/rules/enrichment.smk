@@ -83,6 +83,11 @@ if config["enrichment"]["spia"]["enabled"]:
 rule clusterprofiler_gsea:
     input:
         unpack(get_enrichment_deps),
+        msigdb_flag=lambda wildcards: (
+            "resources/msigdb/msigdb_loaded.flag"
+            if config["enrichment"]["msigdb"]["enabled"]
+            else "resources/msigdb/msigdb_disabled.flag"
+        ),
     output:
         gsea_rds="resources/enrichment/{analysis}/{contrast}/gsea_results.RDS",
     params:
@@ -101,6 +106,11 @@ rule clusterprofiler_gsea:
 rule clusterprofiler_ora:
     input:
         unpack(get_enrichment_deps),
+        msigdb_flag=lambda wildcards: (
+            "resources/msigdb/msigdb_loaded.flag"
+            if config["enrichment"]["msigdb"]["enabled"]
+            else "resources/msigdb/msigdb_disabled.flag"
+        ),
     output:
         ora_rds="resources/enrichment/{analysis}/{contrast}/ora_results.RDS",
     params:
@@ -137,6 +147,39 @@ if config["enrichment"]["spia"]["enabled"]:
             contrast="[^/]+",
         script:
             "../scripts/run_spia.R"
+
+
+# Create flag indicating if MSigDB is enabled
+rule create_msigdb_flag:
+    output:
+        branch(
+            config["enrichment"]["msigdb"]["enabled"],
+            then="resources/msigdb/msigdb_enabled.flag",
+            otherwise="resources/msigdb/msigdb_disabled.flag",
+        ),
+    log:
+        "logs/enrichment/create_msigdb_flag.log",
+    shell:
+        """
+        touch {output}
+        """
+
+
+# Pre-load MSigDB data to prevent race conditions during concurrent enrichment analysis
+rule preload_msigdb:
+    input:
+        "resources/msigdb/msigdb_enabled.flag",
+    output:
+        "resources/msigdb/msigdb_loaded.flag",
+    params:
+        species=lambda wildcards: config["ref_assembly"]["species"],
+        collections=lambda wildcards: config["enrichment"]["msigdb"]["collections"],
+    log:
+        "logs/enrichment/preload_msigdb.log",
+    conda:
+        "../envs/r_env.yaml"
+    script:
+        "../scripts/preload_msigdb.R"
 
 
 rule all_enrichment_analyses:
