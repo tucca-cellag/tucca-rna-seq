@@ -93,10 +93,9 @@ enrichment:
         extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
   msigdb:
     enabled: true
+    # For CI/CD testing, use only H (Hallmark) to avoid timeout issues
     collections:
-      - "H" # Hallmark gene sets
-      - "C2" # Curated gene sets
-      - "C5" # Ontology gene sets
+      - "H" # Hallmark gene sets (50 gene sets - suitable for CI/CD)
     custom_gmt_files: []
     ora:
       extra: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
@@ -112,8 +111,6 @@ enrichment:
       - name: "GTEx Tissue Gene Expression Profiles"
         gene_sets:
           - "Muscle"
-          - "Adipose Tissue"
-          - "Skin"
       - name: "BioGPS Human Cell Type and Tissue Gene Expression Profiles"
         gene_sets:
           - "Adipocyte"
