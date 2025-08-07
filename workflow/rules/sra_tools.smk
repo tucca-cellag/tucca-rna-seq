@@ -83,7 +83,10 @@ rule subsample_sra_pe_reads:
         --clip \
         --split-3 \
         --outdir ./data/sra_reads \
-        -v) &> {log}
+        -v && \
+        # Rename files to match expected output names
+        mv ./data/sra_reads/{wildcards.accession}_pass_1.fastq ./data/sra_reads/{wildcards.accession}_1.fastq && \
+        mv ./data/sra_reads/{wildcards.accession}_pass_2.fastq ./data/sra_reads/{wildcards.accession}_2.fastq) &> {log}
         """
 
 
