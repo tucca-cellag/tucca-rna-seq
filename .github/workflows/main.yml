@@ -75,10 +75,16 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Conda
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Conda
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: false
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Conda
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - Ensembl (complex config)
@@ -151,7 +157,7 @@ jobs:
           name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
       - name: Upload Snakemake results for Rmd tests
-        if: success() && (matrix.scenario.name == 'LR_Ens_Comp_Conda' || matrix.scenario.name == 'LR_Ref_Comp_Conda' || matrix.scenario.name == 'LR_Ens_GMT_Conda')
+        if: success() && (matrix.scenario.name == 'LR_Ens_Comp_Conda' || matrix.scenario.name == 'LR_Ref_Comp_Conda' || matrix.scenario.name == 'LR_Ens_GMT_Conda' || matrix.scenario.name == 'SRA_Mouse_Subsampled_Conda')
         uses: actions/upload-artifact@v4
         with:
           name: snakemake-results-${{ matrix.scenario.name }}-${{ matrix.version.name }}
@@ -170,10 +176,16 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Singularity
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Singularity
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: true
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Singularity
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - Ensembl (complex config)
@@ -268,10 +280,16 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Apptainer
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Apptainer
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: true
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Apptainer
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - Ensembl (complex config)
@@ -367,6 +385,7 @@ jobs:
           - name: LR_Ens_Comp_Conda
           - name: LR_Ref_Comp_Conda
           - name: LR_Ens_GMT_Conda
+          - name: SRA_Mouse_Subsampled_Conda
         version:
           - name: stable
             snakemake: 8.27.1

@@ -16,6 +16,8 @@ ref_assembly:
   name: "GRCm39"
   release: "109"
   species: "Mus_musculus"
+  # Single chromosome for CI/CD testing to reduce resource usage
+  chromosome: ["19"]
 
 # Workflow parameters
 params:
