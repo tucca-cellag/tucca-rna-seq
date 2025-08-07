@@ -433,16 +433,33 @@ jobs:
         shell: Rscript {0}
         run: |
           if (!requireNamespace("rmarkdown", quietly = TRUE)) renv::install("rmarkdown")
-          rmarkdown::render(
-            "analysis/GeneTonic_playground.Rmd",
-            output_file = "GeneTonic_playground.html",
-            output_dir = "rmd_test_output"
-          )
-          rmarkdown::render(
-            "analysis/pcaExplorer_playground.Rmd",
-            output_file = "pcaExplorer_playground.html",
-            output_dir = "rmd_test_output"
-          )
+
+          # Choose appropriate Rmd files based on scenario
+          if ("${{ matrix.scenario.name }}" == "SRA_Mouse_Subsampled_Conda") {
+            # Use mouse-specific notebooks for mouse data
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/GeneTonic_playground_mouse.Rmd",
+              output_file = "GeneTonic_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/pcaExplorer_playground_mouse.Rmd",
+              output_file = "pcaExplorer_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
+          } else {
+            # Use default notebooks for other scenarios (yeast, local reads)
+            rmarkdown::render(
+              "analysis/GeneTonic_playground.Rmd",
+              output_file = "GeneTonic_playground.html",
+              output_dir = "rmd_test_output"
+            )
+            rmarkdown::render(
+              "analysis/pcaExplorer_playground.Rmd",
+              output_file = "pcaExplorer_playground.html",
+              output_dir = "rmd_test_output"
+            )
+          }
       - name: Upload Rmd test output
         if: always()
         uses: actions/upload-artifact@v4
