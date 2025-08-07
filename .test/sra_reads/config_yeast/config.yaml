@@ -17,5 +17,5 @@ params:
       # Disable subsampling for yeast (no subsampling needed)
       enabled: false
       # Default values (not used when enabled: false)
-      num_reads: 10000
-      skip_reads: 0
+      min_spot_id: 1
+      max_spot_id: 1000

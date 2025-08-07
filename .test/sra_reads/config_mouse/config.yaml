@@ -25,10 +25,9 @@ params:
     subsample:
       # Enable subsampling for CI/CD testing on GitHub runners
       enabled: true
-      # Number of reads to download (suitable for GitHub runner testing)
-      num_reads: 10000
-      # Number of reads to skip before starting download
-      skip_reads: 0
+      # Spot ID range for downloading subset of reads (suitable for GitHub runner testing)
+      min_spot_id: 1
+      max_spot_id: 10000
 
 # Differential expression analysis
 diffexp:
