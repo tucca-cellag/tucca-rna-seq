@@ -244,7 +244,7 @@ def get_sra_subsample_params() -> dict:
     Returns the subsampling parameters from the configuration.
 
     Returns:
-        dict: Dictionary containing num_reads and skip_reads parameters.
+        dict: Dictionary containing spot ID range parameters for SRA subsampling.
     """
     # Use .get() with default values to handle missing configuration
     sra_tools_config = config.get("params", {}).get("sra_tools", {})
@@ -253,8 +253,8 @@ def get_sra_subsample_params() -> dict:
     # Return default values if subsample config is missing
     return {
         "enabled": subsample_config.get("enabled", False),
-        "num_reads": subsample_config.get("num_reads", 10000),
-        "skip_reads": subsample_config.get("skip_reads", 0),
+        "min_spot_id": subsample_config.get("min_spot_id", 1),
+        "max_spot_id": subsample_config.get("max_spot_id", 1000),
     }
 
 

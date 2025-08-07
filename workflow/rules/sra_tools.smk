@@ -3,7 +3,7 @@
 
 # Rule order to resolve ambiguity between download and subsample rules
 # When subsampling is enabled, subsample_sra_pe_reads should take precedence
-ruleorder: subsample_sra_pe_reads > download_sra_pe_reads
+# and prefetch_sra should be skipped to avoid storage issues
 
 
 rule configure_sra_tools:
@@ -23,9 +23,26 @@ rule configure_sra_tools:
         """
 
 
-rule prefetch_sra:
+rule create_sra_flags:
     input:
         "resources/sra_tools/sra_config_completed.done",
+    output:
+        branch(
+            is_sra_subsampling_enabled(),
+            then="resources/sra_tools/subsampling_enabled.flag",
+            otherwise="resources/sra_tools/prefetch_enabled.flag",
+        ),
+    log:
+        "logs/sra_tools/create_flags.log",
+    shell:
+        """
+        touch {output}
+        """
+
+
+rule prefetch_sra:
+    input:
+        "resources/sra_tools/prefetch_enabled.flag",
     output:
         multiext("data/sra_cache/{accession}/", "{accession}.sra"),
     log:
@@ -35,13 +52,14 @@ rule prefetch_sra:
         "../envs/sra_tools.yaml"
     shell:
         """
+        # Only prefetch when subsampling is disabled to avoid storage issues
         (prefetch {wildcards.accession} -O ./data/sra_cache --verbose) &> {log}
         """
 
 
 rule download_sra_pe_reads:
     input:
-        "resources/sra_tools/sra_config_completed.done",
+        "resources/sra_tools/prefetch_enabled.flag",
         "data/sra_cache/{accession}/{accession}.sra",
     output:
         "data/sra_reads/{accession}_1.fastq",
@@ -60,14 +78,13 @@ rule download_sra_pe_reads:
 
 rule subsample_sra_pe_reads:
     input:
-        "resources/sra_tools/sra_config_completed.done",
-        "data/sra_cache/{accession}/{accession}.sra",
+        "resources/sra_tools/subsampling_enabled.flag",
     output:
         "data/sra_reads/{accession}_1.fastq",
         "data/sra_reads/{accession}_2.fastq",
     params:
-        num_reads=lambda wildcards: get_sra_subsample_params()["num_reads"],
-        skip_reads=lambda wildcards: get_sra_subsample_params()["skip_reads"],
+        min_spot_id=lambda wildcards: get_sra_subsample_params()["min_spot_id"],
+        max_spot_id=lambda wildcards: get_sra_subsample_params()["max_spot_id"],
     log:
         "logs/sra_tools/subsample/subsample_{accession}.log",
     threads: 2
@@ -75,18 +92,12 @@ rule subsample_sra_pe_reads:
         "../envs/sra_tools.yaml"
     shell:
         """
-        (fastq-dump ./data/sra_cache/{wildcards.accession} \
-        --minSpotId {params.skip_reads} \
-        -N {params.num_reads} \
-        --read-filter pass \
-        --readids \
-        --clip \
+        (fastq-dump {wildcards.accession} \
+        --minSpotId {params.min_spot_id} \
+        --maxSpotId {params.max_spot_id} \
         --split-3 \
         --outdir ./data/sra_reads \
-        -v && \
-        # Rename files to match expected output names
-        mv ./data/sra_reads/{wildcards.accession}_pass_1.fastq ./data/sra_reads/{wildcards.accession}_1.fastq && \
-        mv ./data/sra_reads/{wildcards.accession}_pass_2.fastq ./data/sra_reads/{wildcards.accession}_2.fastq) &> {log}
+        -v) &> {log}
         """
 
 
