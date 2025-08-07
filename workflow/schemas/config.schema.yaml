@@ -329,7 +329,7 @@ properties:
               max_spot_id:
                 type: integer
                 description: "Maximum spot ID for SRA subsampling"
-                default: 10000
+                default: 100000
             required: [enabled, min_spot_id, max_spot_id]
 
 required:
