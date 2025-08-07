@@ -236,7 +236,7 @@ def is_sra_subsampling_enabled() -> bool:
     Returns:
         bool: True if subsampling is enabled, False otherwise.
     """
-    return config["params"]["sra_tools"]["subsample"]["enabled"]
+    return get_sra_subsample_params()["enabled"]
 
 
 def get_sra_subsample_params() -> dict:
@@ -246,7 +246,16 @@ def get_sra_subsample_params() -> dict:
     Returns:
         dict: Dictionary containing num_reads and skip_reads parameters.
     """
-    return config["params"]["sra_tools"]["subsample"]
+    # Use .get() with default values to handle missing configuration
+    sra_tools_config = config.get("params", {}).get("sra_tools", {})
+    subsample_config = sra_tools_config.get("subsample", {})
+
+    # Return default values if subsample config is missing
+    return {
+        "enabled": subsample_config.get("enabled", False),
+        "num_reads": subsample_config.get("num_reads", 10000),
+        "skip_reads": subsample_config.get("skip_reads", 0),
+    }
 
 
 def get_sra_download_rule_name() -> str:
