@@ -13,6 +13,7 @@ if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
             datatype="dna",
             build=config["ref_assembly"]["name"],
             release=config["ref_assembly"]["release"],
+            chromosome=lambda wildcards: get_chromosome_param(),
         log:
             "logs/ensembl/get_genome.log",
         wrapper:
@@ -65,6 +66,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
         params:
             genome_asc=config["ref_assembly"]["accession"],
             api_key=config["api_keys"]["ncbi"],
+            chromosome=lambda wildcards: get_chromosome_param(),
         conda:
             "../envs/ncbi_datasets.yaml"
         log:
@@ -75,10 +77,21 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
             )
         shell:
             """
-            (datasets download genome accession {params.genome_asc} \
-                --include gtf,rna,genome,seq-report \
-                --api-key {params.api_key} \
-                --filename {output}) &> {log}
+            # Check if chromosome filtering is requested
+            if [ -n "{params.chromosome}" ]; then
+                echo "Downloading single chromosome: {params.chromosome}"
+                (datasets download genome accession {params.genome_asc} \
+                    --include gtf,rna,genome,seq-report \
+                    --chromosomes {params.chromosome} \
+                    --api-key {params.api_key} \
+                    --filename {output}) &> {log}
+            else
+                echo "Downloading full genome"
+                (datasets download genome accession {params.genome_asc} \
+                    --include gtf,rna,genome,seq-report \
+                    --api-key {params.api_key} \
+                    --filename {output}) &> {log}
+            fi
             """
 
     rule unzip_genome:

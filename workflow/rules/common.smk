@@ -264,6 +264,26 @@ def get_sra_download_rule_name() -> str:
 
 
 ################################################################################
+#                        GENOME DOWNLOAD HELPER FUNCTIONS                      #
+#          Helper functions for single chromosome downloads and genome         #
+#          configuration access                                                #
+################################################################################
+
+
+def get_chromosome_param():
+    """
+    Returns chromosome parameter if specified in config, otherwise None.
+
+    Used by genome download rules to support single chromosome downloads
+    for CI/CD testing and resource optimization.
+
+    Returns:
+        List[str] or None: List of chromosome names if specified, None otherwise.
+    """
+    return config["ref_assembly"].get("chromosome", None)
+
+
+################################################################################
 #                      DESEQ2 MULTI-ANALYSIS HELPERS                           #
 #          Parses and provides access to DESeq2 analysis configurations        #
 #          defined in config.yaml under 'diffexp.deseq2.analyses'              #
