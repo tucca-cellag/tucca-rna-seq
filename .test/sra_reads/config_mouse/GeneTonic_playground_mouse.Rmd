@@ -3,7 +3,7 @@ title: "Interactive Analysis with GeneTonic"
 author: "tucca-rna-seq"
 date: "`r Sys.Date()`"
 bibliography:
-  - ../../analysis/grateful-refs.bib
+  - "`r here::here('tucca-rna-seq', 'analysis', 'grateful-refs.bib')`"
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/nature.csl
 link-citations: true
 output:
@@ -14,7 +14,7 @@ output:
     DT: datatable
     toc_depth: 3
     collapsed: true
-    css: ../../analysis/css/doc.css
+    css: "`r here::here('tucca-rna-seq', 'analysis', 'css', 'doc.css')`"
     fig_width: 15
     fig_height: 15
     classoption: landscape
