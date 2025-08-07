@@ -1,6 +1,11 @@
 # workflow/rules/sra_tools.smk
 
 
+# Rule order to resolve ambiguity between download and subsample rules
+# When subsampling is enabled, subsample_sra_pe_reads should take precedence
+ruleorder: subsample_sra_pe_reads > download_sra_pe_reads
+
+
 rule configure_sra_tools:
     output:
         touch("resources/sra_tools/sra_config_completed.done"),
