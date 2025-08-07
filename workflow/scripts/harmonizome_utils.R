@@ -54,9 +54,13 @@ setup_harmonizome_api <- function() {
   # Import the Harmonizome class
   tryCatch(
     {
-      harmonizome <- reticulate::source_python(api_file)
+      reticulate::source_python(api_file)
       base::message("Harmonizome API loaded successfully")
-      return(harmonizome$Harmonizome)
+      # Return the Harmonizome class and Entity enum
+      return(list(
+        Harmonizome = reticulate::py$Harmonizome,
+        Entity = reticulate::py$Entity
+      ))
     },
     error = function(e) {
       base::stop("Failed to load Harmonizome API: ", e$message)
@@ -77,7 +81,9 @@ get_harmonizome_gene_set <- function(dataset_name, gene_set_name, output_dir = "
   base::message("Getting Harmonizome gene set: ", gene_set_name, " from dataset: ", dataset_name)
 
   # Setup the API
-  harmonizome <- setup_harmonizome_api()
+  api_objects <- setup_harmonizome_api()
+  harmonizome <- api_objects$Harmonizome
+  entity <- api_objects$Entity
 
   # Create output directory if it doesn't exist
   if (!base::dir.exists(output_dir)) {
@@ -86,11 +92,43 @@ get_harmonizome_gene_set <- function(dataset_name, gene_set_name, output_dir = "
 
   tryCatch(
     {
-      # Get gene set information using the official API
-      gene_set_info <- harmonizome$get("gene_set", gene_set_name)
+      # Get gene set information using the official API with error handling
+      base::message("Calling Harmonizome API for gene set: ", gene_set_name)
+
+      # Add timeout and retry logic for API calls
+      max_retries <- 3
+      retry_count <- 0
+
+      while (retry_count < max_retries) {
+        tryCatch(
+          {
+            # Use the correct API pattern according to documentation
+            gene_set_info <- harmonizome$get(entity$GENE_SET, gene_set_name)
+            break # Success, exit retry loop
+          },
+          error = function(e) {
+            retry_count <<- retry_count + 1
+            if (retry_count >= max_retries) {
+              base::stop("Failed to get gene set after ", max_retries, " retries: ", e$message)
+            }
+            base::message("API call failed, retrying (", retry_count, "/", max_retries, "): ", e$message)
+            base::Sys.sleep(2) # Wait before retry
+          }
+        )
+      }
+
+      # Validate the response
+      if (base::is.null(gene_set_info)) {
+        base::stop("API returned null response for gene set: ", gene_set_name)
+      }
+
+      # Log the response structure for debugging
+      base::message("Gene set info structure: ", base::paste(base::names(gene_set_info), collapse = ", "))
 
       # Check if this gene set belongs to the specified dataset
-      if (gene_set_info$dataset != dataset_name) {
+      # The API response structure may vary, so we need to be flexible
+      dataset_field <- if ("dataset" %in% base::names(gene_set_info)) "dataset" else "dataset_name"
+      if (dataset_field %in% base::names(gene_set_info) && gene_set_info[[dataset_field]] != dataset_name) {
         base::stop("Gene set '", gene_set_name, "' does not belong to dataset '", dataset_name, "'")
       }
 
@@ -167,7 +205,9 @@ download_harmonizome_dataset <- function(dataset_name, output_dir = "resources/h
   base::message("Downloading Harmonizome dataset: ", dataset_name)
 
   # Setup the API
-  harmonizome <- setup_harmonizome_api()
+  api_objects <- setup_harmonizome_api()
+  harmonizome <- api_objects$Harmonizome
+  entity <- api_objects$Entity
 
   # Create output directory
   if (!base::dir.exists(output_dir)) {
@@ -177,7 +217,7 @@ download_harmonizome_dataset <- function(dataset_name, output_dir = "resources/h
   tryCatch(
     {
       # Get all gene sets for this dataset
-      gene_sets_response <- harmonizome$get("gene_set")
+      gene_sets_response <- harmonizome$get(entity$GENE_SET)
 
       # Filter gene sets for this dataset
       dataset_gene_sets <- base::list()
@@ -318,11 +358,23 @@ load_harmonizome_gene_sets <- function(harmonizome_config, orgdb_pkg_name) {
         base::message("Loading from cache: ", cache_file)
         gene_set_data <- base::readRDS(cache_file)
       } else {
-        # Get the gene set using the official API
-        gene_set_data <- get_harmonizome_gene_set(dataset_name, gene_set_name)
+        # Get the gene set using the official API with error handling
+        tryCatch(
+          {
+            gene_set_data <- get_harmonizome_gene_set(dataset_name, gene_set_name)
+            harmonizome_data[[gene_set_name]] <- gene_set_data
+          },
+          error = function(e) {
+            base::message(
+              "Warning: Failed to load Harmonizome gene set '", gene_set_name,
+              "' from dataset '", dataset_name, "': ", e$message
+            )
+            base::message("This could be due to API rate limiting, network issues, or temporary unavailability.")
+            base::message("Skipping this gene set and continuing with other analyses...")
+            # Don't add to harmonizome_data, just continue
+          }
+        )
       }
-
-      harmonizome_data[[gene_set_name]] <- gene_set_data
     }
   }
 
@@ -330,7 +382,7 @@ load_harmonizome_gene_sets <- function(harmonizome_config, orgdb_pkg_name) {
   if (base::length(harmonizome_data) > 0) {
     return(prepare_harmonizome_gene_sets(harmonizome_data, orgdb_pkg_name))
   } else {
-    base::message("No Harmonizome gene sets found")
+    base::message("No Harmonizome gene sets found or all failed to load")
     return(NULL)
   }
 }
