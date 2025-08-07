@@ -28,6 +28,9 @@ params:
       # Spot ID range for downloading subset of reads (suitable for GitHub runner testing)
       min_spot_id: 1
       max_spot_id: 10000
+  qualimap_rnaseq:
+    # Disable Qualimap for CI/CD testing to avoid timeout issues
+    enabled: false
 
 # Differential expression analysis
 diffexp:

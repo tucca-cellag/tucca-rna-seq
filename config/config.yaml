@@ -90,6 +90,8 @@ params:
       --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0
       --alignIntronMin 1 --alignIntronMax 2500
   qualimap_rnaseq:
+    # Enable Qualimap by default for full analysis
+    enabled: true
     counting_alg: "proportional"
     sequencing_protocol: "non-strand-specific"
     extra: "--paired --java-mem-size=8G"

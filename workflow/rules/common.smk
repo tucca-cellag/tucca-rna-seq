@@ -258,6 +258,17 @@ def get_sra_subsample_params() -> dict:
     }
 
 
+def is_qualimap_enabled() -> bool:
+    """
+    Returns whether Qualimap is enabled in the configuration.
+
+    Returns:
+        bool: True if Qualimap is enabled, False otherwise.
+    """
+    qualimap_config = config.get("params", {}).get("qualimap_rnaseq", {})
+    return qualimap_config.get("enabled", True)
+
+
 def get_sra_download_rule_name() -> str:
     """
     Returns the name of the SRA download rule to use based on configuration.
@@ -626,6 +637,13 @@ def get_fastqc_paths(row: pd.Series) -> List[str]:
 
 # Helper function for Qualimap output paths.
 def get_qualimap_paths(row: pd.Series) -> List[str]:
+    """
+    Returns Qualimap output paths only if Qualimap is enabled.
+    Returns empty list if Qualimap is disabled to avoid requiring these files.
+    """
+    if not is_qualimap_enabled():
+        return []
+
     sample_unit: str = row.sample_unit
     paths: List[str] = [
         f"results/qualimap/{sample_unit}.qualimap/qualimapReport.html",

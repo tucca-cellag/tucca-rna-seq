@@ -3,6 +3,7 @@
 
 rule star_pe_multi:
     input:
+        "resources/qualimap/qualimap_enabled.flag",
         fq1=lambda wildcards: [get_paired_reads(wildcards)[0]],
         fq2=lambda wildcards: [get_paired_reads(wildcards)[1]],
         # path to STAR reference genome index
