@@ -77,15 +77,13 @@ rule subsample_sra_pe_reads:
         """
         (fastq-dump ./data/sra_cache/{wildcards.accession} \
         --minSpotId {params.skip_reads} \
-        --readids \
-        --read-filter pass \
-        --dumpbase \
-        --clip \
-        --split-files \
-        --outdir ./data/sra_reads \
         -N {params.num_reads} \
-        -v \
-        --force) &> {log}
+        --read-filter pass \
+        --readids \
+        --clip \
+        --split-3 \
+        --outdir ./data/sra_reads \
+        -v) &> {log}
         """
 
 
