@@ -2,9 +2,14 @@
   <img width="25%" align="left" src="images/tucca-rna-seq-logo-white.png" alt="tucca-rna-seq logo">
 </div>
 
-**`tucca-cellag/tucca-rna-seq`** is the
-[Tufts University Center for Cellular Agriculture's (TUCCA)][1] RNA-Seq
-workflow specifically designed for cellular agriculture projects.
+**`tucca-cellag/tucca-rna-seq`** is a modular RNA-Seq workflow developed in the
+[Kaplan Lab at TUCCA][1] and is adaptable for most RNA-Seq projects.
+
+Initially, this workflow was tailored for cellular agriculture research,
+focusing on the analysis of muscle and fat cell transcriptomes. Over time, it
+has been expanded into a flexible and modular tool suitable for a broad range
+of RNA-Seq applications. Its adaptable design allows for easy modification to
+fit various experimental needs beyond its original scope.
 
 This workflow was developed using the [Snakemake][1.5] workflow management
 system. `tucca-rna-seq` is a standardized usage Snakemake workflow that follows
@@ -30,7 +35,6 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
 [![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
-
 > [!WARNING]
 > This workflow is still under construction. [Release v0.9.0][8] marks our first
 > public release. v0.9.0 contains all logic to process raw paired-end RNA-Seq
@@ -42,8 +46,18 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 > dynamically explore and visualize your results. This will include a suite of
 > Shiny applications leveraging powerful packages like [`pcaExplorer`][9],
 > [`ideal`][10], and [`GeneTonic`][11] to bring your data to life, as well as
-> custom scripting to generate our favorite [`clusterProfiler`][12] figures. We
-> encourage users to test this v0.9.0 release and provide feedback. Users should
+> custom scripting to generate our favorite [`clusterProfiler`][12] figures.
+>
+> **Looking Ahead: AI-Powered Analysis Integration**
+>
+> Beyond v1.0.0, we're developing an innovative AI-powered analysis platform
+> that will integrate directly with this workflow. This platform will feature a
+> private Large Language Model (LLM) chat application connected to your RNA-Seq
+> results, enabling natural language queries about your data. The system will
+> automatically vectorize workflow outputs and provide intelligent,
+> context-aware analysis assistance.
+>
+> We encourage users to test this v0.9.0 release and provide feedback. Users should
 > expect our documentation to be incomplete and continue to have major reworks
 > until v1.0.0 is released. Please [open an issue][5] to report any bugs or
 > suggest improvements. Additionally, feel free to [contact us][contact] with
@@ -56,10 +70,23 @@ The usage of this workflow is described in our documentation at
 we're missing (in the workflow or in our documentation) please
 [open an issue][5] to let us know.
 
+### Getting Started
+
+Before running the workflow, we recommend reviewing our
+[Data Collection Template](https://tucca-cellag.github.io/tucca-rna-seq/getting-started/data-collection)
+to ensure you have all necessary information organized. This template helps you:
+
+- Organize your raw sequencing data
+- Document sample metadata and experimental design
+- Specify analysis parameters and preferences
+- Plan for quality control and visualization needs
+
+For detailed workflow documentation, visit [tucca-cellag.github.io][2].
+
 ## Workflow Overview
 
 <div align="center">
-  <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow-no-logo.png" width="700">
+  <img alt="tucca-rna-seq workflow map" src="images/tucca-rna-seq-workflow.png" width="700">
   <p>Created in <a href="https://BioRender.com">https://BioRender.com</a></p>
 </div>
 
@@ -122,7 +149,7 @@ the `tucca-cellag` community, we ask that you observe our [code of conduct][7].
 [1.5]: https://snakemake.readthedocs.io/en/stable/
 [2]: https://tucca-cellag.github.io/tucca-rna-seq/introduction
 [2.5]: https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html
-[3]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag%20tucca-rna-seq.html
+[3]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag/tucca-rna-seq.html
 [4]: https://github.com/tucca-cellag/tucca-rna-seq/issues
 [5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new/choose
 [contact]: <mailto:benjamin.bromberg@tufts.edu>
