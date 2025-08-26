@@ -229,6 +229,46 @@ def get_sra_filepath(accession: str, read: str) -> Path:
     return Path(f"data/sra_reads/{accession}_{read_num}.fastq")
 
 
+def get_md5_file(wildcards: Wildcard) -> str:
+    """
+    Finds the .md5 checksum file for a given FASTQ file.
+    Assumes the .md5 file is co-located with the FASTQ file,
+    with a .md5 extension appended.
+    e.g., for /path/to/file.fq.gz, it looks for /path/to/file.fq.gz.md5
+    """
+    fq_path_str = get_fq_files(wildcards)
+    md5_path = Path(f"{fq_path_str}.md5")
+    if not md5_path.exists():
+        raise FileNotFoundError(f"Required checksum file not found: {md5_path}")
+    return str(md5_path)
+
+
+def get_checksum_dependency(wildcards: Wildcard) -> List[str]:
+    """
+    Returns the checksum validation flag file for a given read, but only if the
+    read is from a local file (not SRA). Returns an empty list otherwise.
+    """
+    unit = get_unit_record(wildcards)
+    if not is_sra_read(unit):
+        return f"results/checksums/{wildcards.sample_unit}_{wildcards.read}.valid"
+    return []
+
+
+def get_paired_checksum_dependency(wildcards: Wildcard) -> List[str]:
+    """
+    Returns a list of checksum validation flag files for paired-end reads, but only
+    if the reads are from local files (not SRA). Returns an empty list otherwise.
+    """
+    unit = get_unit_record(wildcards)
+    if not is_sra_read(unit):
+        return expand(
+            "results/checksums/{sample_unit}_{read}.valid",
+            sample_unit=wildcards.sample_unit,
+            read=["R1", "R2"],
+        )
+    return []
+
+
 def is_sra_subsampling_enabled() -> bool:
     """
     Determines if SRA subsampling is enabled in the configuration.
