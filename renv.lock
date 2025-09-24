@@ -1664,6 +1664,50 @@
       "Repository": "CRAN",
       "NeedsCompilation": "no"
     },
+    "IHW": {
+      "Package": "IHW",
+      "Version": "1.34.0",
+      "Source": "Bioconductor",
+      "Title": "Independent Hypothesis Weighting",
+      "Authors@R": "c(person(\"Nikos\", \"Ignatiadis\", email = \"nikos.ignatiadis01@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Wolfgang\", \"Huber\", role = \"aut\"))",
+      "Description": "Independent hypothesis weighting (IHW) is a multiple testing procedure that increases power compared to the method of Benjamini and Hochberg by assigning data-driven weights to each hypothesis. The input to IHW is a two-column table of p-values and covariates. The covariate can be any continuous-valued or categorical variable that is thought to be informative on the statistical properties of each hypothesis test, while it is independent of the p-value under the null hypothesis.",
+      "Depends": [
+        "R (>= 3.3.0)"
+      ],
+      "License": "Artistic-2.0",
+      "Imports": [
+        "methods",
+        "slam",
+        "lpsymphony",
+        "fdrtool",
+        "BiocGenerics"
+      ],
+      "Suggests": [
+        "ggplot2",
+        "dplyr",
+        "gridExtra",
+        "scales",
+        "DESeq2",
+        "airway",
+        "testthat",
+        "Matrix",
+        "BiocStyle",
+        "knitr",
+        "rmarkdown",
+        "devtools"
+      ],
+      "VignetteBuilder": "knitr",
+      "biocViews": "ImmunoOncology, MultipleComparison, RNASeq",
+      "RoxygenNote": "7.1.1",
+      "git_url": "https://git.bioconductor.org/packages/IHW",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "12ebabb",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Author": "Nikos Ignatiadis [aut, cre], Wolfgang Huber [aut]",
+      "Maintainer": "Nikos Ignatiadis <nikos.ignatiadis01@gmail.com>"
+    },
     "IRanges": {
       "Package": "IRanges",
       "Version": "2.40.1",
@@ -1792,6 +1836,31 @@
       "git_last_commit_date": "2024-10-29",
       "Repository": "Bioconductor 3.20",
       "NeedsCompilation": "no"
+    },
+    "KernSmooth": {
+      "Package": "KernSmooth",
+      "Version": "2.23-26",
+      "Source": "Repository",
+      "Priority": "recommended",
+      "Date": "2024-12-10",
+      "Title": "Functions for Kernel Smoothing Supporting Wand & Jones (1995)",
+      "Authors@R": "c(person(\"Matt\", \"Wand\", role = \"aut\", email = \"Matt.Wand@uts.edu.au\"), person(\"Cleve\", \"Moler\", role = \"ctb\", comment = \"LINPACK routines in src/d*\"), person(\"Brian\", \"Ripley\", role = c(\"trl\", \"cre\", \"ctb\"), email = \"Brian.Ripley@R-project.org\", comment = \"R port and updates\"))",
+      "Note": "Maintainers are not available to give advice on using a package they did not author.",
+      "Depends": [
+        "R (>= 2.5.0)",
+        "stats"
+      ],
+      "Suggests": [
+        "MASS",
+        "carData"
+      ],
+      "Description": "Functions for kernel smoothing (and density estimation) corresponding to the book:  Wand, M.P. and Jones, M.C. (1995) \"Kernel Smoothing\".",
+      "License": "Unlimited",
+      "ByteCompile": "yes",
+      "NeedsCompilation": "yes",
+      "Author": "Matt Wand [aut], Cleve Moler [ctb] (LINPACK routines in src/d*), Brian Ripley [trl, cre, ctb] (R port and updates)",
+      "Maintainer": "Brian Ripley <Brian.Ripley@R-project.org>",
+      "Repository": "CRAN"
     },
     "MASS": {
       "Package": "MASS",
@@ -2859,6 +2928,42 @@
       "Author": "Hervé Pagès [aut, cre]",
       "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>"
     },
+    "UpSetR": {
+      "Package": "UpSetR",
+      "Version": "1.4.0",
+      "Source": "Repository",
+      "Title": "A More Scalable Alternative to Venn and Euler Diagrams for Visualizing Intersecting Sets",
+      "Date": "2019-5-9",
+      "URL": "http://github.com/hms-dbmi/UpSetR",
+      "BugReports": "http://github.com/hms-dbmi/UpSetR/issues",
+      "Authors@R": "c( person(\"Jake\", \"Conway\", email = \"jake_conway@hms.harvard.edu\", role = \"cre\"), person(\"Nils\", \"Gehlenborg\", email = \"nils@hms.harvard.edu\", role = \"aut\"))",
+      "Description": "Creates visualizations of intersecting sets using a novel matrix design, along with visualizations of several common set, element and attribute related tasks (Conway 2017) <doi:10.1093/bioinformatics/btx364>.",
+      "Depends": [
+        "R (>= 3.0)"
+      ],
+      "Imports": [
+        "ggplot2",
+        "gridExtra",
+        "plyr",
+        "utils",
+        "stats",
+        "methods",
+        "grDevices",
+        "scales"
+      ],
+      "License": "MIT + file LICENSE",
+      "LazyData": "true",
+      "VignetteBuilder": "knitr",
+      "Suggests": [
+        "knitr"
+      ],
+      "RoxygenNote": "6.1.0",
+      "NeedsCompilation": "no",
+      "Author": "Jake Conway [cre], Nils Gehlenborg [aut]",
+      "Maintainer": "Jake Conway <jake_conway@hms.harvard.edu>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "XML": {
       "Package": "XML",
       "Version": "3.99-0.18",
@@ -3748,6 +3853,32 @@
       "URL": "http://www.carme-n.org/",
       "NeedsCompilation": "no",
       "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
+    "caTools": {
+      "Package": "caTools",
+      "Version": "1.18.3",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Tools: Moving Window Statistics, GIF, Base64, ROC AUC, etc",
+      "Date": "2024-09-04",
+      "Authors@R": "c(person(given = \"Jarek\", family = \"Tuszynski\", role = \"aut\", email = \"jaroslaw.w.tuszynski@saic.com\"), person(given = \"Michael\", family = \"Dietze\", role = \"cre\", email = \"michael.dietze@uni-goettingen.de\"))",
+      "Maintainer": "Michael Dietze <michael.dietze@uni-goettingen.de>",
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        "bitops"
+      ],
+      "Suggests": [
+        "MASS",
+        "rpart"
+      ],
+      "Description": "Contains several basic utility functions including: moving (rolling, running) window statistic functions, read/write for GIF and ENVI binary files, fast calculation of AUC, LogitBoost classifier, base64 encoder/decoder, round-off-error-free sum and cumsum, etc.",
+      "License": "GPL-3",
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Author": "Jarek Tuszynski [aut], Michael Dietze [cre]",
       "Encoding": "UTF-8"
     },
     "cachem": {
@@ -5386,6 +5517,31 @@
       "NeedsCompilation": "yes",
       "Repository": "CRAN"
     },
+    "fdrtool": {
+      "Package": "fdrtool",
+      "Version": "1.2.18",
+      "Source": "Repository",
+      "Date": "2024-08-20",
+      "Title": "Estimation of (Local) False Discovery Rates and Higher Criticism",
+      "Authors@R": "c(person(given = \"Bernd\", family = \"Klaus\", role = \"aut\"), person(given = \"Korbinian\", family = \"Strimmer\", role = c(\"aut\", \"cre\"), email = \"strimmerlab@gmail.com\"))",
+      "Depends": [
+        "R (>= 3.4.0)"
+      ],
+      "Suggests": [],
+      "Imports": [
+        "graphics",
+        "grDevices",
+        "stats"
+      ],
+      "Description": "Estimates both tail area-based false  discovery rates (Fdr) as well as local false discovery rates (fdr) for a  variety of null models (p-values, z-scores, correlation coefficients, t-scores).  The proportion of null values and the parameters of the null  distribution are adaptively estimated from the data.  In addition, the package  contains functions for non-parametric density estimation (Grenander estimator),  for monotone regression (isotonic regression and antitonic regression with weights), for computing the greatest convex minorant (GCM) and the least concave majorant (LCM),  for the half-normal and correlation distributions, and for computing empirical higher criticism (HC) scores and the corresponding decision threshold.",
+      "License": "GPL (>= 3)",
+      "URL": "https://strimmerlab.github.io/software/fdrtool/",
+      "NeedsCompilation": "yes",
+      "Author": "Bernd Klaus [aut], Korbinian Strimmer [aut, cre]",
+      "Maintainer": "Korbinian Strimmer <strimmerlab@gmail.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "fgsea": {
       "Package": "fgsea",
       "Version": "1.32.4",
@@ -6635,6 +6791,43 @@
       "Author": "Matthew Young [aut], Nadia Davidson [aut], Federico Marini [ctb, cre] (<https://orcid.org/0000-0003-3252-7758>)",
       "Maintainer": "Federico Marini <marinif@uni-mainz.de>"
     },
+    "gplots": {
+      "Package": "gplots",
+      "Version": "3.2.0",
+      "Source": "Repository",
+      "Title": "Various R Programming Tools for Plotting Data",
+      "Description": "Various R programming tools for plotting data, including: - calculating and plotting locally smoothed summary function as ('bandplot', 'wapply'), - enhanced versions of standard plots ('barplot2', 'boxplot2', 'heatmap.2', 'smartlegend'), - manipulating colors ('col2hex', 'colorpanel', 'redgreen', 'greenred', 'bluered', 'redblue', 'rich.colors'), - calculating and plotting two-dimensional data summaries ('ci2d', 'hist2d'), - enhanced regression diagnostic plots ('lmplot2', 'residplot'), - formula-enabled interface to 'stats::lowess' function ('lowess'), - displaying textual data in plots ('textplot', 'sinkplot'), - plotting dots whose size reflects the relative magnitude of the elements ('balloonplot', 'bubbleplot'), - plotting \"Venn\" diagrams ('venn'), - displaying Open-Office style plots ('ooplot'), - plotting multiple data on same region, with separate axes ('overplot'), - plotting means and confidence intervals ('plotCI', 'plotmeans'), - spacing points in an x-y plot so they don't overlap ('space').",
+      "Depends": [
+        "R (>= 3.0)"
+      ],
+      "Imports": [
+        "gtools",
+        "stats",
+        "caTools",
+        "KernSmooth",
+        "methods"
+      ],
+      "Suggests": [
+        "grid",
+        "MASS",
+        "knitr",
+        "rmarkdown",
+        "r2d2",
+        "nlme"
+      ],
+      "LazyData": "yes",
+      "VignetteBuilder": "knitr",
+      "Date": "2024-10-05",
+      "Authors@R": "c( person(\"Gregory R.\", \"Warnes\", , role = \"aut\"), person(\"Ben\", \"Bolker\", , role = \"aut\"), person(\"Lodewijk\", \"Bonebakker\", , role = \"aut\"), person(\"Robert\", \"Gentleman\", role = \"aut\"), person(\"Wolfgang\", \"Huber\", role = \"aut\"), person(\"Andy\", \"Liaw\", role = \"aut\"), person(\"Thomas\", \"Lumley\", role = \"aut\"), person(\"Martin\", \"Maechler\", role = \"aut\"), person(\"Arni\", \"Magnusson\", role = \"aut\"), person(\"Steffen\", \"Moeller\", role = \"aut\"), person(\"Marc\", \"Schwartz\", role = \"aut\"), person(\"Bill\", \"Venables\", role = \"aut\"), person(\"Tal\", \"Galili\", , \"tal.galili@gmail.com\", c(\"aut\", \"cre\")) )",
+      "License": "GPL-2",
+      "URL": "https://github.com/talgalili/gplots, https://talgalili.github.io/gplots/",
+      "BugReports": "https://github.com/talgalili/gplots/issues",
+      "NeedsCompilation": "no",
+      "Author": "Gregory R. Warnes [aut], Ben Bolker [aut], Lodewijk Bonebakker [aut], Robert Gentleman [aut], Wolfgang Huber [aut], Andy Liaw [aut], Thomas Lumley [aut], Martin Maechler [aut], Arni Magnusson [aut], Steffen Moeller [aut], Marc Schwartz [aut], Bill Venables [aut], Tal Galili [aut, cre]",
+      "Maintainer": "Tal Galili <tal.galili@gmail.com>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
+    },
     "graph": {
       "Package": "graph",
       "Version": "1.84.1",
@@ -6851,6 +7044,37 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut], Thomas Lin Pedersen [aut, cre], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
+      "Repository": "CRAN"
+    },
+    "gtools": {
+      "Package": "gtools",
+      "Version": "3.9.5",
+      "Source": "Repository",
+      "Title": "Various R Programming Tools",
+      "Description": "Functions to assist in R programming, including: - assist in developing, updating, and maintaining R and R packages ('ask', 'checkRVersion', 'getDependencies', 'keywords', 'scat'), - calculate the logit and inverse logit transformations ('logit', 'inv.logit'), - test if a value is missing, empty or contains only NA and NULL values ('invalid'), - manipulate R's .Last function ('addLast'), - define macros ('defmacro'), - detect odd and even integers ('odd', 'even'), - convert strings containing non-ASCII characters (like single quotes) to plain ASCII ('ASCIIfy'), - perform a binary search ('binsearch'), - sort strings containing both numeric and character components ('mixedsort'), - create a factor variable from the quantiles of a continuous variable ('quantcut'), - enumerate permutations and combinations ('combinations', 'permutation'), - calculate and convert between fold-change and log-ratio ('foldchange', 'logratio2foldchange', 'foldchange2logratio'), - calculate probabilities and generate random numbers from Dirichlet distributions ('rdirichlet', 'ddirichlet'), - apply a function over adjacent subsets of a vector ('running'), - modify the TCP_NODELAY ('de-Nagle') flag for socket objects, - efficient 'rbind' of data frames, even if the column names don't match ('smartbind'), - generate significance stars from p-values ('stars.pval'), - convert characters to/from ASCII codes ('asc', 'chr'), - convert character vector to ASCII representation ('ASCIIfy'), - apply title capitalization rules to a character vector ('capwords').",
+      "Authors@R": "c(person(\"Gregory R.\", \"Warnes\", role = \"aut\"), person(\"Ben\", \"Bolker\", role = c(\"aut\", \"cre\"), email = \"bolker@mcmaster.ca\", comment=c(ORCID=\"0000-0002-2127-0443\")), person(\"Thomas\", \"Lumley\", role = \"aut\"), person(\"Arni\", \"Magnusson\", role = \"aut\"), person(\"Bill\", \"Venables\", role = \"aut\"), person(\"Genei\", \"Ryodan\", role = \"aut\"), person(\"Steffen\", \"Moeller\", role = \"aut\"), person(\"Ian\", \"Wilson\", role = \"ctb\"), person(\"Mark\", \"Davis\", role = \"ctb\"), person(\"Nitin\", \"Jain\", role=\"ctb\"), person(\"Scott\", \"Chamberlain\", role = \"ctb\"))",
+      "License": "GPL-2",
+      "Depends": [
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "URL": "https://github.com/r-gregmisc/gtools",
+      "BugReports": "https://github.com/r-gregmisc/gtools/issues",
+      "Language": "en-US",
+      "Suggests": [
+        "car",
+        "gplots",
+        "knitr",
+        "rstudioapi",
+        "SGP",
+        "taxize"
+      ],
+      "RoxygenNote": "7.2.3",
+      "Encoding": "UTF-8",
+      "NeedsCompilation": "yes",
+      "Author": "Gregory R. Warnes [aut], Ben Bolker [aut, cre] (<https://orcid.org/0000-0002-2127-0443>), Thomas Lumley [aut], Arni Magnusson [aut], Bill Venables [aut], Genei Ryodan [aut], Steffen Moeller [aut], Ian Wilson [ctb], Mark Davis [ctb], Nitin Jain [ctb], Scott Chamberlain [ctb]",
+      "Maintainer": "Ben Bolker <bolker@mcmaster.ca>",
       "Repository": "CRAN"
     },
     "haven": {
@@ -7269,6 +7493,86 @@
       "Author": "Hadley Wickham [aut, cre], Posit Software, PBC [cph, fnd], Maximilian Girlich [ctb]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
+    },
+    "ideal": {
+      "Package": "ideal",
+      "Version": "2.0.0",
+      "Source": "Bioconductor",
+      "Type": "Package",
+      "Title": "Interactive Differential Expression AnaLysis",
+      "Date": "2024-09-13",
+      "Authors@R": "c(person(\"Federico\", \"Marini\", role = c(\"aut\", \"cre\"),  email =\"marinif@uni-mainz.de\",  comment = c(ORCID = '0000-0003-3252-7758')))",
+      "Description": "This package provides functions for an Interactive Differential Expression AnaLysis of RNA-sequencing datasets, to extract quickly and effectively information downstream the step of differential expression. A Shiny application encapsulates the whole package. Support for reproducibility of the whole analysis is  provided by means of a template report which gets automatically compiled  and can be stored/shared.",
+      "License": "MIT + file LICENSE",
+      "Depends": [
+        "topGO"
+      ],
+      "Imports": [
+        "DESeq2",
+        "SummarizedExperiment",
+        "mosdef (>= 1.1.0)",
+        "GenomicRanges",
+        "IRanges",
+        "S4Vectors",
+        "ggplot2 (>= 2.0.0)",
+        "heatmaply",
+        "plotly",
+        "pheatmap",
+        "IHW",
+        "gplots",
+        "UpSetR",
+        "goseq",
+        "stringr",
+        "dplyr",
+        "limma",
+        "GOstats",
+        "GO.db",
+        "AnnotationDbi",
+        "shiny (>= 0.12.0)",
+        "shinydashboard",
+        "shinyBS",
+        "DT",
+        "rentrez",
+        "rintrojs",
+        "rlang",
+        "ggrepel",
+        "knitr",
+        "rmarkdown",
+        "shinyAce",
+        "BiocParallel",
+        "grDevices",
+        "graphics",
+        "base64enc",
+        "methods",
+        "utils",
+        "stats"
+      ],
+      "Suggests": [
+        "testthat",
+        "BiocStyle",
+        "markdown",
+        "airway",
+        "org.Hs.eg.db",
+        "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        "DEFormats",
+        "htmltools",
+        "edgeR"
+      ],
+      "URL": "https://github.com/federicomarini/ideal, https://federicomarini.github.io/ideal/",
+      "BugReports": "https://github.com/federicomarini/ideal/issues",
+      "biocViews": "ImmunoOncology, GeneExpression, DifferentialExpression, RNASeq, Sequencing, Visualization, QualityControl, GUI, GeneSetEnrichment, ReportWriting, ShinyApps",
+      "VignetteBuilder": "knitr",
+      "RoxygenNote": "7.3.2",
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "git_url": "https://git.bioconductor.org/packages/ideal",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "cf70c4b",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "NeedsCompilation": "no",
+      "Author": "Federico Marini [aut, cre] (<https://orcid.org/0000-0003-3252-7758>)",
+      "Maintainer": "Federico Marini <marinif@uni-mainz.de>"
     },
     "ids": {
       "Package": "ids",
@@ -7844,6 +8148,39 @@
       "SystemRequirements": "USE_C17",
       "NeedsCompilation": "yes",
       "Repository": "CRAN"
+    },
+    "lpsymphony": {
+      "Package": "lpsymphony",
+      "Version": "1.34.0",
+      "Source": "Bioconductor",
+      "Title": "Symphony integer linear programming solver in R",
+      "Description": "This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.",
+      "Maintainer": "Vladislav Kim <Vladislav.Kim@embl.de>",
+      "Authors@R": "c( person(\"Vladislav\", \"Kim\",     role = c(\"aut\", \"cre\"), email = \"Vladislav.Kim@embl.de\"), person(\"Ted\", \"Ralphs\",        role = \"ctb\", email = \"ted@lehigh.edu\"), person(\"Menal\", \"Guzelsoy\",    role = \"ctb\", email = \"mguzelsoy@lehigh.edu\"), person(\"Ashutosh\", \"Mahajan\",  role = \"ctb\", email = \"amahajan@iitb.ac.in\"), person(\"Reinhard\", \"Harter\",   role = \"ctb\", email = \"reinhard.harter@gmail.com\"), person(\"Kurt\", \"Hornik\",       role = \"ctb\", email = \"Kurt.Hornik@R-project.org\"), person(\"Cyrille\", \"Szymanski\", role = \"ctb\", email = \"cnszym@gmail.com\"), person(\"Stefan\",\"Theussl\",     role = \"ctb\", email = \"stefan.theussl@wu.ac.at\"), person(\"Mike\",\"Smith\",         role = \"ctb\", email = \"grimbough@gmail.com\", comment = c(ORCID = \"0000-0002-7800-3848\")))",
+      "License": "EPL",
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Enhances": [
+        "slam"
+      ],
+      "Suggests": [
+        "BiocStyle",
+        "knitr",
+        "testthat"
+      ],
+      "URL": "http://R-Forge.R-project.org/projects/rsymphony, https://projects.coin-or.org/SYMPHONY, http://www.coin-or.org/download/source/SYMPHONY/",
+      "BugReports": "https://github.com/Huber-group-EMBL/lpsymphony/issues",
+      "biocViews": "Infrastructure, ThirdPartyClient",
+      "VignetteBuilder": "knitr",
+      "NeedsCompilation": "yes",
+      "SystemRequirements": "GNU make",
+      "git_url": "https://git.bioconductor.org/packages/lpsymphony",
+      "git_branch": "RELEASE_3_20",
+      "git_last_commit": "47b75db",
+      "git_last_commit_date": "2024-10-29",
+      "Repository": "Bioconductor 3.20",
+      "Author": "Vladislav Kim [aut, cre], Ted Ralphs [ctb], Menal Guzelsoy [ctb], Ashutosh Mahajan [ctb], Reinhard Harter [ctb], Kurt Hornik [ctb], Cyrille Szymanski [ctb], Stefan Theussl [ctb], Mike Smith [ctb] (<https://orcid.org/0000-0002-7800-3848>)"
     },
     "lubridate": {
       "Package": "lubridate",
@@ -9563,6 +9900,38 @@
       "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
       "Repository": "CRAN"
     },
+    "rentrez": {
+      "Package": "rentrez",
+      "Version": "1.2.3",
+      "Source": "Repository",
+      "Date": "2020-11-06",
+      "Title": "'Entrez' in R",
+      "Authors@R": "c( person(\"David\", \"Winter\", role=c(\"aut\", \"cre\"),  email = \"david.winter@gmail.com\",  comment = c(ORCID = \"0000-0002-6165-0029\")), person(\"Scott\", \"Chamberlain\", role=\"ctb\", email = \"myrmecocystus@gmail.com\", comment = c(ORCID = \"0000-0003-1444-9135\")), person(\"Han\",\"Guangchun\", role=c(\"ctb\"),email=\"hanguangchun@gmail.com\", comment = c(ORCID = \"0000-0001-9277-2507\")) )",
+      "Depends": [
+        "R (>= 2.6.0)"
+      ],
+      "Imports": [
+        "XML",
+        "httr (>= 0.5)",
+        "jsonlite (>= 0.9)"
+      ],
+      "Suggests": [
+        "testthat",
+        "knitr",
+        "rmarkdown"
+      ],
+      "URL": "https://docs.ropensci.org/rentrez/ (website) https://github.com/ropensci/rentrez/",
+      "BugReports": "https://github.com/ropensci/rentrez/issues/",
+      "Description": "Provides an R interface to the NCBI's 'EUtils' API,  allowing users to search databases like 'GenBank'  <https://www.ncbi.nlm.nih.gov/genbank/> and 'PubMed'  <https://pubmed.ncbi.nlm.nih.gov/>, process the  results of those searches and pull data into their R sessions.",
+      "VignetteBuilder": "knitr",
+      "License": "MIT + file LICENSE",
+      "RoxygenNote": "7.1.1",
+      "Encoding": "UTF-8",
+      "NeedsCompilation": "no",
+      "Author": "David Winter [aut, cre] (<https://orcid.org/0000-0002-6165-0029>), Scott Chamberlain [ctb] (<https://orcid.org/0000-0003-1444-9135>), Han Guangchun [ctb] (<https://orcid.org/0000-0001-9277-2507>)",
+      "Maintainer": "David Winter <david.winter@gmail.com>",
+      "Repository": "CRAN"
+    },
     "renv": {
       "Package": "renv",
       "Version": "1.1.4",
@@ -10753,6 +11122,31 @@
       "Author": "Dean Attali [aut, cre] (<https://orcid.org/0000-0002-5645-3493>)",
       "Maintainer": "Dean Attali <daattali@gmail.com>",
       "Repository": "CRAN"
+    },
+    "slam": {
+      "Package": "slam",
+      "Version": "0.1-55",
+      "Source": "Repository",
+      "Title": "Sparse Lightweight Arrays and Matrices",
+      "Authors@R": "c(person(\"Kurt\", \"Hornik\", role = c(\"aut\", \"cre\"), email = \"Kurt.Hornik@R-project.org\", comment = c(ORCID = \"0000-0003-4198-9911\")), person(\"David\", \"Meyer\", role = \"aut\", email = \"David.Meyer@R-project.org\", comment = c(ORCID = \"0000-0002-5196-3048\")), person(\"Christian\", \"Buchta\", role = \"aut\"))",
+      "Description": "Data structures and algorithms for sparse arrays and matrices, based on index arrays and simple triplet representations, respectively.",
+      "Depends": [
+        "R (>= 3.4.0)"
+      ],
+      "Imports": [
+        "stats"
+      ],
+      "Enhances": [
+        "Matrix",
+        "SparseM",
+        "spam"
+      ],
+      "License": "GPL-2",
+      "NeedsCompilation": "yes",
+      "Author": "Kurt Hornik [aut, cre] (<https://orcid.org/0000-0003-4198-9911>), David Meyer [aut] (<https://orcid.org/0000-0002-5196-3048>), Christian Buchta [aut]",
+      "Maintainer": "Kurt Hornik <Kurt.Hornik@R-project.org>",
+      "Repository": "CRAN",
+      "Encoding": "UTF-8"
     },
     "snow": {
       "Package": "snow",
