@@ -459,6 +459,11 @@ jobs:
               output_file = "pcaExplorer_playground.html",
               output_dir = "rmd_test_output"
             )
+              rmarkdown::render(
+              "analysis/ideal_playground.Rmd",
+              output_file = "ideal_playground.html",
+              output_dir = "rmd_test_output"
+            )
           }
       - name: Upload Rmd test output
         if: always()
