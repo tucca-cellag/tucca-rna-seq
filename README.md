@@ -3,18 +3,20 @@
 </div>
 
 **`tucca-cellag/tucca-rna-seq`** is a modular RNA-Seq workflow developed in the
-[Kaplan Lab at TUCCA][1] and is adaptable for most RNA-Seq projects.
+[Kaplan Lab at TUCCA][tucca]. It provides a complete, end-to-end pipeline that
+processes raw FASTQ files through quality control, quantification, differential
+expression, and pathway enrichment analysis.
 
-Initially, this workflow was tailored for cellular agriculture research,
-focusing on the analysis of muscle and fat cell transcriptomes. Over time, it
-has been expanded into a flexible and modular tool suitable for a broad range
-of RNA-Seq applications. Its adaptable design allows for easy modification to
-fit various experimental needs beyond its original scope.
+Initially tailored for cellular agriculture research on muscle and fat cell
+transcriptomes, the workflow has been designed with modularity and flexibility
+at its core. This allows users to easily customize the pipeline by adding,
+removing, or modifying steps to suit a broad range of RNA-Seq applications
+and experimental designs.
 
-This workflow was developed using the [Snakemake][1.5] workflow management
+This workflow was developed using the [Snakemake][snakemake] workflow management
 system. `tucca-rna-seq` is a standardized usage Snakemake workflow that follows
-the [best practices][2.5] laid out in the Snakemake documentation (as of
-Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
+the [best practices][best-prac] laid out in the Snakemake documentation (as of
+Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][swc].
 
 ---
 
@@ -36,7 +38,7 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 [![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
 > [!WARNING]
-> This workflow is still under construction. [Release v0.9.0][8] marks our first
+> This workflow is still under construction. [Release v0.9.0][v0.9.0] marks our first
 > public release. v0.9.0 contains all logic to process raw paired-end RNA-Seq
 > reads through differential expression. Currently, the workflow can generate a
 > large number of DESeq2 result files, especially for experiments with multiple
@@ -44,9 +46,9 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 > dozens of individual result files can be challenging. The centerpiece of the
 > v1.0.0 release will be an interactive analysis toolkit that allows you to
 > dynamically explore and visualize your results. This will include a suite of
-> Shiny applications leveraging powerful packages like [`pcaExplorer`][9],
-> [`ideal`][10], and [`GeneTonic`][11] to bring your data to life, as well as
-> custom scripting to generate our favorite [`clusterProfiler`][12] figures.
+> Shiny applications leveraging powerful packages like [`pcaExplorer`][pcaExplorer],
+> [`ideal`][ideal], and [`GeneTonic`][GeneTonic] to bring your data to life, as well as
+> custom scripting to generate our favorite [`clusterProfiler`][clusterProfiler] figures.
 >
 > **Looking Ahead: AI-Powered Analysis Integration**
 >
@@ -59,21 +61,21 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][3].
 >
 > We encourage users to test this v0.9.0 release and provide feedback. Users should
 > expect our documentation to be incomplete and continue to have major reworks
-> until v1.0.0 is released. Please [open an issue][5] to report any bugs or
+> until v1.0.0 is released. Please [open an issue][open-issue] to report any bugs or
 > suggest improvements. Additionally, feel free to [contact us][contact] with
 > any questions.
 
 ## Documentation
 
 The usage of this workflow is described in our documentation at
-[tucca-cellag.github.io][2]. If you've found a bug or there is a feature that
+[tucca-cellag.github.io][our-docs]. If you've found a bug or there is a feature that
 we're missing (in the workflow or in our documentation) please
-[open an issue][5] to let us know.
+[open an issue][open-issue] to let us know.
 
 ### Getting Started
 
 Before running the workflow, we recommend reviewing our
-[Data Collection Template](https://tucca-cellag.github.io/tucca-rna-seq/getting-started/data-collection)
+[Data Collection Template][data-collection]
 to ensure you have all necessary information organized. This template helps you:
 
 - Organize your raw sequencing data
@@ -81,7 +83,7 @@ to ensure you have all necessary information organized. This template helps you:
 - Specify analysis parameters and preferences
 - Plan for quality control and visualization needs
 
-For detailed workflow documentation, visit [tucca-cellag.github.io][2].
+For detailed workflow documentation, visit [tucca-cellag.github.io][our-docs].
 
 ## Workflow Overview
 
@@ -94,16 +96,16 @@ For detailed workflow documentation, visit [tucca-cellag.github.io][2].
 
 <div align="center">
   <img alt="tucca-rna-seq workflow map" src="images/rulegraph.png" width="700">
-  <p>Created via `snakemake --rulegraph`</a></p>
+  <p>Created via `snakemake --rulegraph`</p>
 </div>
 
 ## How do I get help?
 
 For questions or suggestions regarding the workflow, first, check out our
-detailed documentation at [tucca-cellag.github.io][2]. If you can't find the
+detailed documentation at [tucca-cellag.github.io][our-docs]. If you can't find the
 answer to your question in our documentation you can try checking if someone
-has [previously opened an issue][4] answering your question. If you still have
-a question please [open an issue][5] so we can help! For any other inquiries,
+has [previously opened an issue][see-issues] answering your question. If you still have
+a question please [open an issue][open-issue] so we can help! For any other inquiries,
 please contact us via [email][contact].
 
 ## Citing the Workflow
@@ -140,23 +142,24 @@ products.
 We welcome your involvement in the development of this workflow via submission
 of bug reports, proposing new features, engaging in discussions, or providing
 fixes and other code modifications. If you're interested in contributing,
-please consult the [contributing guidelines][6]. For all interactions within
-the `tucca-cellag` community, we ask that you observe our [code of conduct][7].
+please consult the [contributing guidelines][contrib]. For all interactions within
+the `tucca-cellag` community, we ask that you observe our [code of conduct][conduct].
 
-&copy; 2025 [Tufts University Center for Cellular Agriculture][1]
+&copy; 2025 [Tufts University Center for Cellular Agriculture][tucca]
 
-[1]: https://cellularagriculture.tufts.edu/
-[1.5]: https://snakemake.readthedocs.io/en/stable/
-[2]: https://tucca-cellag.github.io/tucca-rna-seq/introduction
-[2.5]: https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html
-[3]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag/tucca-rna-seq.html
-[4]: https://github.com/tucca-cellag/tucca-rna-seq/issues
-[5]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new/choose
+[tucca]: https://cellularagriculture.tufts.edu/
+[snakemake]: https://snakemake.readthedocs.io/en/stable/
+[our-docs]: https://tucca-cellag.github.io/tucca-rna-seq/introduction
+[best-prac]: https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html
+[swc]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/tucca-cellag/tucca-rna-seq.html
+[see-issues]: https://github.com/tucca-cellag/tucca-rna-seq/issues
+[open-issue]: https://github.com/tucca-cellag/tucca-rna-seq/issues/new/choose
+[data-collection]: https://tucca-cellag.github.io/tucca-rna-seq/data-collection/data-collection-why
 [contact]: <mailto:benjamin.bromberg@tufts.edu>
-[6]: .github/CONTRIBUTING.md
-[7]: CODE_OF_CONDUCT.md
-[8]: https://github.com/tucca-cellag/tucca-rna-seq/releases/tag/v0.9.0
-[9]: https://bioconductor.org/packages/release/bioc/html/pcaExplorer.html
-[10]: https://bioconductor.org/packages/release/bioc/html/ideal.html
-[11]: https://bioconductor.org/packages/release/bioc/html/GeneTonic.html
-[12]: https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
+[contrib]: .github/CONTRIBUTING.md
+[conduct]: CODE_OF_CONDUCT.md
+[v0.9.0]: https://github.com/tucca-cellag/tucca-rna-seq/releases/tag/v0.9.0
+[pcaExplorer]: https://bioconductor.org/packages/release/bioc/html/pcaExplorer.html
+[ideal]: https://bioconductor.org/packages/release/bioc/html/ideal.html
+[GeneTonic]: https://bioconductor.org/packages/release/bioc/html/GeneTonic.html
+[clusterProfiler]: https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
