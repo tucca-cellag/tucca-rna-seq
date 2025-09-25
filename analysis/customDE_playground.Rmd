@@ -180,14 +180,35 @@ base::message("Attempting to load OrgDb package: ", org_db_pkg)
 # Set a default value for annotation_obj
 annotation_obj <- NULL
 
-# Try to load the required OrgDb package. If this fails, it means the renv
-# environment is not correctly set up.
+# Try to load the package. If it's not there, try to install it.
 if (!base::require(org_db_pkg, character.only = TRUE)) {
-  base::message(
-    "OrgDb package could not be loaded. Please ensure the pipeline ",
-    "has run successfully and that you are in the correct R environment."
+  base::message("Package not found, attempting installation via renv...")
+  tryCatch(
+    {
+      if (install_method == "local") {
+        # For a locally built package, we need to provide the path to renv
+        local_pkg_path <- here::here("tucca-rna-seq", install_source)
+        base::message(
+          "Attempting to install local package from: ",
+          local_pkg_path
+        )
+        # We point renv to the directory containing the package source
+        renv::install(local_pkg_path, prompt = FALSE)
+      } else {
+        # For remote packages, renv can find it by name from Bioconductor
+        base::message("Attempting to install remote package: ", org_db_pkg)
+        renv::install(org_db_pkg, prompt = FALSE)
+      }
+    },
+    error = function(e) {
+      base::message(base::paste("Installation of", org_db_pkg, "failed."))
+      base::message("Original error: ", e$message)
+    }
   )
-} else {
+}
+
+# Now, try to load it again. If it works, create the annotation object.
+if (base::require(org_db_pkg, character.only = TRUE)) {
   # Determine the keytype based on the genome annotation source from config.yaml
   ref_source <- config$ref_assembly$source
   keytype <- if (ref_source %in% base::c("Ensembl", "GENCODE")) {
@@ -238,6 +259,11 @@ if (!base::require(org_db_pkg, character.only = TRUE)) {
       gene_name = dplyr::all_of(symbol_col)
     ) |>
     dplyr::filter(!base::is.na(gene_name))
+} else {
+  base::message(
+    "OrgDb package could not be loaded. Please ensure the pipeline",
+    "has run successfully and that you are in the correct R environment."
+  )
 }
 ```
 
