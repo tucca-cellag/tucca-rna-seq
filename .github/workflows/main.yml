@@ -447,6 +447,11 @@ jobs:
               output_file = "pcaExplorer_playground_mouse.html",
               output_dir = "rmd_test_output"
             )
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/ideal_playground_mouse.Rmd",
+              output_file = "ideal_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
           } else {
             # Use default notebooks for other scenarios (yeast, local reads)
             rmarkdown::render(
