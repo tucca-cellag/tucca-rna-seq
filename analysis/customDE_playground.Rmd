@@ -43,7 +43,7 @@ First, we load all the necessary R packages.
 ```{r setup, message=FALSE, warning=FALSE}
 # Bootstrap the 'here' package. This ensures that `here` is installed before
 # we use it to find the project root.
-if (!requireNamespace("here", quietly = TRUE)) {
+if (!base::requireNamespace("here", quietly = TRUE)) {
   utils::install.packages("here", quiet = TRUE)
 }
 
@@ -55,8 +55,6 @@ renv::restore(
   project = here::here("tucca-rna-seq"), prompt = FALSE, clean = TRUE
 )
 
-# For assembling multi-panel figures, this playground uses the `cowplot` and
-# `ggplotify` packages. Make sure they are included in your renv environment.
 # All functions in this notebook will be called with explicit package namespaces
 # (e.g., `DESeq2::plotMA()`) to ensure clarity and avoid conflicts.
 # This makes `library()` calls unnecessary.
@@ -76,19 +74,19 @@ config <- yaml::read_yaml(config_path)
 analyses_list <- config$diffexp$deseq2$analyses
 
 # Use lapply to iterate over each analysis and extract its contrasts
-analysis_contrast_map <- lapply(analyses_list, function(analysis) {
-  sapply(analysis$contrasts, `[[`, "name")
+analysis_contrast_map <- base::lapply(analyses_list, function(analysis) {
+  base::sapply(analysis$contrasts, `[[`, "name")
 })
 
 # Assign the analysis names to the list elements
-names(analysis_contrast_map) <- sapply(analyses_list, `[[`, "name")
+base::names(analysis_contrast_map) <- base::sapply(analyses_list, `[[`, "name")
 
 # Print the resulting R list with a descriptive header
 base::cat(
   "Available analyses (as list names) and their corresponding",
   "contrasts (as list values):\n\n"
 )
-print(analysis_contrast_map)
+base::print(analysis_contrast_map)
 ```
 
 # Your Configuration
@@ -137,6 +135,112 @@ dst <- base::readRDS(dst_path)
 res_de <- base::readRDS(wald_path)
 ```
 
+# Preparing Annotations for Results Tables
+
+To make our results tables more informative, we first need to map our gene IDs
+(e.g., ENSEMBL IDs) to more common gene symbols or names. The following code
+chunk loads the appropriate organism annotation database (`OrgDb`) and creates
+an `annotation_obj` that we can use to enrich our results.
+
+```{r create_annotation_obj}
+# Load the enrichment parameters that were used in the Snakemake run
+enrichment_params_path <- here::here(
+  "tucca-rna-seq", "resources", "enrichment", "enrichment_params.RDS"
+)
+enrichment_params <- base::readRDS(enrichment_params_path)
+
+# Get OrgDb package name from the loaded parameters.
+# This logic mirrors the pipeline scripts to correctly identify the package
+# name, whether it was installed from Bioconductor or built locally.
+install_method <- enrichment_params$install_method
+install_source <- enrichment_params$install_source
+
+# Determine the actual package name
+org_db_pkg <- if (install_method == "local") {
+  # When built locally, find the package name from the build directory.
+  local_build_path <- here::here("tucca-rna-seq", install_source)
+  pkg_dirs <- base::list.dirs(
+    path = local_build_path,
+    full.names = FALSE, recursive = FALSE
+  )
+  pkg_name <- pkg_dirs[grepl("^org\\..+\\.db$", pkg_dirs)]
+  if (base::length(pkg_name) == 0) {
+    base::stop(
+      "Could not find a locally built OrgDb package in the specified",
+      "directory: ", local_build_path
+    )
+  }
+  pkg_name[1]
+} else {
+  enrichment_params$org_db_pkg
+}
+
+base::message("Attempting to load OrgDb package: ", org_db_pkg)
+
+# Set a default value for annotation_obj
+annotation_obj <- NULL
+
+# Try to load the required OrgDb package. If this fails, it means the renv
+# environment is not correctly set up.
+if (!base::require(org_db_pkg, character.only = TRUE)) {
+  base::message(
+    "OrgDb package could not be loaded. Please ensure the pipeline ",
+    "has run successfully and that you are in the correct R environment."
+  )
+} else {
+  # Determine the keytype based on the genome annotation source from config.yaml
+  ref_source <- config$ref_assembly$source
+  keytype <- if (ref_source %in% base::c("Ensembl", "GENCODE")) {
+    "ENSEMBL"
+  } else if (ref_source == "RefSeq") {
+    "ENTREZID"
+  } else {
+    base::warning(base::paste(
+      "Unrecognized ref_assembly.source:", ref_source,
+      "- defaulting keytype to ENSEMBL."
+    ))
+    "ENSEMBL"
+  }
+
+  base::message(base::paste(
+    "Using", org_db_pkg, "for annotation with keytype '", keytype, "'."
+  ))
+
+  # The annotation object needs columns: 'gene_id', 'gene_name'
+  # We will map from the appropriate gene IDs based on the keytype
+  keys <- utils::head(base::rownames(dds))
+
+  # Determine the correct column for gene symbols
+  all_cols <- AnnotationDbi::columns(base::get(org_db_pkg))
+  symbol_col_candidates <- base::c("SYMBOL", "GENENAME")
+  symbol_col <- NULL
+
+  for (candidate in symbol_col_candidates) {
+    if (candidate %in% all_cols) {
+      symbol_col <- candidate
+      base::message("Found '", symbol_col, "' as the gene symbol column.")
+      break
+    }
+  }
+
+  if (base::is.null(symbol_col)) {
+    base::stop("Could not find a suitable gene symbol column in this OrgDb.")
+  }
+
+  annotation_obj <- AnnotationDbi::select(
+    base::get(org_db_pkg),
+    keys = AnnotationDbi::keys(base::get(org_db_pkg), keytype = keytype),
+    columns = base::c(symbol_col),
+    keytype = keytype
+  ) |>
+    dplyr::rename(
+      gene_id = dplyr::all_of(keytype),
+      gene_name = dplyr::all_of(symbol_col)
+    ) |>
+    dplyr::filter(!base::is.na(gene_name))
+}
+```
+
 # Exploratory Data Analysis & QC
 
 Before diving into the differential expression results, it's crucial to perform
@@ -154,7 +258,7 @@ samples from the same experimental group to cluster together.
 ```{r plot-pca}
 # The `intgroup` argument specifies which variable(s) from the colData to use
 # for coloring and shaping the points.
-p_pca <- DESeq2::plotPCA(dst, intgroup = c("treatment1", "treatment2")) +
+p_pca <- DESeq2::plotPCA(dst, intgroup = base::c("treatment1", "treatment2")) +
   ggplot2::labs(title = "PCA of Variance-Stabilized Counts") +
   ggplot2::theme_bw()
 p_pca
@@ -191,11 +295,11 @@ to the sample distance heatmap.
 vst_mat <- SummarizedExperiment::assay(dst)
 
 # Compute pairwise distances
-sample_dists <- stats::dist(t(vst_mat))
+sample_dists <- stats::dist(base::t(vst_mat))
 sample_dist_matrix <- base::as.matrix(sample_dists)
 
 # Get metadata for annotation
-metadata <- SummarizedExperiment::colData(dst) |> as.data.frame()
+metadata <- SummarizedExperiment::colData(dst) |> base::as.data.frame()
 
 # Define a color palette from scico.
 # You can explore other palettes by changing the `palette` argument.
@@ -205,18 +309,18 @@ heatmap_colors <- scico::scico(n = 100, palette = "lajolla")
 # Generate colors for metadata annotations.
 # This code dynamically creates a named list of colors for each column
 # in your metadata, which can be passed to pheatmap.
-annotation_colors <- list()
-for (colname in names(metadata)) {
-  if (is.factor(metadata[[colname]]) || is.character(metadata[[colname]])) {
-    unique_vals <- unique(metadata[[colname]])
-    if (length(unique_vals) <= 9) {
+annotation_colors <- base::list()
+for (colname in base::names(metadata)) {
+  if (base::is.factor(metadata[[colname]]) || base::is.character(metadata[[colname]])) {
+    unique_vals <- base::unique(metadata[[colname]])
+    if (base::length(unique_vals) <= 9) {
       # Use a qualitative palette for few categories
-      palette <- RColorBrewer::brewer.pal(n = length(unique_vals), name = "Set1")
+      palette <- RColorBrewer::brewer.pal(n = base::length(unique_vals), name = "Set1")
     } else {
       # Use a scico palette for more categories
-      palette <- scico::scico(n = length(unique_vals), palette = "berlin")
+      palette <- scico::scico(n = base::length(unique_vals), palette = "berlin")
     }
-    names(palette) <- unique_vals
+    base::names(palette) <- unique_vals
     annotation_colors[[colname]] <- palette
   }
 }
@@ -270,8 +374,8 @@ average expression.
 ```{r plot-ma}
 p_ma <- ggplotify::as.ggplot(~ DESeq2::plotMA(
   res_de,
-  ylim = c(-4, 4), # Adjust ylim as needed
-  main = paste("MA Plot for:", contrast_name)
+  ylim = base::c(-4, 4), # Adjust ylim as needed
+  main = base::paste("MA Plot for:", contrast_name)
 ))
 p_ma
 ```
@@ -289,22 +393,22 @@ customizable plots.
 
 ```{r plot-volcano}
 # Convert results to a data frame for plotting
-res_df <- as.data.frame(res_de)
+res_df <- base::as.data.frame(res_de)
 
 # To label specific genes, create a vector of gene symbols.
 # Example:
-# genes_to_label <- c("GENE1", "GENE2", "ANOTHER_GENE")
+# genes_to_label <- base::c("GENE1", "GENE2", "ANOTHER_GENE")
 #
 # You can then pass this vector to the `selectLab` argument. Note that your
 # results data frame must have a column with gene symbols. The code below
 # assumes your row names are gene symbols.
 p_volcano <- EnhancedVolcano::EnhancedVolcano(
   res_df,
-  lab = rownames(res_df),
+  lab = base::rownames(res_df),
   x = "log2FoldChange",
   y = "padj",
-  title = paste("Volcano Plot for:", contrast_name),
-  subtitle = paste0("Log2 FC cutoff = ", lfc_threshold, "; p-adj cutoff = ", alpha),
+  title = base::paste("Volcano Plot for:", contrast_name),
+  subtitle = base::paste0("Log2 FC cutoff = ", lfc_threshold, "; p-adj cutoff = ", alpha),
   pCutoff = alpha,
   FCcutoff = lfc_threshold,
   pointSize = 2.0,
@@ -338,10 +442,10 @@ absolute expression levels.
 #   dplyr::filter(padj < 0.05) |>
 #   rownames()
 top_genes <- res_de |>
-  as.data.frame() |>
+  base::as.data.frame() |>
   dplyr::arrange(padj) |>
   utils::head(20) |>
-  rownames()
+  base::rownames()
 
 # Extract normalized, transformed counts for these genes
 vst_mat <- SummarizedExperiment::assay(dst)
@@ -362,15 +466,113 @@ p_heatmap_de <- ggplotify::as.ggplot(pheatmap::pheatmap(
   color = scico::scico(100, palette = "vik"),
   # Define symmetric breaks for the color scale for Z-scores.
   # Adjust the range (-3, 3) if your Z-scores have a wider spread.
-  breaks = seq(-3, 3, length.out = 101),
+  breaks = base::seq(-3, 3, length.out = 101),
   # Additional parameters for aesthetics and clarity
   fontsize = 10,
   cutree_cols = 2, # Cut column dendrogram into 2 clusters
-  legend_breaks = c(-3, 0, 3),
-  legend_labels = c("Low", "Medium", "High"),
+  legend_breaks = base::c(-3, 0, 3),
+  legend_labels = base::c("Low", "Medium", "High"),
   silent = TRUE
 ))
 p_heatmap_de
+```
+
+# Exploring DE Results in Data Tables
+
+While plots are great for seeing the big picture, data tables are essential for
+drilling down into the details. This section demonstrates how to create
+interactive tables of your DE results.
+
+```{r create-results-tables}
+# Convert the DESeqResults object to a data frame and add annotations
+res_df_annotated <- res_de |>
+  base::as.data.frame() |>
+  tibble::rownames_to_column(var = "gene_id") |>
+  dplyr::left_join(annotation_obj, by = "gene_id") |>
+  # Round numeric columns for readability
+  dplyr::mutate(dplyr::across(tidyselect::where(is.numeric), ~ base::round(.x, 3)))
+
+# Create clickable links for gene IDs and symbols
+species_name <- config$ref_assembly$species
+res_df_linked <- res_df_annotated |>
+  dplyr::mutate(
+    # Create ENSEMBL links if the source is Ensembl/GENCODE
+    gene_id_link = dplyr::case_when(
+      config$ref_assembly$source %in% base::c("Ensembl", "GENCODE") ~
+        base::paste0(
+          "<a href='http://www.ensembl.org/", species_name,
+          "/Gene/Summary?g=", gene_id, "' target='_blank'>", gene_id, "</a>"
+        ),
+      TRUE ~ gene_id
+    ),
+    # Create NCBI links for gene symbols
+    gene_symbol_link = base::paste0(
+      "<a href='http://www.ncbi.nlm.nih.gov/gene/?term=",
+      gene_name, "' target='_blank'>", gene_name, "</a>"
+    )
+  ) |>
+  # Reorder columns to be more intuitive
+  dplyr::select(
+    gene_id_link, gene_symbol_link, baseMean, log2FoldChange, padj,
+    tidyselect::everything()
+  )
+
+# Filter for significant genes
+res_sig <- res_df_linked |>
+  dplyr::filter(padj < alpha & base::abs(log2FoldChange) > lfc_threshold)
+
+# Separate into up- and down-regulated
+res_up <- res_sig |> dplyr::filter(log2FoldChange > 0)
+res_down <- res_sig |> dplyr::filter(log2FoldChange < 0)
+```
+
+## Full DE Results Table
+
+This table contains the complete, annotated results for the selected contrast.
+
+```{r table-full-results, echo=FALSE}
+DT::datatable(
+  res_df_linked,
+  escape = FALSE, # Important to render HTML links
+  caption = "Full annotated DE results",
+  options = base::list(scrollX = TRUE)
+)
+```
+
+## Significant DE Genes
+
+This table shows genes that pass the significance cutoffs defined in your
+`config.yaml` (p-adj < `r alpha` and |log2FC| > `r lfc_threshold`).
+
+```{r table-sig-results, echo=FALSE}
+DT::datatable(
+  res_sig,
+  escape = FALSE,
+  caption = "Significant DE genes",
+  options = base::list(scrollX = TRUE)
+)
+```
+
+### Upregulated Genes
+
+```{r table-up-results, echo=FALSE}
+DT::datatable(
+  res_up,
+  escape = FALSE,
+  caption = "Significantly upregulated genes",
+  options = base::list(scrollX = TRUE)
+)
+```
+
+### Downregulated Genes
+
+```{r table-down-results, echo=FALSE}
+DT::datatable(
+  res_down,
+  escape = FALSE,
+  caption = "Significantly downregulated genes",
+  options = base::list(scrollX = TRUE)
+)
 ```
 
 # Arranging and Saving Plots with `cowplot`
@@ -384,7 +586,7 @@ created into a single figure and save it to a file.
 # Arrange plots into a 2x2 grid
 final_figure <- cowplot::plot_grid(
   p_pca, p_volcano, p_ma, p_heatmap_de,
-  labels = c("A", "B", "C", "D"),
+  labels = base::c("A", "B", "C", "D"),
   ncol = 2,
   align = "hv"
 )
@@ -406,7 +608,7 @@ final_figure
 Below is the output of the R session used to generate this report.
 
 ```{r sessionInfo}
-sessionInfo()
+utils::sessionInfo()
 ```
 
 # References
@@ -414,7 +616,7 @@ sessionInfo()
 ```{r citation-reports, message=FALSE, warning=FALSE, echo=TRUE}
 # Packages to cite
 dependencies <- renv::dependencies()
-pkgs <- unique(dependencies$Package)
+pkgs <- base::unique(dependencies$Package)
 
 # Create grateful citation report
 grateful::cite_packages(
@@ -438,6 +640,6 @@ pkgs_tbl <- grateful::cite_packages(
   cite.tidyverse = FALSE,
   include.RStudio = FALSE # Set to FALSE for automated testing.
 )
-pkgs_tbl$Citation <- gsub("\\.\\.\\.\\.", "", pkgs_tbl$Citation)
+pkgs_tbl$Citation <- base::gsub("\\.\\.\\.\\.", "", pkgs_tbl$Citation)
 knitr::kable(pkgs_tbl)
 ```
