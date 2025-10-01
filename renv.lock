@@ -1056,49 +1056,6 @@
       "NeedsCompilation": "yes",
       "Author": "Hervé Pagès [aut, cre], Aaron Lun [ctb], Peter Hickey [ctb]"
     },
-    "EnhancedVolcano": {
-      "Package": "EnhancedVolcano",
-      "Version": "1.13.2",
-      "Source": "GitHub",
-      "Type": "Package",
-      "Title": "Publication-ready volcano plots with enhanced colouring and labeling",
-      "Authors@R": "c( person(\"Kevin\", \"Blighe\", role = c(\"aut\", \"cre\"), email = \"kevin@clinicalbioinformatics.co.uk\"), person(\"Sharmila\", \"Rana\", role = c(\"aut\")), person(\"Emir\", \"Turkes\", role = c(\"ctb\")), person(\"Benjamin\", \"Ostendorf\", role = c(\"ctb\")), person(\"Andrea\", \"Grioni\", role = c(\"ctb\")), person(\"Benjamin\", \"Bromberg\", role = c(\"ctb\")), person(\"Myles\", \"Lewis\", role = c(\"aut\")))",
-      "Maintainer": "Kevin Blighe <kevin@clinicalbioinformatics.co.uk>",
-      "Description": "Volcano plots represent a useful way to visualise the results of differential expression analyses. Here, we present a highly-configurable function that produces publication-ready volcano plots. EnhancedVolcano will attempt to fit as many point labels in the plot window as possible, thus avoiding 'clogging' up the plot with labels that could not otherwise have been read. Other functionality allows the user to identify up to 4 different types of attributes in the same plot space via colour, shape, size, and shade parameter configurations.",
-      "License": "GPL-3",
-      "Depends": [
-        "ggplot2",
-        "ggrepel"
-      ],
-      "Imports": [
-        "methods"
-      ],
-      "Suggests": [
-        "ggalt",
-        "ggrastr",
-        "RUnit",
-        "BiocGenerics",
-        "knitr",
-        "DESeq2",
-        "pasilla",
-        "airway",
-        "org.Hs.eg.db",
-        "gridExtra",
-        "magrittr",
-        "rmarkdown"
-      ],
-      "URL": "https://github.com/kevinblighe/EnhancedVolcano",
-      "biocViews": "RNASeq, GeneExpression, Transcription, DifferentialExpression, ImmunoOncology",
-      "VignetteBuilder": "knitr",
-      "RoxygenNote": "7.1.2",
-      "Author": "Kevin Blighe [aut, cre], Sharmila Rana [aut], Emir Turkes [ctb], Benjamin Ostendorf [ctb], Andrea Grioni [ctb], Benjamin Bromberg [ctb], Myles Lewis [aut]",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "benjibromberg",
-      "RemoteRepo": "EnhancedVolcano",
-      "RemoteRef": "master",
-      "RemoteSha": "6d1a0f6976ec00afb7fb3cf5aebc380814d814a2"
-    },
     "GO.db": {
       "Package": "GO.db",
       "Version": "3.20.0",
@@ -10769,36 +10726,6 @@
       "Author": "Guangchuang Yu [aut, cre] (<https://orcid.org/0000-0002-6485-8781>), Shuangbin Xu [ctb] (<https://orcid.org/0000-0003-3513-5362>)",
       "Maintainer": "Guangchuang Yu <guangchuangyu@gmail.com>",
       "Repository": "CRAN"
-    },
-    "scico": {
-      "Package": "scico",
-      "Version": "1.5.0",
-      "Source": "Repository",
-      "Title": "Colour Palettes Based on the Scientific Colour-Maps",
-      "Authors@R": "c( person(\"Thomas Lin\", \"Pedersen\", email = \"thomasp85@gmail.com\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-5147-4711\")), person(\"Fabio\", \"Crameri\", role = c(\"aut\")))",
-      "Maintainer": "Thomas Lin Pedersen <thomasp85@gmail.com>",
-      "Description": "Colour choice in information visualisation is important in order to avoid being mislead by inherent bias in the used colour palette. The 'scico' package provides access to the perceptually uniform and colour-blindness  friendly palettes developed by Fabio Crameri and released under the  \"Scientific Colour-Maps\" moniker. The package contains 24 different palettes  and includes both diverging and sequential types.",
-      "License": "MIT + file LICENSE",
-      "Encoding": "UTF-8",
-      "Depends": [
-        "R (>= 2.10)"
-      ],
-      "Imports": [
-        "scales",
-        "grDevices"
-      ],
-      "Suggests": [
-        "ggplot2",
-        "testthat",
-        "dplyr",
-        "covr"
-      ],
-      "URL": "https://github.com/thomasp85/scico",
-      "BugReports": "https://github.com/thomasp85/scico/issues",
-      "RoxygenNote": "7.2.3",
-      "NeedsCompilation": "no",
-      "Author": "Thomas Lin Pedersen [aut, cre] (<https://orcid.org/0000-0002-5147-4711>), Fabio Crameri [aut]",
-      "Repository": "https://packagemanager.posit.co/cran/latest"
     },
     "selectr": {
       "Package": "selectr",

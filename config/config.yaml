@@ -150,10 +150,6 @@ diffexp:
     transform:
       method: "rlog"
       extra: ""
-    # Cutoffs for downstream analysis and visualization.
-    # These values are used by the RMarkdown playgrounds.
-    p_adj_cutoff: 0.05
-    lfc_threshold: 1.0
 
 # ----------------------------------------------------------
 # Pathway Enrichment Section:
