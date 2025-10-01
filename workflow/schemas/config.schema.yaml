@@ -3,10 +3,8 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 description: snakemake configuration file
 
 properties:
-  samples:
-    type: string
-  units:
-    type: string
+  samples: { type: string, default: "config/samples.tsv" }
+  units: { type: string, default: "config/units.tsv" }
 
   ref_assembly:
     type: object
@@ -23,6 +21,7 @@ properties:
         type: string
       species:
         type: string
+        description: "Scientific name with underscore (e.g., Mus_musculus)"
         pattern: "^[A-Z][a-z]+_[a-z]+(?:_[a-z]+)?$"
       custom_files:
         type: object
@@ -33,10 +32,7 @@ properties:
             type: string
           custom_transcriptome_fasta:
             type: string
-    required:
-      - source
-      - name
-      - species
+    required: [source, name, species]
     allOf:
       - if:
           properties:
@@ -56,328 +52,332 @@ properties:
             accession:
               pattern: "^GCA_[0-9]+.[0-9]+$"
               description: "Ensembl and GENCODE assembly accessions are of the pattern ^GCA_[0-9]+.[0-9]+$"
-          required:
-            - release
+          required: [release]
 
   api_keys:
     type: object
+    default: {}
     properties:
-      ncbi:
-        type: string
+      ncbi: { type: string, default: "" }
 
   diffexp:
     type: object
+    default: {}
     properties:
       tximeta:
         type: object
+        default: {}
         properties:
           factors:
             type: array
+            minItems: 1
             items:
               type: object
+              default: {}
               properties:
-                name:
-                  type: string
-                reference_level:
-                  type: string
+                name: { type: string, default: "treatment1" }
+                reference_level: { type: string, default: "untreated" }
               required: [name, reference_level]
           extra:
-            type: string
+            {
+              type: string,
+              default: "",
+              description: "Extra params for tximeta",
+            }
+        required: [factors]
       deseq2:
         type: object
+        default: {}
         properties:
           analyses:
             type: array
             minItems: 1
             items:
               type: object
+              default: {}
               properties:
-                name:
-                  type: string
+                name: { type: string, default: "treatment1_treatment2" }
                 deseqdataset:
                   type: object
+                  default: {}
                   properties:
                     formula:
-                      type: string
+                      { type: string, default: "~ treatment1 + treatment2" }
                     min_counts:
-                      type: integer
-                    extra:
-                      type: string
-                    threads:
-                      type: integer
-                  required: [formula, min_counts, threads]
+                      {
+                        type: integer,
+                        default: 10,
+                        description: "For more information on pre-filtering via `min_counts`, see https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering or https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt",
+                      }
+                    extra: { type: string, default: "" }
+                    threads: { type: integer, default: 1 }
+                  required: [formula]
                 wald:
                   type: object
+                  default: {}
                   properties:
-                    deseq_extra:
-                      type: string
-                    shrink_extra:
-                      type: string
-                    results_extra:
-                      type: string
-                    threads:
-                      type: integer
-                  required: [threads]
+                    deseq_extra: { type: string, default: "" }
+                    shrink_extra: { type: string, default: "type = 'apeglm'" }
+                    results_extra: { type: string, default: "alpha = 0.05" }
+                    threads: { type: integer, default: 1 }
                 contrasts:
                   type: array
                   items:
                     type: object
+                    default: {}
                     properties:
                       name:
-                        type: string
+                        {
+                          type: string,
+                          default: "treatment1_treated_vs_untreated",
+                        }
                       elements:
                         type: array
+                        default: ["treatment1", "treated", "untreated"]
                         items:
                           type: string
                     required: [name, elements]
               required: [name, deseqdataset, wald, contrasts]
-        required: [analyses]
+          transform:
+            type: object
+            default: {}
+            properties:
+              method: { type: string, default: "rlog" }
+              extra: { type: string, default: "" }
+        required: [analyses, transform]
+    required: [tximeta, deseq2]
 
   enrichment:
     type: object
+    default: {}
     properties:
       padj_cutoff:
         type: number
+        default: 0.05
         description: "Adjusted p-value cutoff to define significant genes for ORA."
       targets:
         type: array
-        items:
-          type: string
+        default: []
+        description: "List of target gene symbols to search for in enriched pathways. Not yet implemented. TODO"
+        items: { type: string, default: "" }
       clusterprofiler:
         type: object
+        default: {}
         properties:
           gsea:
             type: object
+            default: {}
             properties:
               gseGO:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-                required: [extra]
+                  extra: { type: string, default: "" }
               gseKEGG:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-                required: [extra]
+                  extra: { type: string, default: "" }
             required: [gseGO, gseKEGG]
           ora:
             type: object
+            default: {}
             properties:
               enrichGO:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
+                  extra: { type: string, default: "" }
               enrichKEGG:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-                required: [extra]
+                  extra: { type: string, default: "" }
             required: [enrichGO, enrichKEGG]
           kegg_module:
             type: object
+            default: {}
             properties:
-              enabled:
-                type: boolean
+              enabled: { type: boolean, default: false }
               enrichMKEGG:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
+                  extra: { type: string, default: "" }
               gseMKEGG:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-            required: [enabled]
+                  extra: { type: string, default: "" }
+            required: [enrichMKEGG, gseMKEGG]
           wikipathways:
             type: object
+            default: {}
             properties:
-              enabled:
-                type: boolean
+              enabled: { type: boolean, default: false }
               enrichWP:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-                required: [extra]
+                  extra: { type: string, default: "" }
               gseWP:
                 type: object
+                default: {}
                 properties:
-                  extra: { type: string }
-                required: [extra]
-            required: [enabled]
-        required: [gsea, ora, kegg_module, wikipathways]
+                  extra: { type: string, default: "" }
+            required: [enrichWP, gseWP]
       msigdb:
         type: object
         description: "MSigDB (Molecular Signatures Database) configuration"
         properties:
-          enabled:
-            type: boolean
-            description: "Enable MSigDB analysis"
-            default: false
+          enabled: { type: boolean, default: true }
           collections:
             type: array
+            default: ["H"]
             description: "List of MSigDB collections to analyze (H, C1, C2, C3, C4, C5, C6, C7, C8)"
             items:
               type: string
               enum: ["H", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"]
           custom_gmt_files:
             type: array
+            default: []
             description: "List of paths to custom GMT files for ORA and GSEA"
-            items:
-              type: string
+            items: { type: string }
           ora:
             type: object
+            default: {}
             properties:
-              extra:
-                type: string
-                description: "Extra parameters for MSigDB ORA analysis"
-            required: [extra]
+              extra: { type: string, default: "" }
           gsea:
             type: object
+            default: {}
             properties:
-              extra:
-                type: string
-                description: "Extra parameters for MSigDB GSEA analysis"
-            required: [extra]
-        required: [enabled]
+              extra: { type: string, default: "" }
+        required: [collections, custom_gmt_files, ora, gsea]
       spia:
         type: object
+        default: {}
         description: "SPIA (Signaling Pathway Impact Analysis) configuration"
         properties:
-          enabled:
-            type: boolean
-            description: "Enable SPIA analysis"
-            default: false
+          enabled: { type: boolean, default: false }
           extra:
-            type: string
-            description: "Extra parameters for SPIA analysis"
-        required: [enabled]
+            {
+              type: string,
+              default: "beta = NULL, verbose = TRUE, plots = FALSE",
+            }
       harmonizome:
         type: object
+        default: {}
         description: "Harmonizome database configuration for tissue-specific gene sets"
         properties:
-          enabled:
-            type: boolean
-            description: "Enable Harmonizome analysis"
-            default: false
+          enabled: { type: boolean, default: false }
           datasets:
             type: array
-            description: "List of Harmonizome datasets and gene sets to analyze"
+            description: "List of Harmonizome datasets and gene sets to analyze (see https://maayanlab.cloud/Harmonizome/)"
             items:
               type: object
               properties:
                 name:
-                  type: string
-                  description: "Name of the Harmonizome dataset (e.g., 'GTEx Tissue Gene Expression Profiles')"
+                  {
+                    type: string,
+                    description: "Name of the Harmonizome dataset (e.g., 'GTEx Tissue Gene Expression Profiles')",
+                  }
                 gene_sets:
                   type: array
                   description: "List of gene set names to download from this dataset"
                   items:
                     type: string
-                    description: "Name of the gene set (e.g., 'muscle', 'adipocyte')"
-              required:
-                - name
-                - gene_sets
+                    description: "Name of the gene set (e.g., 'Muscle', 'Adipocyte')"
+              required: [name, gene_sets]
           ora:
             type: object
+            default: {}
             properties:
-              extra:
-                type: string
-                description: "Extra parameters for ORA analysis"
-                default: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+              extra: { type: string, default: "" }
           gsea:
             type: object
+            default: {}
             properties:
-              extra:
-                type: string
-                description: "Extra parameters for GSEA analysis"
-                default: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
-        required: [enabled]
+              extra: { type: string, default: "" }
+        required: [ora, gsea]
       annotationforge:
         type: object
+        default: {}
         properties:
-          version:
-            type: string
+          version: { type: string, default: 0.1.0 }
           author:
-            type: string
-          extra:
-            type: string
+            { type: string, default: "firstname.lastname@institution.edu" }
+          extra: { type: string, default: "useSynonyms = TRUE" }
     required:
       [padj_cutoff, clusterprofiler, msigdb, spia, harmonizome, annotationforge]
 
   params:
     type: object
+    default: {}
     properties:
       fastqc:
         type: object
+        default: {}
         properties:
-          memory:
-            type: integer
-          extra:
-            type: string
+          memory: { type: integer, default: 1024 }
+          extra: { type: string, default: "" }
       star_index:
         type: object
+        default: {}
         properties:
-          sjdbOverhang:
-            type: integer
-          extra:
-            type: string
+          sjdbOverhang: { type: integer, default: 149 }
+          extra: { type: string, default: "" }
       star:
         type: object
+        default: {}
         properties:
-          outSAMtype:
-            type: string
-          outSAMunmapped:
-            type: string
-          outSAMattributes:
-            type: string
-          readFilesCommand:
-            type: string
-          outFilterMultimapNmax:
-            type: integer
-          outFilterScoreMinOverLread:
-            type: integer
-          outFilterMatchNminOverLread:
-            type: integer
-          alignIntronMin:
-            type: integer
-          alignIntronMax:
-            type: integer
           extra:
-            type: string
+            {
+              type: string,
+              default: "--outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard --outFilterMultimapNmax 1 --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --alignIntronMin 1 --alignIntronMax 2500",
+            }
       qualimap_rnaseq:
         type: object
+        default: {}
         properties:
-          enabled:
-            type: boolean
-            description: "Whether to enable Qualimap RNA-Seq QC analysis"
-            default: true
-          counting_alg:
-            type: string
-          sequencing_protocol:
-            type: string
-          extra:
-            type: string
+          enabled: { type: boolean, default: true }
+          counting_alg: { type: string, default: "proportional" }
+          sequencing_protocol: { type: string, default: "non-strand-specific" }
+          extra: { type: string, default: "--paired --java-mem-size=8G" }
       salmon_index:
         type: object
+        default: {}
         properties:
-          extra:
-            type: string
+          extra: { type: string, default: "-k 31" }
       salmon_quant:
         type: object
+        default: {}
         properties:
-          libtype:
-            type: string
+          libtype: { type: string, default: "A" }
           extra:
-            type: string
+            {
+              type: string,
+              default: "--seqBias --posBias --writeUnmappedNames",
+            }
       multiqc:
         type: object
+        default: {}
         properties:
           extra:
-            type: string
+            {
+              type: string,
+              default: "--verbose --force",
+              description: "Leave out --force if you don't want to automatically overwrite existing multiqc results on a re-run",
+            }
       sra_tools:
         type: object
+        default: {}
         properties:
           vdb_config_ra_path:
-            type: string
+            {
+              type: string,
+              default: "/repository/user/main/remote_access=true",
+            }
           subsample:
             type: object
             description: "Configuration for subsampling SRA data for testing purposes"
@@ -394,7 +394,9 @@ properties:
                 type: integer
                 description: "Maximum spot ID for SRA subsampling"
                 default: 100000
-            required: [enabled, min_spot_id, max_spot_id]
+            required: [min_spot_id, max_spot_id]
+    required:
+      [qualimap_rnaseq, star, salmon_index, salmon_quant, multiqc, sra_tools]
 
 required:
   - samples
