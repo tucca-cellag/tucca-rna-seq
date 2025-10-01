@@ -181,6 +181,10 @@ if (enrichment_params$msigdb$enabled) {
       # Filter for this collection
       collection_genesets <- msigdb_genesets[msigdb_genesets$gs_cat == collection, ]
       collection_data <- prepare_enrichment_data(collection_genesets, "msigdb")
+      if (nrow(collection_data$TERM2GENE) == 0L) {
+        base::message("No genesets for collection '", collection, "'. Skipping.")
+        next
+      }
 
       # Run GSEA
       gsea_defaults <- "geneList = genelist_fc_sort"
