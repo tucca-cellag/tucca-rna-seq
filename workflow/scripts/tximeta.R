@@ -50,7 +50,7 @@ if (!base::is.null(factor_specs_list) && base::length(factor_specs_list) > 0) {
           ref = ref_level
         )
         base::message(base::paste0(
-          "Column '", factor_name, "' converted to factor with",
+          "Column '", factor_name, "' converted to factor with ",
           "reference level '", ref_level, "'."
         ))
       } else {
