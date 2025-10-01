@@ -34,6 +34,13 @@ base::library(package = "dplyr", character.only = TRUE)
 species <- snakemake@params$species
 collections <- snakemake@params$collections
 
+if (is.null(species) || species == "") {
+  stop("Parameter 'species' is required but not provided")
+}
+if (is.null(collections) || length(collections) == 0) {
+  stop("Parameter 'collections' is required but not provided")
+}
+
 base::message("Pre-loading MSigDB data for species: ", species)
 base::message("Collections to load: ", base::paste(collections, collapse = ", "))
 

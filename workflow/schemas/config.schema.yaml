@@ -187,7 +187,69 @@ properties:
                 properties:
                   extra: { type: string }
             required: [enabled]
-        required: [gsea, ora, kegg_module]
+          wikipathways:
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              enrichWP:
+                type: object
+                properties:
+                  extra: { type: string }
+                required: [extra]
+              gseWP:
+                type: object
+                properties:
+                  extra: { type: string }
+                required: [extra]
+            required: [enabled]
+        required: [gsea, ora, kegg_module, wikipathways]
+      msigdb:
+        type: object
+        description: "MSigDB (Molecular Signatures Database) configuration"
+        properties:
+          enabled:
+            type: boolean
+            description: "Enable MSigDB analysis"
+            default: false
+          collections:
+            type: array
+            description: "List of MSigDB collections to analyze (H, C1, C2, C3, C4, C5, C6, C7, C8)"
+            items:
+              type: string
+              enum: ["H", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"]
+          custom_gmt_files:
+            type: array
+            description: "List of paths to custom GMT files for ORA and GSEA"
+            items:
+              type: string
+          ora:
+            type: object
+            properties:
+              extra:
+                type: string
+                description: "Extra parameters for MSigDB ORA analysis"
+            required: [extra]
+          gsea:
+            type: object
+            properties:
+              extra:
+                type: string
+                description: "Extra parameters for MSigDB GSEA analysis"
+            required: [extra]
+        required: [enabled]
+      spia:
+        type: object
+        description: "SPIA (Signaling Pathway Impact Analysis) configuration"
+        properties:
+          enabled:
+            type: boolean
+            description: "Enable SPIA analysis"
+            default: false
+          extra:
+            type: string
+            description: "Extra parameters for SPIA analysis"
+        required: [enabled]
       harmonizome:
         type: object
         description: "Harmonizome database configuration for tissue-specific gene sets"
@@ -238,7 +300,8 @@ properties:
             type: string
           extra:
             type: string
-    required: [padj_cutoff, clusterprofiler, harmonizome]
+    required:
+      [padj_cutoff, clusterprofiler, msigdb, spia, harmonizome, annotationforge]
 
   params:
     type: object
