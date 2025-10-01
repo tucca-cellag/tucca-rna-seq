@@ -52,7 +52,7 @@ here::i_am("tucca-rna-seq/analysis/pcaExplorer_playground.Rmd")
 # We explicitly tell renv where its project directory is.
 # The renv project is in the `tucca-rna-seq` subdirectory.
 renv::restore(
-  project = here::here(), prompt = FALSE, clean = TRUE
+  project = here::here("tucca-rna-seq"), prompt = FALSE, clean = TRUE
 )
 
 # All functions in this notebook will be called with explicit package namespaces
@@ -66,7 +66,7 @@ This chunk reads your `config.yaml` to show which analyses are available.
 
 ```{r possible-analyses}
 # Parse the YAML string into an R list
-config_path <- here::here(, "config", "config.yaml")
+config_path <- here::here("tucca-rna-seq", "config", "config.yaml")
 config <- yaml::read_yaml(config_path)
 
 # Extract and print the names of the available analyses
@@ -136,7 +136,7 @@ install_source <- enrichment_params$install_source
 org_db_pkg <- if (install_method == "local") {
   # When built locally, find the package name from the build directory.
   # The path in config.yaml is relative to the project root.
-  local_build_path <- here::here(, install_source)
+  local_build_path <- here::here("tucca-rna-seq", install_source)
   pkg_dirs <- base::list.dirs(
     path = local_build_path,
     full.names = FALSE, recursive = FALSE
@@ -165,7 +165,7 @@ if (!base::require(org_db_pkg, character.only = TRUE)) {
     {
       if (install_method == "local") {
         # For a locally built package, we need to provide the path to renv
-        local_pkg_path <- here::here(, install_source)
+        local_pkg_path <- here::here("tucca-rna-seq", install_source)
         base::message(
           "Attempting to install local package from: ",
           local_pkg_path
@@ -318,7 +318,7 @@ grateful::cite_packages(
   output = "file",
   out.format = "html",
   citation.style = "nature",
-  out.dir = here::here(, "analysis"),
+  out.dir = here::here("tucca-rna-seq", "analysis"),
   pkgs = pkgs,
   cite.tidyverse = FALSE,
   include.RStudio = FALSE, # Set to FALSE for automated testing (CI/CD). Set to TRUE for interactive use.
@@ -330,7 +330,7 @@ grateful::cite_packages(
 pkgs_tbl <- grateful::cite_packages(
   output = "table",
   citation.style = "nature",
-  out.dir = here::here(),
+  out.dir = here::here("tucca-rna-seq"),
   pkgs = pkgs,
   cite.tidyverse = FALSE,
   include.RStudio = FALSE # Set to FALSE for automated testing (CI/CD). Set to TRUE for interactive use.
