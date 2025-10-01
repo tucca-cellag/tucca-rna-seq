@@ -49,6 +49,10 @@ if (!requireNamespace("here", quietly = TRUE)) {
 # robust to the current working directory.
 here::i_am("tucca-rna-seq/analysis/GeneTonic_playground.Rmd")
 
+# Although here::i_am() is called to set the project root, the `renv`
+# project and all subsequent paths are relative to the `tucca-rna-seq`
+# directory. Therefore, we must use here::here("tucca-rna-seq") to
+# construct paths correctly.
 # We explicitly tell renv where its project directory is.
 # The renv project is in the `tucca-rna-seq` subdirectory.
 renv::restore(
