@@ -228,6 +228,7 @@ properties:
                 type: string
                 description: "Extra parameters for GSEA analysis"
                 default: "pvalueCutoff = 0.05, minGSSize = 10, maxGSSize = 500"
+        required: [enabled]
       annotationforge:
         type: object
         properties:

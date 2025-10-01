@@ -110,7 +110,7 @@ ora_results$KEGG <- safely_set_readable(
 )
 
 # ORA for KEGG Modules (MKEGG)
-if (enrichment_params$clusterprofiler$kegg_module$enabled) {
+if (base::isTRUE(enrichment_params$clusterprofiler$kegg_module$enabled)) {
   base::message("Running ORA for KEGG Modules (MKEGG)...")
   enrichmkegg_defaults <- base::paste0(
     "gene = significant_genes, universe = universe_genes, organism = '",
@@ -133,7 +133,7 @@ if (enrichment_params$clusterprofiler$kegg_module$enabled) {
 }
 
 # ORA for WikiPathways
-if (enrichment_params$clusterprofiler$wikipathways$enabled) {
+if (base::isTRUE(enrichment_params$clusterprofiler$wikipathways$enabled)) {
   # Replaces underscores with spaces in species name for matching
   wp_species <- base::gsub("_", " ", enrichment_params$species)
   supported_wp_species <- clusterProfiler::get_wp_organisms()
@@ -167,7 +167,7 @@ if (enrichment_params$clusterprofiler$wikipathways$enabled) {
 }
 
 # ORA for MSigDB
-if (enrichment_params$msigdb$enabled) {
+if (base::isTRUE(enrichment_params$msigdb$enabled)) {
   base::message("Running ORA for MSigDB...")
 
   # Validate species support
@@ -270,7 +270,7 @@ if (enrichment_params$msigdb$enabled) {
 }
 
 # ORA for Harmonizome
-if (enrichment_params$harmonizome$enabled) {
+if (base::isTRUE(enrichment_params$harmonizome$enabled)) {
   base::message("Running ORA for Harmonizome...")
 
   # Load Harmonizome gene sets
