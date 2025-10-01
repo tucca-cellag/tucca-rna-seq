@@ -245,12 +245,13 @@ def get_md5_file(wildcards: Wildcard) -> str:
 
 def get_checksum_dependency(wildcards: Wildcard) -> List[str]:
     """
-    Returns the checksum validation flag file for a given read, but only if the
-    read is from a local file (not SRA). Returns an empty list otherwise.
+    Returns a list with the checksum validation flag file for a given read,
+    but only if the read is from a local file (not SRA). Returns an empty list
+    otherwise.
     """
     unit = get_unit_record(wildcards)
     if not is_sra_read(unit):
-        return f"results/checksums/{wildcards.sample_unit}_{wildcards.read}.valid"
+        return [f"results/checksums/{wildcards.sample_unit}_{wildcards.read}.valid"]
     return []
 
 
