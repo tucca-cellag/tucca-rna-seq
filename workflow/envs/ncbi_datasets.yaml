@@ -4,4 +4,5 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - ncbi-datasets-cli =17.2.0
+  - ncbi-datasets-cli =18.3
+  - jq =1.8

@@ -1,10 +1,8 @@
-log <- file(snakemake@log[[1]], open = "wt")
-sink(log)
-sink(log, type = "message")
-date()
-suppressPackageStartupMessages({
-  library(devtools)
-})
+log <- base::file(snakemake@log[[1]], open = "wt")
+base::sink(log)
+base::sink(log, type = "message")
+base::date()
+base::library(devtools)
 devtools::session_info()
 
 # Configure tximeta to use cache and config directories within the project
@@ -18,13 +16,18 @@ devtools::session_info()
 # workspace. This directs where packages like tximeta (via rappdirs) might
 # place user-specific configuration files (e.g., bfcloc.json) if not managed
 # by setTximetaBFC's primary mechanism.
-r_user_cache_base_dir <- file.path(getwd(), ".r_user_cache_for_tximeta")
-if (!dir.exists(r_user_cache_base_dir)) {
-  dir.create(r_user_cache_base_dir, recursive = TRUE, showWarnings = FALSE)
+r_user_cache_base_dir <- base::file.path(
+  base::getwd(), ".r_user_cache_for_tximeta"
+)
+if (!base::dir.exists(r_user_cache_base_dir)) {
+  base::dir.create(
+    r_user_cache_base_dir,
+    recursive = TRUE, showWarnings = FALSE
+  )
 }
-Sys.setenv(R_USER_CACHE_DIR = r_user_cache_base_dir)
-Sys.setenv(XDG_CACHE_HOME = r_user_cache_base_dir)
-message(paste(
+base::Sys.setenv(R_USER_CACHE_DIR = r_user_cache_base_dir)
+base::Sys.setenv(XDG_CACHE_HOME = r_user_cache_base_dir)
+base::message(base::paste(
   "Set R_USER_CACHE_DIR and XDG_CACHE_HOME to:", r_user_cache_base_dir
 ))
 
@@ -32,42 +35,43 @@ message(paste(
 # will go). This path is typically provided via Snakemake params
 # (e.g., "resources/tximeta").
 tximeta_data_cache_path <- snakemake@params[["tximeta_cache"]]
-if (!dir.exists(tximeta_data_cache_path)) {
-  dir.create(tximeta_data_cache_path, recursive = TRUE, showWarnings = FALSE)
+if (!base::dir.exists(tximeta_data_cache_path)) {
+  base::dir.create(
+    tximeta_data_cache_path,
+    recursive = TRUE, showWarnings = FALSE
+  )
 }
-message(paste(
+base::message(base::paste(
   "Main tximeta data cache path defined as:", tximeta_data_cache_path
 ))
 
 # 3. Set environment variables for tximeta and BiocFileCache to use the defined
 # data cache path.
-Sys.setenv(TXIMETA_HUB_CACHE = tximeta_data_cache_path)
-Sys.setenv(BIOCFILECACHE_CACHE = tximeta_data_cache_path)
-message(paste(
+base::Sys.setenv(TXIMETA_HUB_CACHE = tximeta_data_cache_path)
+base::Sys.setenv(BIOCFILECACHE_CACHE = tximeta_data_cache_path)
+base::message(base::paste(
   "Set TXIMETA_HUB_CACHE and BIOCFILECACHE_CACHE to:", tximeta_data_cache_path
 ))
 
 # Load tximeta
-message("Attempting to load tximeta...")
-suppressPackageStartupMessages({
-  library(tximeta)
-})
-message("tximeta loaded successfully.")
+base::library(tximeta)
 
 # Explicitly set the tximeta cache using its function.
 # The bfcloc.json will point to tximeta_data_cache_path.
-message(paste("Attempting to set tximeta BFC to:", tximeta_data_cache_path))
+base::message(base::paste(
+  "Attempting to set tximeta BFC to:", tximeta_data_cache_path
+))
 tximeta::setTximetaBFC(dir = tximeta_data_cache_path, quiet = FALSE)
-message("setTximetaBFC called.")
+base::message("setTximetaBFC called.")
 
 # Prepare parameters for makeLinkedTxome
-organism_split <- strsplit(snakemake@params[["organism"]], "_")[[1]]
-organism_reformat <- paste(organism_split[1], organism_split[2])
+organism_split <- base::strsplit(snakemake@params[["organism"]], "_")[[1]]
+organism_reformat <- base::paste(organism_split[1], organism_split[2])
 
 if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   # Enforce creation of a TxDb object for Ensembl and GENCODE when
   # is called makeLinkedTxome
-  source <- paste0("Local", snakemake@params[["source"]])
+  source <- base::paste0("Local", snakemake@params[["source"]])
   # TODO: If support for makeLinkedTxome(source = c("Ensembl", "GENCODE")) is
   # added instead of forcing "LocalEnsembl" and "LocalGENCODE" the logic in
   # workflow/scripts/tximeta.R will need to be refactored to work with EnsDb
@@ -78,9 +82,9 @@ if (snakemake@params[["source"]] %in% c("Ensembl", "GENCODE")) {
   source <- snakemake@params[["source"]]
 }
 
-message(paste(
+base::message(base::paste(
   "Parameters for makeLinkedTxome:",
-  "\n  Index Dir (first):", dirname(snakemake@input[["index_dir"]])[1],
+  "\n  Index Dir (first):", base::dirname(snakemake@input[["index_dir"]])[1],
   "\n  Source:", source,
   "\n  Organism:", organism_reformat,
   "\n  Release:", snakemake@params[["release"]],
@@ -91,10 +95,10 @@ message(paste(
 ))
 
 # Call makeLinkedTxome
-message("Calling makeLinkedTxome...")
+base::message("Calling makeLinkedTxome...")
 tximeta::makeLinkedTxome(
   # index_dir is a list of files, select the first file's dirname
-  indexDir = dirname(snakemake@input[["index_dir"]])[1],
+  indexDir = base::dirname(snakemake@input[["index_dir"]])[1],
   source = source,
   organism = organism_reformat,
   release = snakemake@params[["release"]],
@@ -104,5 +108,5 @@ tximeta::makeLinkedTxome(
   write = TRUE,
   jsonFile = snakemake@output[["jsonFile"]]
 )
-message("makeLinkedTxome finished.")
-message(paste("Script completed at:", Sys.time()))
+base::message("makeLinkedTxome finished.")
+base::message(base::paste("Script completed at:", base::Sys.time()))

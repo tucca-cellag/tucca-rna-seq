@@ -3,7 +3,8 @@
 
 rule fastqc:
     input:
-        get_fq_files,
+        fq=get_fq_files,
+        checksum_valid=get_checksum_dependency,
     output:
         htmls="results/fastqc/{sample_unit}_{read}/{sample_unit}_{read}.html",
         zips="results/fastqc/{sample_unit}_{read}/{sample_unit}_{read}_fastqc.zip",
@@ -26,10 +27,10 @@ rule fastqc:
         """
         (# Perform fastqc on each read
         fastqc --threads {threads} --memory {params.memory} \
-        {params.extra} --outdir {params.outdir}/ {input}
+        {params.extra} --outdir {params.outdir}/ {input.fq}
         
         # Determine the base name by removing known fastq extensions
-        base_name=$(basename "{input}")
+        base_name=$(basename "{input.fq}")
         if [[ "$base_name" == *.fq.gz ]]; then
             base_name=$(basename "$base_name" .fq.gz)
         elif [[ "$base_name" == *.fastq.gz ]]; then

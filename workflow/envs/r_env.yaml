@@ -1,0 +1,20 @@
+name: r_env
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - conda-forge::r-base =4.4
+  - conda-forge::r-devtools =2.4
+  - conda-forge::r-tidyverse =2.0
+  - conda-forge::r-yaml =2.3
+  - conda-forge::r-rmarkdown =2.29
+  - conda-forge::r-biocmanager =1.30
+  - conda-forge::r-msigdbr =25.1
+  - conda-forge::r-httr =1.4
+  - conda-forge::r-reticulate =1.43
+  - bioconda::bioconductor-tximeta =1.24
+  - bioconda::bioconductor-deseq2 =1.46
+  - bioconda::bioconductor-clusterprofiler =4.14
+  - bioconda::bioconductor-annotationdbi =1.68
+  - bioconda::bioconductor-spia =2.58

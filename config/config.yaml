@@ -10,9 +10,6 @@
 # If you cannot find a satisfactory answer in our documentation, please let us
 # know about your issue on our GitHub page, so we can assist you further:
 # https://github.com/tucca-cellag/tucca-rna-seq/issues/new
-
-# The default data/configuration is an example analysis using data from
-# BioProject PRJNA716186 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA716186)
 # ----------------------------------------------------------
 
 # ----------------------------------------------------------
@@ -37,22 +34,45 @@
 #
 # ----------------------------------------------------------
 ref_assembly:
-  source: "RefSeq"
-  accession: "GCF_016699485.2"
-  name: "bGalGal1.mat.broiler.GRCg7b"
-  release: ""
-  species: "Gallus_gallus"
+  source: "Ensembl"
+  accession: "GCA_000146045.2"
+  name: "R64-1-1"
+  release: "113"
+  species: "Saccharomyces_cerevisiae"
 
 # ----------------------------------------------------------
-# API Key Section:
-# If you are running this workflow too frequently, NCBI's datasets software may
-# throttle your API calls without an API key.
+# NCBI API Key
+#
+# To avoid potential rate-limiting issues when downloading data from NCBI,
+# you can provide an API key here. The key will be used by the 'ncbi-datasets-cli'
+# tool, which is used for fetching genomes and SRA datasets.
+#
+# For instructions on how to obtain an API key, please visit:
+# https://account.ncbi.nlm.nih.gov/settings/
 # ----------------------------------------------------------
 api_keys:
   ncbi: ""
 
 # ----------------------------------------------------------
+# Read Quality Control and Quantification
+#
+# This section configures the initial stages of the workflow, from quality
+# control (QC) of raw sequencing reads to the generation of feature counts.
+# The parameters below for each tool allow for fine-tuning the pipeline's
+# performance and behavior.
+# ----------------------------------------------------------
+params:
+  star_index:
+    extra: "--genomeSAindexNbases 10" # for small genomes (eg. Sc)
+
+# ----------------------------------------------------------
 # Differential Expression Section:
+#
+# This section defines the parameters for the differential gene expression
+# analysis. It allows you to specify the experimental design, including the
+# factors and contrasts to be analyzed with DESeq2. You can configure multiple
+# analyses, each with its own formula and settings, to explore different
+# aspects of your data.
 # ----------------------------------------------------------
 diffexp:
   tximeta:
@@ -61,84 +81,92 @@ diffexp:
         reference_level: "untreated"
       - name: "treatment2"
         reference_level: "untreated"
-    extra: ""
   deseq2:
     analyses:
-      - name: "treatment1+treatment2"
+      - name: "treatment1_treatment2"
         deseqdataset:
           formula: "~ treatment1 + treatment2"
-          min_counts: 10
-          extra: ""
-          threads: 1
-        wald:
-          deseq_extra: ""
-          shrink_extra: "type = 'apeglm'"
-          results_extra: "alpha = 0.005"
-          threads: 1
         contrasts:
           - name: "treatment1_treated_vs_untreated"
             elements: ["treatment1", "treated", "untreated"]
           - name: "treatment2_treated_vs_untreated"
             elements: ["treatment2", "treated", "untreated"]
-
-  # For min_counts
-  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering
-  # Alternatively rely on results()
-  # See https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#indfilt
+    transform: {}
 
 # ----------------------------------------------------------
-# Differential Expression Section:
+# Pathway Enrichment Section:
+#
+# This section configures the pathway enrichment analysis, which helps to
+# interpret the biological meaning of the differentially expressed genes.
+# It uses the 'clusterProfiler' R package to perform Over-Representation
+# Analysis (ORA) and Gene Set Enrichment Analysis (GSEA) on gene sets from
+# GO and KEGG databases.
+#
+# For more details on 'clusterProfiler', see:
+# https://yulab-smu.top/biomedical-knowledge-mining-book/
 # ----------------------------------------------------------
 enrichment:
-
-# ----------------------------------------------------------
-# Sample and Unit Sheet Section
-# ----------------------------------------------------------
-# Path to your SAMPLE SHEET which keeps track of your biological replicates
-samples: "config/samples.tsv"
-# Path to your sequencing UNIT SHEET which keeps track of your technical
-# replicates (e.g. sequencer lanes or resequencing of the same biological
-# sample)
-units: "config/units.tsv"
-
-# ----------------------------------------------------------
-# Params Section: Configurable Settings for the Software
-#
-# This section contains all the adjustable parameters for the various
-# software tools used in the workflow. Update these settings to customize
-# the analysis to match your experimental setup.
-#
-# Each sub-section (e.g., fastqc, star, salmon_quant) provides tool-specific
-# options. Modify these as needed to fine-tune the performance and behavior
-# of the pipeline.
-# ----------------------------------------------------------
-params:
-  fastqc:
-    memory: 1024
-    extra: ""
-  star_index:
-    sjdbOverhang: 149
-    extra: "--genomeSAindexNbases 10" # for small genomes (eg. Sc)
-  star:
-    extra: >-
-      --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within
-      --outSAMattributes Standard --outFilterMultimapNmax 1
-      --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0
-      --alignIntronMin 1 --alignIntronMax 2500
-  qualimap_rnaseq:
-    counting_alg: "proportional"
-    sequencing_protocol: "non-strand-specific"
-    extra: "--paired --java-mem-size=8G"
-  salmon_index:
-    extra: "-k 31"
-  salmon_quant:
-    # --lib_type A: Auto detect type of sequencing lib from which the reads
-    # came from (recommended)
-    libtype: "A"
-    extra: "--seqBias --posBias --writeUnmappedNames"
-  multiqc:
-    # Leave out --force if you don't want to automatically overwrite existing
-    # multiqc results on a re-run
-    extra: "--verbose --force"
-  sra_tools:
-    vdb_config_ra_path: "/repository/user/main/remote_access=true"
+  # Adjusted p-value cutoff to define significant genes for ORA
+  padj_cutoff: 0.05 # Default is 0.05
+  clusterprofiler:
+    wikipathways:
+      enabled: true
+    kegg_module:
+      enabled: true
+  # MSigDB (Molecular Signatures Database) configuration
+  # MSigDB provides gene sets for enrichment analysis using clusterProfiler's
+  # universal enrichment functions (enricher() and GSEA()). The workflow supports
+  # both built-in MSigDB collections and custom GMT files.
+  #
+  # Available collections:
+  # - H: Hallmark gene sets (50 gene sets)
+  # - C1: Positional gene sets (299 gene sets)
+  # - C2: Curated gene sets (5,922 gene sets)
+  # - C3: Regulatory target gene sets (3,738 gene sets)
+  # - C4: Computational gene sets (858 gene sets)
+  # - C5: Ontology gene sets (10,922 gene sets)
+  # - C6: Oncogenic signatures (189 gene sets)
+  # - C7: Immunologic signatures (4,872 gene sets)
+  # - C8: Cell type signature gene sets (746 gene sets)
+  #
+  # For more information, see: https://www.gsea-msigdb.org/gsea/msigdb/
+  msigdb:
+    enabled: true
+    # List of MSigDB collections to analyze (H, C1, C2, C3, C4, C5, C6, C7, C8)
+    # For CI/CD testing, use only H (Hallmark) to avoid timeout issues
+    collections:
+      - "H" # Hallmark gene sets (50 gene sets - suitable for CI/CD)
+    # Custom GMT files (optional)
+    # Place your GMT files in resources/gmt/ and reference them here
+    #
+    # To use custom gene sets:
+    # 1. Place your GMT file in the resources/gmt/ directory
+    # 2. Uncomment the line below and replace "example_genesets.gmt" with your filename
+    # 3. Ensure your GMT file follows the standard format (see resources/gmt/README.md)
+    # 4. Make sure your gene IDs match the format used in your differential expression analysis
+    #
+    # Example GMT file format:
+    # GENE_SET_1  Description of gene set 1 GENE1 GENE2 GENE3
+    # GENE_SET_2  Description of gene set 2 GENE4 GENE5 GENE6 GENE7
+    #
+    # Available custom gene sets:
+    # - muscle_genesets.gmt: 1,517 muscle-related gene sets (see resources/gmt/README.md)
+    custom_gmt_files: [] # Example: ["resources/gmt/example_genesets.gmt"]
+  # SPIA (Signaling Pathway Impact Analysis) configuration
+  # SPIA performs topology-based pathway analysis considering both gene expression
+  # changes and pathway structure. It identifies pathways that are significantly
+  # perturbed based on the impact of differentially expressed genes on pathway
+  # topology. The workflow automatically generates required SPIA data files
+  # using makeSPIAdata() before running the analysis.
+  #
+  # IMPORTANT: SPIA uses the KEGG REST API (rest.kegg.jp) which is made available
+  # only for academic use by academic users. Non-academic users are requested to
+  # follow the guidelines shown in "Non-academic use of KEGG" at the KEGG website.
+  # See: https://www.kegg.jp/kegg/rest/ for API usage restrictions and
+  # https://www.kegg.jp/kegg/legal.html for legal information.
+  #
+  # Rate limiting: The workflow automatically limits API calls to ~2.5 calls per
+  # second (well within the KEGG limit of 3 calls per second) to avoid being
+  # blocked by the KEGG server.
+  spia:
+    enabled: true

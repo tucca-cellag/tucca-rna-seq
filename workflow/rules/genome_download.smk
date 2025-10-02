@@ -13,6 +13,7 @@ if config["ref_assembly"]["source"] in ("Ensembl", "GENCODE"):
             datatype="dna",
             build=config["ref_assembly"]["name"],
             release=config["ref_assembly"]["release"],
+            chromosome=lambda wildcards: get_chromosome_param(),
         log:
             "logs/ensembl/get_genome.log",
         wrapper:
@@ -65,6 +66,7 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
         params:
             genome_asc=config["ref_assembly"]["accession"],
             api_key=config["api_keys"]["ncbi"],
+            chromosome=lambda wildcards: get_chromosome_param(),
         conda:
             "../envs/ncbi_datasets.yaml"
         log:
@@ -75,6 +77,8 @@ if config["ref_assembly"]["source"] in ("RefSeq"):
             )
         shell:
             """
+            # RefSeq downloads always get full genome (single chromosome not supported for alignment)
+            echo "Downloading full genome for RefSeq"
             (datasets download genome accession {params.genome_asc} \
                 --include gtf,rna,genome,seq-report \
                 --api-key {params.api_key} \

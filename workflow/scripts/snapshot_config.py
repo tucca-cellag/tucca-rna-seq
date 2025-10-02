@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-File: snapshot_config.py
-
 This script snapshots the configuration directory by copying its contents
 into the results snapshot directory. It uses the cp_config_to_res_dir()
 function from common.smk.
+
+File: workflow/scripts/snapshot_config.py
 """
 
 import shutil
@@ -29,11 +29,14 @@ def cp_config_to_res_dir() -> None:
 
 
 def main():
+    """
+    Snapshots the config directory and creates a marker file.
+    """
     cp_config_to_res_dir()
     print("Configuration snapshot completed.")
     # The marker file is provided as the first command-line argument.
     marker_file = sys.argv[1]
-    with open(marker_file, "w") as f:
+    with open(marker_file, "w", encoding="utf-8") as f:
         f.write("Configuration snapshot completed.")
 
 

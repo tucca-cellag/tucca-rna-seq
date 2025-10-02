@@ -1,0 +1,7 @@
+sample_name	treatment1	treatment2	replicate_num	sequencing_batch
+etoh60_1	treated	untreated	1	1
+etoh60_2	treated	untreated	2	1
+ref1	untreated	untreated	1	1
+ref2	untreated	untreated	2	1
+temp33_1	untreated	treated	1	1
+temp33_2	untreated	treated	2	1

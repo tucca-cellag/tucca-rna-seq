@@ -20,7 +20,8 @@ rule DESeqDataSet_from_ranged_se_per_analysis:
 
 
 # Rule 2: Run DESeq2 Wald test for each specified contrast within each analysis
-# DDS comes from the DESeqDataSet_from_ranged_se_per_analysis rule, specific to the {analysis_name}
+# DDS comes from the DESeqDataSet_from_ranged_se_per_analysis rule, specific to
+# the {analysis_name}
 rule deseq2_wald_per_analysis:
     input:
         dds="resources/deseq2/{analysis_name}/dds.RDS",
@@ -43,15 +44,42 @@ rule deseq2_wald_per_analysis:
         results_extra=get_wald_results_extra,
         # get contrast to be evaluated
         contrast=get_wald_contrast_elements,
+    wildcard_constraints:
+        analysis_name="[^/]+",
+        contrast_name="[^/]+",
     wrapper:
         "v6.2.0/bio/deseq2/wald"
+
+
+# Rule to apply a variance-stabilizing transformation (e.g., rlog) to the count
+# data, preparing it for downstream visualization analyses like PCA and sample
+# clustering.
+# TODO Make wrapper bio/deseq2/deseqtransform or add to bio/deseq2/deseqdataset
+rule deseq2_transform:
+    input:
+        dds="resources/deseq2/{analysis_name}/dds.RDS",
+    output:
+        dst="resources/deseq2/{analysis_name}/dst.RDS",
+        image="resources/deseq2/{analysis_name}/.RData",
+    params:
+        method=config["diffexp"]["deseq2"]["transform"]["method"],
+        extra=config["diffexp"]["deseq2"]["transform"]["extra"],
+    conda:
+        "../envs/r_env.yaml"
+    log:
+        "logs/deseq2/{analysis_name}/transform.log",
+    script:
+        "../scripts/deseqtransform.R"
 
 
 rule get_results_from_all_deseq_analyses:
     input:
         # Request all DDS files (one per analysis_name)
         expand(
-            "resources/deseq2/{analysis_name}/dds.RDS",
+            [
+                "resources/deseq2/{analysis_name}/dds.RDS",
+                "resources/deseq2/{analysis_name}/dst.RDS",
+            ],
             analysis_name=DESEQ_ANALYSES_NAMES,
         ),
         # Request all Wald test outputs (for each contrast in each analysis)

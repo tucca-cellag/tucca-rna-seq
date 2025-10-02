@@ -4,7 +4,7 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/*]
   pull_request:
     branches-ignore: []
   workflow_dispatch:
@@ -24,6 +24,8 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -rf .Rprofile renv renv.lock
       - name: Run Super-Linter
         uses: github/super-linter@v7
         env:
@@ -52,6 +54,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -rf .Rprofile renv renv.lock
       - name: Lint workflow
         uses: snakemake/snakemake-github-action@v2
         continue-on-error: ${{ matrix.version.allow_failure }}
@@ -71,16 +75,28 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Conda
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Conda
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: false
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Conda
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - Ensembl (complex config)
           - name: LR_Ens_Comp_Conda
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+            cleanup: false
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Conda
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
             extra_args: ""
             cleanup: false
           # Local Reads - RefSeq (complex config)
@@ -119,6 +135,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -rf .Rprofile renv renv.lock
       - name: Run Snakemake workflow (Conda)
         uses: snakemake/snakemake-github-action@v2
         continue-on-error: ${{ matrix.version.allow_failure }}
@@ -138,6 +156,15 @@ jobs:
         with:
           name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
+      - name: Upload Snakemake results for Rmd tests
+        if: success() && (matrix.scenario.name == 'LR_Ens_Comp_Conda' || matrix.scenario.name == 'LR_Ref_Comp_Conda' || matrix.scenario.name == 'LR_Ens_GMT_Conda' || matrix.scenario.name == 'SRA_Mouse_Subsampled_Conda')
+        uses: actions/upload-artifact@v4
+        with:
+          name: snakemake-results-${{ matrix.scenario.name }}-${{ matrix.version.name }}
+          path: |
+            resources/
+            config/
+            results/
 
   SDM_Singularity_Conda:
     name: ${{ matrix.scenario.name }} (Snakemake ${{ matrix.version.name }})
@@ -149,16 +176,28 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Singularity
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Singularity
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: true
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Singularity
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - Ensembl (complex config)
           - name: LR_Ens_Comp_Singularity
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+            cleanup: true
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Singularity
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - RefSeq (complex config)
@@ -199,6 +238,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -rf .Rprofile renv renv.lock
       - name: Create host directory for R config (Singularity)
         run: mkdir -p ${{ github.workspace }}/.host_R_config_singularity
       - name: Install Singularity
@@ -214,7 +255,7 @@ jobs:
           # Usage of --bind required for success of rule make_linked_txome
           # on GitHub runners
           args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
             --use-singularity
             --singularity-args "--bind ${{ github.workspace }}/.host_R_config_singularity:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
@@ -239,16 +280,28 @@ jobs:
       fail-fast: true
       matrix:
         scenario:
-          # SRA Reads
-          - name: SRA_Apptainer
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - name: SRA_Yeast_Apptainer
             rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config/config.yaml
+            configfile: .test/sra_reads/config_yeast/config.yaml
+            extra_args: ""
+            cleanup: true
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - name: SRA_Mouse_Subsampled_Apptainer
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - Ensembl (complex config)
           - name: LR_Ens_Comp_Apptainer
             rules: all
             configfile: .test/local_reads/ensembl/config_complex/config.yaml
+            extra_args: ""
+            cleanup: true
+          # Local Reads - Ensembl (GMT test config)
+          - name: LR_Ens_GMT_Apptainer
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
             extra_args: ""
             cleanup: true
           # Local Reads - RefSeq (complex config)
@@ -289,6 +342,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -rf .Rprofile renv renv.lock
       - name: Create host directory for R config (Apptainer)
         run: mkdir -p ${{ github.workspace }}/.host_R_config_apptainer
       - name: Install Apptainer
@@ -304,7 +359,7 @@ jobs:
           # Usage of --bind required for success of rule make_linked_txome
           # on GitHub runners
           args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions
+            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
             --use-singularity
             --singularity-args "--bind ${{ github.workspace }}/.host_R_config_apptainer:/home/runner/.config/R"
             --configfile ${{ matrix.scenario.configfile }}
@@ -318,3 +373,106 @@ jobs:
         with:
           name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
           path: logs/
+
+  Test_Rmds:
+    name: Test Rmd analysis notebooks (using ${{ matrix.version.name }} from ${{ matrix.scenario.name }})
+    runs-on: ubuntu-latest
+    needs: [SDM_Conda]
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - name: LR_Ens_Comp_Conda
+          - name: LR_Ref_Comp_Conda
+          - name: LR_Ens_GMT_Conda
+          - name: SRA_Mouse_Subsampled_Conda
+        version:
+          - name: stable
+            snakemake: 8.27.1
+          - name: latest
+            snakemake: "*"
+    steps:
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gsfonts \
+            libcurl4-openssl-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libgit2-dev \
+            libglpk-dev \
+            libmagick++-dev \
+            libpng-dev \
+            libx11-dev \
+            pandoc
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Remove .Rprofile to avoid renv auto-activation
+        run: rm -f .Rprofile
+
+      - name: Download Snakemake results
+        uses: actions/download-artifact@v4
+        with:
+          name: snakemake-results-${{ matrix.scenario.name }}-${{ matrix.version.name }}
+          path: .
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.4.3"
+          cran: "https://packagemanager.posit.co/cran/2025-04-10"
+
+      - name: Restore renv environment
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Render Rmd files
+        shell: Rscript {0}
+        run: |
+          if (!requireNamespace("rmarkdown", quietly = TRUE)) renv::install("rmarkdown")
+
+          # Choose appropriate Rmd files based on scenario
+          if ("${{ matrix.scenario.name }}" == "SRA_Mouse_Subsampled_Conda") {
+            # Use mouse-specific notebooks for mouse data
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/GeneTonic_playground_mouse.Rmd",
+              output_file = "GeneTonic_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/pcaExplorer_playground_mouse.Rmd",
+              output_file = "pcaExplorer_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
+            rmarkdown::render(
+              ".test/sra_reads/config_mouse/ideal_playground_mouse.Rmd",
+              output_file = "ideal_playground_mouse.html",
+              output_dir = "rmd_test_output"
+            )
+          } else {
+            # Use default notebooks for other scenarios (yeast, local reads)
+            rmarkdown::render(
+              "analysis/GeneTonic_playground.Rmd",
+              output_file = "GeneTonic_playground.html",
+              output_dir = "rmd_test_output"
+            )
+            rmarkdown::render(
+              "analysis/pcaExplorer_playground.Rmd",
+              output_file = "pcaExplorer_playground.html",
+              output_dir = "rmd_test_output"
+            )
+              rmarkdown::render(
+              "analysis/ideal_playground.Rmd",
+              output_file = "ideal_playground.html",
+              output_dir = "rmd_test_output"
+            )
+          }
+      - name: Upload Rmd test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rmd-test-output-${{ matrix.scenario.name }}-${{ matrix.version.name }}
+          path: rmd_test_output/

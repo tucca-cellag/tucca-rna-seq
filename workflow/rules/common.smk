@@ -20,6 +20,8 @@ import shutil
 from typing import Protocol, List
 from snakemake.utils import validate
 import re
+import yaml
+import hashlib
 
 ################################################################################
 #                                GLOBAL VARIABLES                              #
@@ -227,6 +229,121 @@ def get_sra_filepath(accession: str, read: str) -> Path:
     return Path(f"data/sra_reads/{accession}_{read_num}.fastq")
 
 
+def get_md5_file(wildcards: Wildcard) -> str:
+    """
+    Finds the .md5 checksum file for a given FASTQ file.
+    Assumes the .md5 file is co-located with the FASTQ file,
+    with a .md5 extension appended.
+    e.g., for /path/to/file.fq.gz, it looks for /path/to/file.fq.gz.md5
+    """
+    fq_path_str = get_fq_files(wildcards)
+    md5_path = Path(f"{fq_path_str}.md5")
+    if not md5_path.exists():
+        raise FileNotFoundError(f"Required checksum file not found: {md5_path}")
+    return str(md5_path)
+
+
+def get_checksum_dependency(wildcards: Wildcard) -> List[str]:
+    """
+    Returns a list with the checksum validation flag file for a given read,
+    but only if the read is from a local file (not SRA). Returns an empty list
+    otherwise.
+    """
+    unit = get_unit_record(wildcards)
+    if not is_sra_read(unit):
+        return [f"results/checksums/{wildcards.sample_unit}_{wildcards.read}.valid"]
+    return []
+
+
+def get_paired_checksum_dependency(wildcards: Wildcard) -> List[str]:
+    """
+    Returns a list of checksum validation flag files for paired-end reads, but only
+    if the reads are from local files (not SRA). Returns an empty list otherwise.
+    """
+    unit = get_unit_record(wildcards)
+    if not is_sra_read(unit):
+        return expand(
+            "results/checksums/{sample_unit}_{read}.valid",
+            sample_unit=wildcards.sample_unit,
+            read=["R1", "R2"],
+        )
+    return []
+
+
+def is_sra_subsampling_enabled() -> bool:
+    """
+    Determines if SRA subsampling is enabled in the configuration.
+
+    Returns:
+        bool: True if subsampling is enabled, False otherwise.
+    """
+    return get_sra_subsample_params()["enabled"]
+
+
+def get_sra_subsample_params() -> dict:
+    """
+    Returns the subsampling parameters from the configuration.
+
+    Returns:
+        dict: Dictionary containing spot ID range parameters for SRA subsampling.
+    """
+    # Use .get() with default values to handle missing configuration
+    sra_tools_config = config.get("params", {}).get("sra_tools", {})
+    subsample_config = sra_tools_config.get("subsample", {})
+
+    # Return default values if subsample config is missing
+    return {
+        "enabled": subsample_config.get("enabled", False),
+        "min_spot_id": subsample_config.get("min_spot_id", 1),
+        "max_spot_id": subsample_config.get("max_spot_id", 1000),
+    }
+
+
+def is_qualimap_enabled() -> bool:
+    """
+    Returns whether Qualimap is enabled in the configuration.
+
+    Returns:
+        bool: True if Qualimap is enabled, False otherwise.
+    """
+    qualimap_config = config.get("params", {}).get("qualimap_rnaseq", {})
+    return qualimap_config.get("enabled", True)
+
+
+def get_sra_download_rule_name() -> str:
+    """
+    Returns the name of the SRA download rule to use based on configuration.
+
+    Returns:
+        str: Either 'download_sra_pe_reads' or 'subsample_sra_pe_reads'
+    """
+    return (
+        "subsample_sra_pe_reads"
+        if is_sra_subsampling_enabled()
+        else "download_sra_pe_reads"
+    )
+
+
+################################################################################
+#                        GENOME DOWNLOAD HELPER FUNCTIONS                      #
+#          Helper functions for single chromosome downloads and genome         #
+#          configuration access                                                #
+################################################################################
+
+
+def get_chromosome_param():
+    """
+    Returns chromosome parameter if specified in config, otherwise None.
+
+    Used by genome download rules to support single chromosome downloads
+    for CI/CD testing and resource optimization.
+
+    Returns:
+        List[str] or None: List of chromosome names if specified, None otherwise.
+    """
+    return config["ref_assembly"].get("chromosome", None)
+
+
 ################################################################################
 #                      DESEQ2 MULTI-ANALYSIS HELPERS                           #
 #          Parses and provides access to DESeq2 analysis configurations        #
@@ -397,6 +514,150 @@ def get_wald_contrast_elements(wildcards: Wildcard) -> List[str]:
 
 
 ################################################################################
+#                   ENRICHMENT ENVIRONMENT HELPER FUNCTIONS                    #
+################################################################################
+
+
+# A mapping of species names (from config.yaml) to their official OrgDb package
+# names. A user can add to this list if a new package becomes available.
+ORGDB_MAPPING = {
+    "Homo_sapiens": "org.Hs.eg.db",
+    "Mus_musculus": "org.Mm.eg.db",
+    "Rattus_norvegicus": "org.Rn.eg.db",
+    "Saccharomyces_cerevisiae": "org.Sc.sgd.db",
+    "Caenorhabditis_elegans": "org.Ce.eg.db",
+    "Drosophila_melanogaster": "org.Dm.eg.db",
+    "Danio_rerio": "org.Dr.eg.db",
+    "Bos_taurus": "org.Bt.eg.db",
+    "Sus_scrofa": "org.Ss.eg.db",
+    "Canis_lupus_familiaris": "org.Cf.eg.db",
+    "Gallus_gallus": "org.Gg.eg.db",
+    "Arabidopsis_thaliana": "org.At.tair.db",
+    "Macaca_mulatta": "org.Mmu.eg.db",
+    "Xenopus_laevis": "org.Xl.eg.db",
+    "Anopheles_gambiae": "org.Ag.eg.db",
+    "Pan_troglodytes": "org.Pt.eg.db",
+    "Escherichia_coli_K_12_strain_MG1655": "org.EcK12.eg.db",
+    "Plasmodium_falciparum": "org.Pf.plasmo.db",
+}
+
+
+def get_orgdb_install_info(config):
+    """
+    Looks up the species in the ORGDB_MAPPING.
+    Returns install info for Bioconda if found, otherwise for a local build.
+    """
+    species = config["ref_assembly"]["species"]
+    if species in ORGDB_MAPPING:
+        # Package exists, instruct to install from Bioconda
+        pkg_name = ORGDB_MAPPING[species]
+        return {
+            "method": "bioconda",
+            "source": pkg_name,
+            "pkg_name": pkg_name,
+            "local_build_needed": False,
+        }
+    else:
+        # Package not found, instruct to build locally
+        # The package name will be derived by AnnotationForge
+        return {
+            "method": "local",
+            "source": "resources/enrichment/local_orgdb_build",
+            "pkg_name": "built.locally",  # Placeholder, not used for install
+            "local_build_needed": True,
+        }
+
+
+def get_kegg_organism_code(config):
+    """
+    Constructs the 3-letter KEGG organism code from the species name.
+    Example: "Saccharomyces_cerevisiae" -> "sce"
+    """
+    try:
+        species_name = config["ref_assembly"]["species"]
+        parts = species_name.split("_")
+        return (parts[0][0] + parts[1][:2]).lower()
+    except (KeyError, IndexError) as e:
+        raise ValueError(
+            "Could not determine KEGG organism code. Ensure config['ref_assembly']['species'] "
+            f"is in 'Genus_species' format. Error: {e}"
+        )
+
+
+def get_enrichment_outputs():
+    """Generates a list of all enrichment analysis output files."""
+    outputs = []
+    # CONTRAST_JOBS is defined earlier in common.smk
+    for job in CONTRAST_JOBS:
+        analysis_name = job["analysis_name"]
+        contrast_name = job["contrast_name"]
+        outputs.append(
+            f"resources/enrichment/{analysis_name}/{contrast_name}/gsea_results.RDS"
+        )
+        outputs.append(
+            f"resources/enrichment/{analysis_name}/{contrast_name}/ora_results.RDS"
+        )
+        # Only include SPIA outputs if SPIA is enabled
+        if config["enrichment"]["spia"]["enabled"]:
+            outputs.append(
+                f"resources/enrichment/{analysis_name}/{contrast_name}/spia_results.RDS"
+            )
+            outputs.append(
+                f"resources/enrichment/{analysis_name}/{contrast_name}/spia_results_readable.RDS"
+            )
+
+    # Include SPIA data directory if SPIA is enabled
+    if config["enrichment"]["spia"]["enabled"]:
+        outputs.append("resources/enrichment/spia_data")
+
+    return outputs
+
+
+# Helper function to get dynamic inputs based on the dictionary lookup
+def get_enrichment_deps(wildcards):
+    info = get_orgdb_install_info(config)
+    deps = {
+        "dge_tsv": f"resources/deseq2/{wildcards.analysis}/{wildcards.contrast}/dge.tsv",
+        "orgdb_install_flag": get_orgdb_install_flag(config),
+    }
+    if info["local_build_needed"]:
+        deps["local_build"] = "resources/enrichment/local_orgdb_build"
+        deps["tax_id"] = "resources/enrichment/tax_id.txt"
+    return deps
+
+
+# Helper function to get dynamic params
+def get_enrichment_params(wildcards):
+    """
+    Constructs a dictionary of parameters for enrichment analysis rules.
+    This function combines static configuration from config.yaml with
+    dynamically generated values (like package names and install methods).
+    """
+    # Start with a copy of the enrichment section from config
+    params = config["enrichment"].copy()
+
+    # Get dynamic info for OrgDb installation
+    info = get_orgdb_install_info(config)
+    params["install_method"] = info["method"]
+    params["install_source"] = info["source"]
+    params["org_db_pkg"] = info["pkg_name"]
+
+    # Get dynamic info for KEGG
+    params["kegg_organism"] = get_kegg_organism_code(config)
+
+    # Get species name for WikiPathways
+    params["species"] = config["ref_assembly"]["species"]
+
+    return params
+
+
+def get_orgdb_install_flag(config):
+    """Returns the path to the installation flag for the OrgDb package."""
+    pkg_name = get_orgdb_install_info(config)["pkg_name"]
+    return f"resources/enrichment/{pkg_name}.installed"
+
+
+################################################################################
 #                            TARGET RULE ALL HELPERS                           #
 #          defines get_final_output() and it's helpers for use in              #
 #        the workflow's target rule (rule all) in workflow/Snakefile           #
@@ -417,6 +678,13 @@ def get_fastqc_paths(row: pd.Series) -> List[str]:
 
 # Helper function for Qualimap output paths.
 def get_qualimap_paths(row: pd.Series) -> List[str]:
+    """
+    Returns Qualimap output paths only if Qualimap is enabled.
+    Returns empty list if Qualimap is disabled to avoid requiring these files.
+    """
+    if not is_qualimap_enabled():
+        return []
+
     sample_unit: str = row.sample_unit
     paths: List[str] = [
         f"results/qualimap/{sample_unit}.qualimap/qualimapReport.html",
@@ -450,6 +718,7 @@ def get_final_output() -> List[str]:
 
     # Define non-unit-based output (e.g., DESeq2 results, MultiQC report)
     final_output.append("resources/deseq2/deseq2_analyses_complete.done")
+    final_output.append("resources/enrichment/enrichment_analyses_complete.done")
 
     multiqc: str = f"results/multiqc/multiqc.html"
     final_output.append(multiqc)

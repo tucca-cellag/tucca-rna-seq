@@ -1,13 +1,10 @@
-sample_name	species	adhesion	immortalization_state	replicate_num	sequencing_batch
-IB_Primary_CEF_A	israeli_baladi	adherent	primary	1	1
-IB_Primary_CEF_B	israeli_baladi	adherent	primary	2	1
-IB_Primary_CEF_C	israeli_baladi	adherent	primary	3	1
-BR308_Primary_CEF_A	broiler_ross_308	adherent	primary	1	1
-BR308_Primary_CEF_B	broiler_ross_308	adherent	primary	2	1
-BR308_Primary_CEF_C	broiler_ross_308	adherent	primary	3	1
-IB_SI_AI_CEF_A	israeli_baladi	anchorage_independent	spontaneously_immortalized	1	1
-IB_SI_AI_CEF_B	israeli_baladi	anchorage_independent	spontaneously_immortalized	2	1
-IB_SI_AI_CEF_C	israeli_baladi	anchorage_independent	spontaneously_immortalized	3	1
-BR308_SI_AI_CEF_A	broiler_ross_308	anchorage_independent	spontaneously_immortalized	1	1
-BR308_SI_AI_CEF_B	broiler_ross_308	anchorage_independent	spontaneously_immortalized	2	1
-BR308_SI_AI_CEF_C	broiler_ross_308	anchorage_independent	spontaneously_immortalized	3	1
+sample_name	treatment1	treatment2	replicate_num	sequencing_batch
+etoh60_1	treated	untreated	1	1
+etoh60_2	treated	untreated	2	1
+etoh60_3	treated	untreated	3	1
+ref1	untreated	untreated	1	1
+ref2	untreated	untreated	2	1
+ref3	untreated	untreated	3	1
+temp33_1	untreated	treated	1	1
+temp33_2	untreated	treated	2	1
+temp33_3	untreated	treated	3	1

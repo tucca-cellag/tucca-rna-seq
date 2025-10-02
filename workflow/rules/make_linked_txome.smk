@@ -52,11 +52,15 @@ rule make_linked_txome:
             ),
         ),
         organism=config["ref_assembly"]["species"],
-        release=config["ref_assembly"]["release"],
+        release=branch(
+            config["ref_assembly"]["source"] != "RefSeq",
+            then=config["ref_assembly"]["release"],
+            otherwise="",
+        ),
         genome=config["ref_assembly"]["name"],
         tximeta_cache="resources/tximeta",
     conda:
-        "../envs/tximeta.yaml"
+        "../envs/r_env.yaml"
     log:
         "logs/tximeta/make_linked_txome.log",
     script:

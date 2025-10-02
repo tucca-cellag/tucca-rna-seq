@@ -19,6 +19,7 @@ container: "docker://continuumio/miniconda3"
 include: "rules/common.smk"
 include: "rules/genome_download.smk"
 include: "rules/fastqc.smk"
+include: "rules/checksum.smk"
 include: "rules/multiqc.smk"
 include: "rules/qualimap.smk"
 include: "rules/salmon.smk"
@@ -29,6 +30,7 @@ include: "rules/star.smk"
 include: "rules/make_linked_txome.smk"
 include: "rules/tximeta.smk"
 include: "rules/deseq2.smk"
+include: "rules/enrichment.smk"
 
 
 ##### target rules #####

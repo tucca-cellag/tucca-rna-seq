@@ -1,0 +1,24 @@
+# profiles/github-actions-singularity/config.yaml
+# Configured for exclusive use with GitHub Actions Singularity/Apptainer
+# testing workflow. This profile includes all-temp to save disk space since
+# these runs don't make artifacts for Rmd testing like the Conda runs
+# See .github/workflows/main.yml
+
+# Profile Settings
+# To learn more see:
+# https://snakemake.readthedocs.io/en/stable/executing/cli.html
+use-conda: true
+conda-cleanup-pkgs: tarballs
+verbose: true
+all-temp: true # Safe to use for Singularity/Apptainer runs
+show-failed-logs: true
+retries: 3
+rerun-incomplete: true
+cores: all
+latency-wait: 120
+default-resources:
+  mem_mb: 16000
+
+set-resources:
+  star_index:
+    mem_mb: 16000

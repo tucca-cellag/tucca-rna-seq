@@ -1,8 +1,24 @@
 # workflow/rules/qualimap.smk
 
 
+rule create_qualimap_flags:
+    output:
+        branch(
+            is_qualimap_enabled(),
+            then="resources/qualimap/qualimap_enabled.flag",
+            otherwise="resources/qualimap/qualimap_disabled.flag",
+        ),
+    log:
+        "logs/qualimap/create_flags.log",
+    shell:
+        """
+        touch {output}
+        """
+
+
 rule qualimap_rnaseq:
     input:
+        "resources/qualimap/qualimap_enabled.flag",
         bam="resources/star/{sample_unit}/Aligned.sortedByCoord.out.bam",
         genome_gtf=branch(
             config["ref_assembly"]["source"] == "RefSeq",
@@ -24,9 +40,13 @@ rule qualimap_rnaseq:
         directory("results/qualimap/{sample_unit}.qualimap/images_qualimapReport"),
         directory("results/qualimap/{sample_unit}.qualimap/raw_data_qualimapReport"),
     params:
-        counting_alg=config["params"]["qualimap_rnaseq"]["counting_alg"],
-        sequencing_protocol=config["params"]["qualimap_rnaseq"]["sequencing_protocol"],
-        extra=config["params"]["qualimap_rnaseq"]["extra"],
+        counting_alg=lambda wildcards: config["params"]["qualimap_rnaseq"][
+            "counting_alg"
+        ],
+        sequencing_protocol=lambda wildcards: config["params"]["qualimap_rnaseq"][
+            "sequencing_protocol"
+        ],
+        extra=lambda wildcards: config["params"]["qualimap_rnaseq"]["extra"],
     conda:
         "../envs/qualimap.yaml"
     log:

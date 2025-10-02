@@ -3,6 +3,7 @@
 
 rule star_index:
     input:
+        "resources/qualimap/qualimap_enabled.flag",
         fasta=branch(
             config["ref_assembly"]["source"] == "RefSeq",
             then="resources/datasets/ncbi_dataset/data/{genome_asc}/{genome_asc}_{genome_name}_genomic.fna".format(

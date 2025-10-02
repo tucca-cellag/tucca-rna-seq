@@ -57,7 +57,7 @@ rule tximeta:
         factors=config["diffexp"]["tximeta"]["factors"],
         extra=config["diffexp"]["tximeta"]["extra"],
     conda:
-        "../envs/tximeta.yaml"
+        "../envs/r_env.yaml"
     log:
         "logs/tximeta/tximeta.log",
     script:

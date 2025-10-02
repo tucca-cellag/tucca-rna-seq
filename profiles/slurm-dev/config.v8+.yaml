@@ -2,6 +2,8 @@
 # Configured for exclusive use with snakemake-executor-plugin-slurm
 
 # Profile Settings
+# To learn more see:
+# https://snakemake.readthedocs.io/en/stable/executing/cli.html
 __use_yte__: true
 executor: slurm
 use-singularity: true

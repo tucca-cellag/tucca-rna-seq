@@ -89,6 +89,7 @@ rule salmon_quant:
         # (e.g. technical replicates) use a list for r1 and r2.
         r1=lambda wildcards: get_paired_reads(wildcards)[0],
         r2=lambda wildcards: get_paired_reads(wildcards)[1],
+        checksum_valid=get_paired_checksum_dependency,
         index=multiext(
             "results/salmon/transcriptome_index/",
             "complete_ref_lens.bin",
