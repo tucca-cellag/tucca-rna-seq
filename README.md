@@ -37,24 +37,6 @@ Snakemake v9.3) and can be found in the [Snakemake Workflow Catalog][swc].
 [![Follow on Twitter](http://img.shields.io/badge/tuftscellag-1DA1F2?label=twitter&logo=x)](https://twitter.com/tuftscellag)
 [![Connect on LinkedIn](https://custom-icon-badges.demolab.com/badge/TUCCA-0077B5?label=LinkedIn&logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/company/tufts-cell-ag/)
 
-> [!WARNING]
-> This workflow is still under construction. [Release v0.9.0][v0.9.0] marks our first
-> public release. v0.9.0 contains all logic to process raw paired-end RNA-Seq
-> reads through differential expression. Currently, the workflow can generate a
-> large number of DESeq2 result files, especially for experiments with multiple
-> conditions and contrasts. While this is thorough, we recognize that navigating
-> dozens of individual result files can be challenging. The centerpiece of the
-> v1.0.0 release will be an interactive analysis toolkit that allows you to
-> dynamically explore and visualize your results. This will include a suite of
-> Shiny applications leveraging powerful packages like [`pcaExplorer`][pcaExplorer],
-> [`ideal`][ideal], and [`GeneTonic`][GeneTonic] to bring your data to life, as well as
-> custom scripting to generate our favorite [`clusterProfiler`][clusterProfiler] figures. We
-> encourage users to test this v0.9.0 release and provide feedback. Users should
-> expect our documentation to be incomplete and continue to have major reworks
-> until v1.0.0 is released. Please [open an issue][open-issue] to report any bugs or
-> suggest improvements. Additionally, feel free to [contact us][contact] with
-> any questions.
-
 > **Looking Ahead: AI-Powered Analysis Integration**
 >
 > Beyond v1.0.0, we're developing an innovative AI-powered analysis platform
