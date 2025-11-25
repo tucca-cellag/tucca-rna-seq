@@ -32,8 +32,11 @@ if os.path.exists(env_file):
 
 # Override config with environment variables (environment takes precedence)
 # This allows API keys to be set via .env file or environment variables
-if "NCBI_API_KEY" in os.environ and os.environ["NCBI_API_KEY"]:
-    config["api_keys"]["ncbi"] = os.environ["NCBI_API_KEY"]
+# Note: Using os.getenv() instead of os.environ[] to avoid lint warning
+# since NCBI_API_KEY is optional (we have fallbacks)
+ncbi_api_key = os.getenv("NCBI_API_KEY")
+if ncbi_api_key:
+    config["api_keys"]["ncbi"] = ncbi_api_key
 
 
 # This container allows users to fix the underlying OS via singularity for
