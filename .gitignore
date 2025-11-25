@@ -48,3 +48,6 @@ de_analysis
 
 # R Environment Variables
 .Renviron
+
+# Environment Variables (API Keys)
+.env
