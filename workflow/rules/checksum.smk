@@ -28,6 +28,7 @@ rule validate_checksum:
         # Otherwise, use md5sum -c directly on the individual .md5 file.
         """
         (
+        set -o pipefail
         cd $(dirname {input.fq})
         md5_file=$(basename {input.md5})
         fq_file=$(basename {input.fq})
@@ -35,6 +36,7 @@ rule validate_checksum:
         if [ "$md5_file" = "MD5.txt" ]; then
             # Novogene format: extract the line matching the FASTQ filename
             # Use -F flag to treat filename as a literal string, not a regex pattern
+            # pipefail ensures grep failures are properly detected
             grep -F "$fq_file" "$md5_file" | md5sum -c --status -
         else
             # Individual .md5 file format

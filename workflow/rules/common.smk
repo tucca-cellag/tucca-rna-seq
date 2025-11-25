@@ -232,33 +232,33 @@ def get_sra_filepath(accession: str, read: str) -> Path:
 def get_md5_file(wildcards: Wildcard) -> str:
     """
     Finds the checksum file for a given FASTQ file.
-    
+
     First checks for MD5.txt (Novogene format) in the same directory as the FASTQ file.
     If not found, falls back to individual .md5 files (e.g., file.fq.gz.md5).
-    
+
     Parameters:
         wildcards (Wildcard): An object with attributes: sample_unit, read.
-    
+
     Returns:
         str: The path to the checksum file (either MD5.txt or individual .md5 file).
-    
+
     Raises:
         FileNotFoundError: If neither MD5.txt nor individual .md5 file is found.
     """
     fq_path_str = get_fq_files(wildcards)
     fq_path = Path(fq_path_str)
     fq_dir = fq_path.parent
-    
+
     # First, check for MD5.txt (Novogene format) in the same directory
     md5_txt_path = fq_dir / "MD5.txt"
     if md5_txt_path.exists():
         return str(md5_txt_path)
-    
+
     # Fall back to individual .md5 file format
     md5_path = Path(f"{fq_path_str}.md5")
     if md5_path.exists():
         return str(md5_path)
-    
+
     # Neither format found
     raise FileNotFoundError(
         f"Required checksum file not found. Checked for:\n"
