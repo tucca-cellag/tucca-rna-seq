@@ -5,14 +5,41 @@ set -euo pipefail
 # This script mimics the jobs in .github/workflows/test.yml by invoking
 # Snakemake with the targets and configuration the workflow uses.
 #
-# IMPORTANT: Replace "YOUR_NCBI_API_KEY" with your actual key.
+# IMPORTANT: Set your NCBI API key via .env file or NCBI_API_KEY environment
+# variable. See .env.template for instructions.
 #
 # This script assumes that you are in the repository root where the Snakefile
 # (workflow/Snakefile) and the profiles directory exist, and that both the
 # singularity and snakemake modules are loaded.
 
-# Hard-coded API key—replace this placeholder with your actual NCBI API key.
-API_KEY="YOUR_NCBI_API_KEY"
+# Load API key from environment variable or .env file
+# Priority: 1) Environment variable, 2) .env file
+if [ -z "${NCBI_API_KEY:-}" ]; then
+  # Try to load from .env file if it exists
+  if [ -f ".env" ]; then
+    # Source .env file, but only export NCBI_API_KEY if it's set
+    set -a
+    source .env
+    set +a
+  fi
+fi
+
+# Validate that API key is set
+if [ -z "${NCBI_API_KEY:-}" ] || [ "${NCBI_API_KEY}" = "your_ncbi_api_key_here" ]; then
+  echo "Error: NCBI_API_KEY is not set or is using the placeholder value." >&2
+  echo "" >&2
+  echo "Please set your NCBI API key using one of the following methods:" >&2
+  echo "  1. Create a .env file: cp .env.template .env" >&2
+  echo "     Then edit .env and replace 'your_ncbi_api_key_here' with your key" >&2
+  echo "  2. Set environment variable: export NCBI_API_KEY='your_key_here'" >&2
+  echo "" >&2
+  echo "To obtain an NCBI API key, visit:" >&2
+  echo "  https://account.ncbi.nlm.nih.gov/settings/" >&2
+  exit 1
+fi
+
+# Use NCBI_API_KEY for backward compatibility with existing script logic
+API_KEY="${NCBI_API_KEY}"
 DEFAULT_CONDA_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
 DEFAULT_SINGULARITY_PREFIX="/cluster/tufts/kaplanlab/bbromb01/tucca-rna-seq-dev/envs"
 PROFILE_PROD_PATH="profiles/slurm"

@@ -8,6 +8,37 @@ min_version("8.27.1")
 configfile: "config/config.yaml"
 
 
+# Load environment variables from .env file if it exists
+# This allows API keys to be stored securely outside of version control
+import os
+
+# Load .env file if it exists
+env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+if os.path.exists(env_file):
+    with open(env_file, "r") as f:
+        for line in f:
+            line = line.strip()
+            # Skip empty lines and comments
+            if not line or line.startswith("#"):
+                continue
+            # Parse KEY=VALUE format
+            if "=" in line:
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                # Set environment variable if not already set
+                if key and value and key not in os.environ:
+                    os.environ[key] = value
+
+# Override config with environment variables (environment takes precedence)
+# This allows API keys to be set via .env file or environment variables
+# Note: Using os.getenv() instead of os.environ[] to avoid lint warning
+# since NCBI_API_KEY is optional (we have fallbacks)
+ncbi_api_key = os.getenv("NCBI_API_KEY")
+if ncbi_api_key:
+    config["api_keys"]["ncbi"] = ncbi_api_key
+
+
 # This container allows users to fix the underlying OS via singularity for
 # each job when using the workflow with --use-conda --use-singularity
 container: "docker://continuumio/miniconda3"

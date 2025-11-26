@@ -43,15 +43,27 @@ ref_assembly:
 # ----------------------------------------------------------
 # NCBI API Key
 #
+# RECOMMENDED: Use a .env file instead of setting the API key here.
+# The .env file is git-ignored and prevents accidental commits of secrets.
+#
+# To use .env file:
+#   1. Copy the template: cp .env.template .env
+#   2. Edit .env and add your API key: NCBI_API_KEY=your_key_here
+#
+# The workflow will automatically load the API key from:
+#   1. NCBI_API_KEY environment variable (highest priority)
+#   2. .env file (if NCBI_API_KEY is set in the file)
+#   3. This config file (fallback, deprecated)
+#
 # To avoid potential rate-limiting issues when downloading data from NCBI,
-# you can provide an API key here. The key will be used by the 'ncbi-datasets-cli'
+# you can provide an API key. The key will be used by the 'ncbi-datasets-cli'
 # tool, which is used for fetching genomes and SRA datasets.
 #
 # For instructions on how to obtain an API key, please visit:
 # https://account.ncbi.nlm.nih.gov/settings/
 # ----------------------------------------------------------
 api_keys:
-  ncbi: ""
+  ncbi: "" # Leave empty - use .env file or environment variable instead
 
 # ----------------------------------------------------------
 # Read Quality Control and Quantification
