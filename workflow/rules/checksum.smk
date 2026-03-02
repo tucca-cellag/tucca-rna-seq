@@ -29,9 +29,9 @@ rule validate_checksum:
         """
         (
         set -o pipefail
-        cd $(dirname {input.fq})
-        md5_file=$(basename {input.md5})
-        fq_file=$(basename {input.fq})
+        cd "$(dirname "{input.fq}")"
+        md5_file="$(basename "{input.md5}")"
+        fq_file="$(basename "{input.fq}")"
         
         if [ "$md5_file" = "MD5.txt" ]; then
             # Novogene format: extract the line matching the FASTQ filename
@@ -42,5 +42,5 @@ rule validate_checksum:
             # Individual .md5 file format
             md5sum --status -c "$md5_file"
         fi
-        ) &> {log}
+        ) &> "{log}"
         """
