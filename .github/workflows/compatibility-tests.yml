@@ -1,21 +1,24 @@
 # .github/workflows/compatibility-tests.yml
 #
-# Weekly compatibility testing for Singularity and Apptainer on GH runners.
-# Verifies the workflow works with the latest versions of container runtimes
-# and Snakemake, catching upstream regressions early.
-#
-# Production environment testing (fixed module versions) runs on the
-# Tufts HPC cluster via hpc-tests.yml.
+# Container runtime tests for Singularity and Apptainer on GH runners.
+# Runs on PRs to main and weekly schedule. Verifies the workflow works with
+# both stable and latest versions of container runtimes and Snakemake,
+# catching upstream regressions early.
 
 name: Compatibility Tests
 
 on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - "CITATION.cff"
+      - "CITATIONS.md"
   schedule:
     - cron: "0 0 * * 1"
   workflow_dispatch:
-  # TEMPORARY: push trigger for testing in PR #23 — remove before merge
-  push:
-    branches: [feat/hpc-ci]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

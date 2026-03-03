@@ -1,9 +1,8 @@
 # .github/workflows/main.yml
 #
 # Runs Conda-only integration tests and Rmd notebook tests on GitHub Actions.
-# Container tests run separately:
-#   - hpc-tests.yml: Singularity + Apptainer on Tufts HPC (manual dispatch)
-#   - compatibility-tests.yml: Singularity + Apptainer on GH runners (weekly)
+# Container tests (Singularity + Apptainer) run separately in
+# compatibility-tests.yml (on PRs and weekly schedule).
 
 name: Tests
 
@@ -186,9 +185,8 @@ jobs:
             config/
             results/
 
-  # Container tests (Singularity + Apptainer) run in separate workflows:
-  #   - hpc-tests.yml: on Tufts HPC via SLURM (manual dispatch)
-  #   - compatibility-tests.yml: on GH runners (weekly schedule)
+  # Container tests (Singularity + Apptainer) run in compatibility-tests.yml
+  # (on PRs to main and weekly schedule)
 
   Test_Rmds:
     name: Test Rmd analysis notebooks (using ${{ matrix.version.name }} from ${{ matrix.scenario.name }})
