@@ -27,6 +27,8 @@ on:
       - "LICENSE"
       - "CITATION.cff"
       - "CITATIONS.md"
+  schedule:
+    - cron: "0 0 * * 1"
   workflow_dispatch:
 
 concurrency:
