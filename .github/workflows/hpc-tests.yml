@@ -89,10 +89,14 @@ jobs:
     steps:
       - name: Setup SSH
         run: |
+          if [ -z "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" ]; then
+            echo "::error::TUFTS_SSH_PRIVATE_KEY secret is not set. Configure it in repo Settings > Secrets."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Test SSH connection
         run: |
@@ -117,10 +121,14 @@ jobs:
     steps:
       - name: Setup SSH
         run: |
+          if [ -z "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" ]; then
+            echo "::error::TUFTS_SSH_PRIVATE_KEY secret is not set. Configure it in repo Settings > Secrets."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Submit trivial SLURM job
         id: slurm
@@ -240,10 +248,14 @@ jobs:
     steps:
       - name: Setup SSH
         run: |
+          if [ -z "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" ]; then
+            echo "::error::TUFTS_SSH_PRIVATE_KEY secret is not set. Configure it in repo Settings > Secrets."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Clone repository on HPC
         id: setup
@@ -430,10 +442,14 @@ jobs:
     steps:
       - name: Setup SSH
         run: |
+          if [ -z "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" ]; then
+            echo "::error::TUFTS_SSH_PRIVATE_KEY secret is not set. Configure it in repo Settings > Secrets."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Clone repository on HPC
         id: setup
