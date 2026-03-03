@@ -1,0 +1,276 @@
+# .github/workflows/hpc-tests.yml
+#
+# Runs Singularity + Apptainer integration tests on the Tufts HPC cluster
+# via SSH + SLURM. These tests were moved from main.yml where they required
+# installing Singularity/Apptainer on GH runners and disk cleanup — both
+# are natively available on the HPC.
+#
+# Each run clones the repo fresh into a temp directory on lab storage,
+# runs Snakemake via the SLURM executor, and cleans up after.
+
+name: HPC Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: "Test scenario to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - SRA_Yeast
+          - SRA_Mouse
+          - LR_Ens_Comp
+          - LR_Ens_GMT
+          - LR_Ref_Comp
+      container:
+        description: "Container runtime to test"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - both
+          - singularity
+          - apptainer
+  # TODO: Enable these triggers after manual testing confirms SSH + SLURM works
+  # push:
+  #   branches: [main, feat/*]
+  #   paths-ignore:
+  #     - "**.md"
+  #     - "docs/**"
+  #     - "LICENSE"
+  #     - "CITATION.cff"
+  #     - "CITATIONS.md"
+  # pull_request:
+  #   branches-ignore: []
+  #   paths-ignore:
+  #     - "**.md"
+  #     - "docs/**"
+  #     - "LICENSE"
+  #     - "CITATION.cff"
+  #     - "CITATIONS.md"
+  # schedule:
+  #   - cron: "0 0 * * 1"
+
+env:
+  SSH_HOST: login-prod-01.pax.tufts.edu
+  # HPC module versions
+  SNAKEMAKE_MODULE: snakemake/8.27.1
+  SINGULARITY_MODULE: singularity/3.8.4
+  APPTAINER_MODULE: apptainer/1.2.5-no-suid
+  CONDA_MODULE: miniforge/25.3.0-3
+
+jobs:
+  HPC_Singularity:
+    name: ${{ matrix.scenario.name }}_Singularity (HPC)
+    runs-on: ubuntu-latest
+    if: >-
+      inputs.container == 'both' || inputs.container == 'singularity'
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - id: SRA_Yeast
+            name: SRA_Yeast
+            rules: aggregate_sra_pe_reads
+            configfile: .test/sra_reads/config_yeast/config.yaml
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - id: SRA_Mouse
+            name: SRA_Mouse_Subsampled
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
+          # Local Reads - Ensembl (complex config)
+          - id: LR_Ens_Comp
+            name: LR_Ens_Comp
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+          # Local Reads - Ensembl (GMT test config)
+          - id: LR_Ens_GMT
+            name: LR_Ens_GMT
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
+          # Local Reads - RefSeq (complex config)
+          - id: LR_Ref_Comp
+            name: LR_Ref_Comp
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Clone repository on HPC
+        id: setup
+        run: |
+          RUN_DIR="${{ secrets.TUFTS_WORK_DIR }}/${{ github.run_id }}-singularity-${{ matrix.scenario.id }}"
+          echo "run_dir=${RUN_DIR}" >> "$GITHUB_OUTPUT"
+
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} bash <<REMOTE_SCRIPT
+            set -euo pipefail
+            mkdir -p "${RUN_DIR}"
+            cd "${RUN_DIR}"
+            git clone --recurse-submodules --depth 1 \
+              --branch "${{ github.ref_name }}" \
+              https://github.com/${{ github.repository }}.git repo
+            cd repo
+            rm -rf .Rprofile renv renv.lock
+            echo "Checked out \$(git rev-parse --short HEAD)"
+          REMOTE_SCRIPT
+
+      - name: Run Snakemake (Singularity + Conda)
+        run: |
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} bash <<REMOTE_SCRIPT
+            set -euo pipefail
+            cd "${{ steps.setup.outputs.run_dir }}/repo"
+
+            module purge
+            module load ${{ env.SNAKEMAKE_MODULE }}
+            module load ${{ env.SINGULARITY_MODULE }}
+            module load ${{ env.CONDA_MODULE }}
+
+            echo "=== Singularity Test ==="
+            echo "Snakemake: \$(snakemake --version)"
+            echo "Singularity: \$(singularity --version)"
+            echo "========================"
+
+            snakemake ${{ matrix.scenario.rules }} \
+              --workflow-profile profiles/slurm-dev \
+              --configfile ${{ matrix.scenario.configfile }} \
+              --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}' \
+              --conda-prefix "${{ secrets.TUFTS_CONDA_PREFIX }}" \
+              --singularity-prefix "${{ secrets.TUFTS_SINGULARITY_PREFIX }}"
+          REMOTE_SCRIPT
+
+      - name: Retrieve logs
+        if: always()
+        run: |
+          mkdir -p hpc-logs
+          scp -r "${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }}:${{ steps.setup.outputs.run_dir }}/repo/logs/*" \
+            hpc-logs/ 2>/dev/null || echo "No logs found"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.scenario.name }}_Singularity-hpc-logs
+          path: hpc-logs/
+
+      - name: Cleanup
+        if: always()
+        run: |
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} \
+            "rm -rf ${{ steps.setup.outputs.run_dir }}" || true
+
+  HPC_Apptainer:
+    name: ${{ matrix.scenario.name }}_Apptainer (HPC)
+    runs-on: ubuntu-latest
+    if: >-
+      inputs.container == 'both' || inputs.container == 'apptainer'
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          # SRA Reads - Yeast (no subsampling, stops after SRA download)
+          - id: SRA_Yeast
+            name: SRA_Yeast
+            rules: aggregate_sra_pe_reads
+            configfile: .test/sra_reads/config_yeast/config.yaml
+          # SRA Reads - Mouse (subsampled, full workflow)
+          - id: SRA_Mouse
+            name: SRA_Mouse_Subsampled
+            rules: all
+            configfile: .test/sra_reads/config_mouse/config.yaml
+          # Local Reads - Ensembl (complex config)
+          - id: LR_Ens_Comp
+            name: LR_Ens_Comp
+            rules: all
+            configfile: .test/local_reads/ensembl/config_complex/config.yaml
+          # Local Reads - Ensembl (GMT test config)
+          - id: LR_Ens_GMT
+            name: LR_Ens_GMT
+            rules: all
+            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
+          # Local Reads - RefSeq (complex config)
+          - id: LR_Ref_Comp
+            name: LR_Ref_Comp
+            rules: all
+            configfile: .test/local_reads/refseq/config_complex/config.yaml
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TUFTS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Clone repository on HPC
+        id: setup
+        run: |
+          RUN_DIR="${{ secrets.TUFTS_WORK_DIR }}/${{ github.run_id }}-apptainer-${{ matrix.scenario.id }}"
+          echo "run_dir=${RUN_DIR}" >> "$GITHUB_OUTPUT"
+
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} bash <<REMOTE_SCRIPT
+            set -euo pipefail
+            mkdir -p "${RUN_DIR}"
+            cd "${RUN_DIR}"
+            git clone --recurse-submodules --depth 1 \
+              --branch "${{ github.ref_name }}" \
+              https://github.com/${{ github.repository }}.git repo
+            cd repo
+            rm -rf .Rprofile renv renv.lock
+            echo "Checked out \$(git rev-parse --short HEAD)"
+          REMOTE_SCRIPT
+
+      - name: Run Snakemake (Apptainer + Conda)
+        run: |
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} bash <<REMOTE_SCRIPT
+            set -euo pipefail
+            cd "${{ steps.setup.outputs.run_dir }}/repo"
+
+            module purge
+            module load ${{ env.SNAKEMAKE_MODULE }}
+            module load ${{ env.APPTAINER_MODULE }}
+            module load ${{ env.CONDA_MODULE }}
+
+            echo "=== Apptainer Test ==="
+            echo "Snakemake: \$(snakemake --version)"
+            echo "Apptainer: \$(apptainer --version)"
+            echo "======================"
+
+            snakemake ${{ matrix.scenario.rules }} \
+              --workflow-profile profiles/slurm-dev \
+              --configfile ${{ matrix.scenario.configfile }} \
+              --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}' \
+              --conda-prefix "${{ secrets.TUFTS_CONDA_PREFIX }}" \
+              --singularity-prefix "${{ secrets.TUFTS_SINGULARITY_PREFIX }}"
+          REMOTE_SCRIPT
+
+      - name: Retrieve logs
+        if: always()
+        run: |
+          mkdir -p hpc-logs
+          scp -r "${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }}:${{ steps.setup.outputs.run_dir }}/repo/logs/*" \
+            hpc-logs/ 2>/dev/null || echo "No logs found"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.scenario.name }}_Apptainer-hpc-logs
+          path: hpc-logs/
+
+      - name: Cleanup
+        if: always()
+        run: |
+          ssh ${{ secrets.TUFTS_SSH_USER }}@${{ env.SSH_HOST }} \
+            "rm -rf ${{ steps.setup.outputs.run_dir }}" || true
