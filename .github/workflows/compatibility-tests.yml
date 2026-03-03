@@ -13,6 +13,9 @@ on:
   schedule:
     - cron: "0 0 * * 1"
   workflow_dispatch:
+  # TEMPORARY: push trigger for testing in PR #23 — remove before merge
+  push:
+    branches: [feat/hpc-ci]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

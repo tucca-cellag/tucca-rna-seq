@@ -35,6 +35,9 @@ on:
           - singularity
           - apptainer
   # TODO: Enable these triggers after manual testing confirms SSH + SLURM works
+  # TEMPORARY: push trigger for testing in PR #23 — remove before merge
+  push:
+    branches: [feat/hpc-ci]
   # push:
   #   branches: [main, feat/*]
   #   paths-ignore:
