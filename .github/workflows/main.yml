@@ -1,15 +1,35 @@
-# .github/workflow/main.yml
+# .github/workflows/main.yml
+#
+# Runs Conda-only integration tests and Rmd notebook tests on GitHub Actions.
+# Container tests (Singularity + Apptainer) run separately in
+# compatibility-tests.yml (on PRs and weekly schedule).
 
 name: Tests
 
 on:
   push:
     branches: [main, feat/*]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - ".github/CONTRIBUTING.md"
+      - ".github/CODE_OF_CONDUCT.md"
+      - "LICENSE"
+      - "CITATION.cff"
+      - "CITATIONS.md"
   pull_request:
     branches-ignore: []
-  workflow_dispatch:
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - ".github/CONTRIBUTING.md"
+      - ".github/CODE_OF_CONDUCT.md"
+      - "LICENSE"
+      - "CITATION.cff"
+      - "CITATIONS.md"
   schedule:
     - cron: "0 0 * * 1"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -47,6 +67,7 @@ jobs:
           - name: stable
             snakemake: 8.27.1
             allow_failure: false
+          # Run latest only on schedule to catch upstream regressions
           - name: latest
             snakemake: "*"
             allow_failure: false
@@ -166,213 +187,8 @@ jobs:
             config/
             results/
 
-  SDM_Singularity_Conda:
-    name: ${{ matrix.scenario.name }} (Snakemake ${{ matrix.version.name }})
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-    strategy:
-      fail-fast: true
-      matrix:
-        scenario:
-          # SRA Reads - Yeast (no subsampling, stops after SRA download)
-          - name: SRA_Yeast_Singularity
-            rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config_yeast/config.yaml
-            extra_args: ""
-            cleanup: true
-          # SRA Reads - Mouse (subsampled, full workflow)
-          - name: SRA_Mouse_Subsampled_Singularity
-            rules: all
-            configfile: .test/sra_reads/config_mouse/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - Ensembl (complex config)
-          - name: LR_Ens_Comp_Singularity
-            rules: all
-            configfile: .test/local_reads/ensembl/config_complex/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - Ensembl (GMT test config)
-          - name: LR_Ens_GMT_Singularity
-            rules: all
-            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - RefSeq (complex config)
-          - name: LR_Ref_Comp_Singularity
-            rules: all
-            configfile: .test/local_reads/refseq/config_complex/config.yaml
-            extra_args: ""
-            cleanup: true
-        version:
-          - name: stable
-            snakemake: 8.27.1
-            singularity: 3.8.4
-            allow_failure: false
-          - name: latest
-            snakemake: "*"
-            singularity: 3.8.4
-            allow_failure: false
-    steps:
-      - name: update apt
-        run: sudo apt-get update
-      - name: Free Disk Space (Ubuntu)
-        if: ${{ matrix.scenario.cleanup }}
-        uses: jlumbroso/free-disk-space@v1.3.0
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -rf .Rprofile renv renv.lock
-      - name: Create host directory for R config (Singularity)
-        run: mkdir -p ${{ github.workspace }}/.host_R_config_singularity
-      - name: Install Singularity
-        uses: singularityhub/install-singularity@main
-        with:
-          singularity-version: ${{ matrix.version.singularity }}
-      - name: Run Snakemake workflow (Singularity)
-        uses: snakemake/snakemake-github-action@v2
-        continue-on-error: ${{ matrix.version.allow_failure }}
-        with:
-          directory: .
-          snakefile: workflow/Snakefile
-          # Usage of --bind required for success of rule make_linked_txome
-          # on GitHub runners
-          args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
-            --use-singularity
-            --singularity-args "--bind ${{ github.workspace }}/.host_R_config_singularity:/home/runner/.config/R"
-            --configfile ${{ matrix.scenario.configfile }}
-            --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
-            ${{ matrix.scenario.extra_args }}
-          show-disk-usage-on-error: true
-          snakemake-version: ${{ matrix.version.snakemake }}
-      - name: Upload ./logs/
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
-          path: logs/
-
-  SDM_Apptainer_Conda:
-    name: ${{ matrix.scenario.name }} (Snakemake ${{ matrix.version.name }})
-    runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
-    strategy:
-      fail-fast: true
-      matrix:
-        scenario:
-          # SRA Reads - Yeast (no subsampling, stops after SRA download)
-          - name: SRA_Yeast_Apptainer
-            rules: aggregate_sra_pe_reads
-            configfile: .test/sra_reads/config_yeast/config.yaml
-            extra_args: ""
-            cleanup: true
-          # SRA Reads - Mouse (subsampled, full workflow)
-          - name: SRA_Mouse_Subsampled_Apptainer
-            rules: all
-            configfile: .test/sra_reads/config_mouse/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - Ensembl (complex config)
-          - name: LR_Ens_Comp_Apptainer
-            rules: all
-            configfile: .test/local_reads/ensembl/config_complex/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - Ensembl (GMT test config)
-          - name: LR_Ens_GMT_Apptainer
-            rules: all
-            configfile: .test/local_reads/ensembl/config_gmt_test/config.yaml
-            extra_args: ""
-            cleanup: true
-          # Local Reads - RefSeq (complex config)
-          - name: LR_Ref_Comp_Apptainer
-            rules: all
-            configfile: .test/local_reads/refseq/config_complex/config.yaml
-            extra_args: ""
-            cleanup: true
-        version:
-          - name: stable
-            snakemake: 8.27.1
-            apptainer: 1.4.1
-            allow_failure: false
-          - name: latest
-            snakemake: "*"
-            apptainer: 1.4.1
-            allow_failure: false
-    steps:
-      - name: update apt
-        run: sudo apt-get update
-      - name: Free Disk Space (Ubuntu)
-        if: ${{ matrix.scenario.cleanup }}
-        uses: jlumbroso/free-disk-space@v1.3.0
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Remove .Rprofile to avoid renv auto-activation
-        run: rm -rf .Rprofile renv renv.lock
-      - name: Create host directory for R config (Apptainer)
-        run: mkdir -p ${{ github.workspace }}/.host_R_config_apptainer
-      - name: Install Apptainer
-        uses: eWaterCycle/setup-apptainer@v2
-        with:
-          apptainer-version: ${{ matrix.version.apptainer }}
-      - name: Run Snakemake workflow (Apptainer)
-        uses: snakemake/snakemake-github-action@v2
-        continue-on-error: ${{ matrix.version.allow_failure }}
-        with:
-          directory: .
-          snakefile: workflow/Snakefile
-          # Usage of --bind required for success of rule make_linked_txome
-          # on GitHub runners
-          args: >
-            ${{ matrix.scenario.rules }} --workflow-profile profiles/github-actions-singularity
-            --use-singularity
-            --singularity-args "--bind ${{ github.workspace }}/.host_R_config_apptainer:/home/runner/.config/R"
-            --configfile ${{ matrix.scenario.configfile }}
-            --config api_keys='{"ncbi": "${{ secrets.BB_NCBI_API_KEY }}"}'
-            ${{ matrix.scenario.extra_args }}
-          show-disk-usage-on-error: true
-          snakemake-version: ${{ matrix.version.snakemake }}
-      - name: Upload ./logs/
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.scenario.name }}-smk_${{ matrix.version.name }}-logs
-          path: logs/
+  # Container tests (Singularity + Apptainer) run in compatibility-tests.yml
+  # (on PRs to main and weekly schedule)
 
   Test_Rmds:
     name: Test Rmd analysis notebooks (using ${{ matrix.version.name }} from ${{ matrix.scenario.name }})
